@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktives Dilemma: 1789</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        historical: {
+                            100: '#fdf6e3', // Leichtes Pergament
+                            700: '#4a443b', // Dunkles Holz
+                            800: '#2c2822', // Sehr dunkles Braun
+                            900: '#1a1814', // Fast Schwarz
+                            accent: '#d4af37' // Altes Gold
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #1a1814;
+            color: #fdf6e3;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Verstecke Scrollbar für eine cleanere Optik */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1814; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a443b; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d4af37; 
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8">
+
+    <div class="max-w-3xl w-full">
+        <!-- Header -->
+        <header class="text-center mb-8 fade-in">
+            <h1 class="text-4xl sm:text-5xl font-serif text-historical-accent mb-2">1789</h1>
+            <p class="text-historical-100/70 font-sans tracking-widest uppercase text-sm">Ein interaktives Dilemma</p>
+            <div class="h-px w-32 bg-historical-accent/30 mx-auto mt-6"></div>
+        </header>
+
+        <!-- Main Story Container -->
+        <main id="story-container" class="bg-historical-800 rounded-xl border border-historical-700 shadow-2xl overflow-hidden fade-in relative">
+            
+            <!-- Image Area -->
+            <div class="relative w-full h-64 sm:h-80 bg-historical-900 border-b border-historical-700">
+                <div id="loading-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-historical-900 z-10 transition-opacity">
+                    <i class="fas fa-circle-notch fa-spin text-historical-accent text-3xl mb-4"></i>
+                    <p class="font-serif text-historical-accent/80 italic">Male Szene...</p>
+                </div>
+                <img id="scene-image" src="" alt="Szenenbild" class="w-full h-full object-cover hidden transition-opacity duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-historical-800 to-transparent"></div>
+            </div>
+
+            <!-- Text & Choices Area -->
+            <div class="p-6 sm:p-10">
+                <h2 id="chapter-title" class="text-2xl sm:text-3xl font-serif text-historical-accent mb-4">Kapitel Titel</h2>
+                <div id="story-text" class="font-sans text-lg leading-relaxed text-historical-100/90 mb-8 min-h-[100px]">
+                    Lade Geschichte...
+                </div>
+
+                <div id="choices-container" class="space-y-4 transition-opacity duration-300">
+                    <!-- Buttons werden dynamisch eingefügt -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer Info -->
+        <footer class="text-center mt-8 text-historical-100/50 text-sm font-sans fade-in">
+            <p>Ein interaktives Lern-Szenario für den Geschichtsunterricht.</p>
+        </footer>
+    </div>
+
+    <script>
+        // DIE GESCHICHTSDATEN (wurden in der vorherigen Version vermisst)
+        const storyData = {
+            'start': {
+                title: 'Die Last des Bauern',
+                text: 'Du bist ein armer Bauer in der Nähe von Paris. Deine Familie hungert seit Wochen, das Brot ist unerschwinglich geworden. Morgen stehen die erdrückenden Abgaben an den Grundherren an, die ihr unmöglich zahlen könnt. Verzweiflung macht sich breit. Was tust du?',
+                imagePrompt: 'A poor 18th century french peasant in a dark, miserable hovel, family starving, grim atmosphere, historical oil painting style, dark academia, masterpiece.',
+                choices: [
+                    { text: 'Heimlich im Wald des Grafen wildern.', next: 'wildern' },
+                    { text: 'Nach Paris ziehen und dich den Protesten anschließen.', next: 'paris' }
+                ]
+            },
+            'wildern': {
+                title: 'Im Wald des Grafen',
+                text: 'Du schleichst dich im Schutz der Dämmerung in den Forst des Grundherren. Mit einer alten Armbrust erlegst du ein Wildschwein. Doch plötzlich hörst du das Bellen von Hunden. Die Wildhüter des Grafen haben deine Fährte aufgenommen!',
+                imagePrompt: '18th century peasant hunting secretly in a dark, foggy forest, holding a crossbow, dogs barking in the distance, suspenseful, historical oil painting style.',
+                choices: [
+                    { text: 'Die Beute fallen lassen und um dein Leben rennen.', next: 'flucht' },
+                    { text: 'Einen schnellen Schuss wagen und mit der Beute fliehen.', next: 'erwischt' }
+                ]
+            },
+            'paris': {
+                title: 'Der Weg in die Stadt',
+                text: 'Du nimmst deine Familie und das wenige Hab und Gut und machst dich auf den Weg nach Paris. Die Straßen sind voller verzweifelter Menschen. In der Stadt angekommen, hörst du hitzige Reden über Freiheit und den Sturz des Königs.',
+                imagePrompt: '18th century crowded streets of Paris, peasants marching, angry mob, revolutionary flags, historical oil painting style, dramatic lighting.',
+                choices: [
+                    { text: 'Dich der wütenden Menge zur Bastille anschließen.', next: 'bastille' },
+                    { text: 'Einen ruhigen Ort suchen und nach ehrlicher Arbeit fragen.', next: 'arbeit' }
+                ]
+            },
+            'flucht': {
+                title: 'Mit dem Leben davongekommen',
+                text: 'Du lässt das Wildschwein zurück und rennst, so schnell dich deine Füße tragen. Du entkommst den Wildhütern, aber kehrst mit leeren Händen zu deiner hungernden Familie zurück. Die Abgaben können nicht bezahlt werden. Das Schicksal deiner Familie bleibt ungewiss, aber ihr lebt – vorerst.',
+                imagePrompt: 'Exhausted 18th century peasant running away from dark forest, empty handed, sad, historical oil painting style.',
+                choices: [
+                    { text: 'Geschichte neu beginnen', next: 'start' }
+                ]
+            },
+            'erwischt': {
+                title: 'Im Kerker des Grafen',
+                text: 'Der Schuss geht daneben. Bevor du nachladen oder fliehen kannst, überwältigen dich die Wildhüter. Du wirst wegen Wilderei verhaftet und in den dunklen Kerker des Schlosses geworfen. Deine Familie muss nun ohne dich auskommen.',
+                imagePrompt: '18th century peasant locked in a dark, cold dungeon cell, chains, despair, historical oil painting.',
+                choices: [
+                    { text: 'Geschichte neu beginnen', next: 'start' }
+                ]
+            },
+            'bastille': {
+                title: 'Der Sturm auf die Bastille',
+                text: 'Mitgerissen von der Menge stehst du vor den mächtigen Mauern der Bastille. Schüsse fallen, Pulverrauch liegt in der Luft. Du bist Teil eines historischen Moments geworden – die Revolution hat begonnen, und dein Leben wird nie wieder dasselbe sein!',
+                imagePrompt: 'Storming of the Bastille, 1789, chaotic battle, smoke, fire, angry mob with pitchforks and muskets, historical masterpiece oil painting.',
+                choices: [
+                    { text: 'Geschichte neu beginnen', next: 'start' }
+                ]
+            },
+            'arbeit': {
+                title: 'Ein neuer Anfang',
+                text: 'Du meidest die Unruhen und findest Arbeit bei einem sympathisierenden Bäcker. Obwohl die Zeiten hart sind, kannst du deine Familie ernähren. Als die Revolution ausbricht, seht ihr die Ereignisse aus der relativen Sicherheit der Bäckerei.',
+                imagePrompt: '18th century peasant working in a rustic french bakery, warm light, bread, safe haven amidst chaos outside, historical oil painting.',
+                choices: [
+                    { text: 'Geschichte neu beginnen', next: 'start' }
+                ]
+            }
+        };
+
+        // HISTORIE FÜR DEN HTML EXPORT
+        let storyHistory = [];
+        
+        // DOM Elements
+        const titleEl = document.getElementById('chapter-title');
+        const textEl = document.getElementById('story-text');
+        const choicesEl = document.getElementById('choices-container');
+        const imageEl = document.getElementById('scene-image');
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        function downloadHTML() {
+            const btn = document.getElementById('export-btn');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = `
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center justify-center w-10 h-10 min-w-[2.5rem] rounded-full bg-historical-900 text-historical-accent">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span>Exportiere HTML...</span>
+                </div>
+            `;
+            
+            // Komplette HTML-Struktur für den Export aufbauen
+            let htmlContent = `
+            <!DOCTYPE html>
+            <html lang="de">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Mein Weg durch das Jahr 1789</title>
+                <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+                <style>
+                    body { font-family: 'Inter', sans-serif; background-color: #fdf6e3; color: #1a1814; max-width: 800px; margin: 0 auto; padding: 40px 20px; line-height: 1.6; }
+                    h1 { text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 15px; margin-bottom: 40px; font-size: 32px; font-family: 'Playfair Display', serif; }
+                    h2 { color: #4a443b; font-size: 24px; margin-bottom: 15px; margin-top: 50px; font-family: 'Playfair Display', serif; }
+                    img { width: 100%; max-height: 450px; object-fit: cover; border-radius: 8px; margin-bottom: 20px; border: 1px solid #4a443b; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+                    .choice { background-color: #f0e6d2; padding: 15px; border-left: 4px solid #d4af37; border-radius: 4px; margin-top: 15px; }
+                    .choice strong { color: #4a443b; display: block; margin-bottom: 5px; }
+                    .choice span { font-style: italic; color: #2c2822; }
+                    .end { background-color: #4a443b; color: #fdf6e3; padding: 15px; border-radius: 4px; text-align: center; margin-top: 40px; font-weight: bold; }
+                </style>
+            </head>
+            <body>
+                <h1>Mein Weg durch das Jahr 1789</h1>
+            `;
+
+            // Historie durchgehen und in HTML umwandeln
+            storyHistory.forEach((step, index) => {
+                htmlContent += `<h2>Kapitel ${index + 1}: ${step.title}</h2>`;
+                
+                if (step.image) {
+                    htmlContent += `<img src="${step.image}" alt="Szenenbild zu ${step.title}">`;
+                }
+                
+                htmlContent += `<p>${step.text}</p>`;
+
+                if (step.choiceMade) {
+                    htmlContent += `
+                        <div class="choice">
+                            <strong>Deine Entscheidung:</strong>
+                            <span>&rarr; ${step.choiceMade}</span>
+                        </div>
+                    `;
+                } else {
+                    htmlContent += `<div class="end">--- Ende der Geschichte ---</div>`;
+                }
+            });
+
+            htmlContent += `
+            </body>
+            </html>
+            `;
+
+            // HTML als Datei zum Download anbieten
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Meine_Geschichte_1789.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            // Button kurzzeitig auf "Erledigt" setzen
+            setTimeout(() => { btn.innerHTML = originalHtml; }, 2000);
+        }
+
+        async function generateImage(prompt) {
+            // Wir nutzen Pollinations AI um dynamisch Bilder anhand des Prompts zu erstellen
+            return new Promise(resolve => {
+                const encodedPrompt = encodeURIComponent(prompt);
+                resolve(`https://image.pollinations.ai/prompt/${encodedPrompt}?width=800&height=450&nologo=true`);
+            });
+        }
+
+        async function renderNode(nodeId) {
+            // Historie leeren, wenn neu gestartet wird
+            if (nodeId === 'start') {
+                storyHistory = []; 
+            }
+
+            const node = storyData[nodeId];
+            
+            // UI aktualisieren
+            titleEl.textContent = node.title;
+            textEl.innerHTML = node.text;
+            
+            choicesEl.innerHTML = '';
+            choicesEl.style.opacity = '0';
+            
+            loadingOverlay.classList.remove('hidden');
+            loadingOverlay.classList.add('flex');
+            imageEl.classList.add('hidden');
+
+            try {
+                // Bild laden
+                const imageUrl = await generateImage(node.imagePrompt);
+                
+                // Lade Bild vor, damit es nicht flackert
+                const img = new Image();
+                img.onload = () => {
+                    imageEl.src = imageUrl;
+                    imageEl.classList.remove('hidden');
+                    loadingOverlay.classList.remove('flex');
+                    loadingOverlay.classList.add('hidden');
+                    
+                    // Jetzige geladene Station zur Historie hinzufügen
+                    const currentStep = {
+                        title: node.title,
+                        text: node.text,
+                        image: imageUrl,
+                        choiceMade: null
+                    };
+                    storyHistory.push(currentStep);
+
+                    // Buttons für Entscheidungen generieren
+                    node.choices.forEach(choice => {
+                        const btn = document.createElement('button');
+                        btn.className = 'choice-btn w-full text-left bg-historical-800 border border-historical-700 hover:border-historical-accent hover:bg-historical-700 text-historical-100 py-4 px-6 rounded-lg font-sans text-lg shadow-md transition-all duration-300 flex items-center justify-between group';
+                        
+                        const iconClass = choice.next === 'start' ? 'fa-rotate-right' : 'fa-arrow-right';
+                        
+                        btn.innerHTML = `
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center justify-center w-10 h-10 min-w-[2.5rem] rounded-full bg-historical-900 text-historical-accent group-hover:bg-historical-accent group-hover:text-historical-900 transition-colors duration-300">
+                                    <i class="fas ${iconClass}"></i>
+                                </div>
+                                <span>${choice.text}</span>
+                            </div>
+                        `;
+                        
+                        btn.onclick = () => {
+                            // Die getroffene Wahl im aktuellen Schritt abspeichern
+                            currentStep.choiceMade = choice.text;
+                            // Nächste Station laden
+                            renderNode(choice.next);
+                        };
+                        choicesEl.appendChild(btn);
+                    });
+
+                    // Export Button am Ende der Geschichte anzeigen
+                    const isEndNode = node.choices.length === 1 && node.choices[0].next === 'start';
+                    if (isEndNode) {
+                        const exportBtn = document.createElement('button');
+                        exportBtn.id = 'export-btn';
+                        exportBtn.className = 'choice-btn w-full text-left bg-historical-accent border border-historical-accent hover:bg-[#b8972e] text-historical-900 py-4 px-6 rounded-lg font-sans text-lg shadow-md flex items-center justify-between group mt-4 font-bold';
+                        exportBtn.innerHTML = `
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center justify-center w-10 h-10 min-w-[2.5rem] rounded-full bg-historical-900 text-historical-accent transition-colors duration-300">
+                                    <i class="fas fa-file-code"></i>
+                                </div>
+                                <span>Deinen Story-Verlauf als HTML speichern</span>
+                            </div>
+                            <i class="fas fa-download text-historical-900 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        `;
+                        exportBtn.onclick = downloadHTML;
+                        choicesEl.appendChild(exportBtn);
+                    }
+
+                    choicesEl.style.opacity = '1';
+                };
+                img.src = imageUrl;
+
+            } catch (error) {
+                console.error("Fehler beim Rendern der Szene:", error);
+                loadingOverlay.innerHTML = "<span class='text-red-400'>Fehler beim Laden der Szene.</span>";
+            }
+        }
+
+        // Geschichte beim Laden der Seite starten
+        window.addEventListener('DOMContentLoaded', () => {
+            renderNode('start');
+        });
+    </script>
+</body>
+</html>

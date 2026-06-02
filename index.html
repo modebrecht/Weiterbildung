@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weiterbildung | Lernlabor</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f8fafc;
+      --muted: #aab6c5;
+      --line: rgba(255, 255, 255, 0.16);
+      --panel: rgba(12, 18, 30, 0.76);
+      --panel-strong: rgba(18, 27, 43, 0.92);
+      --accent: #42d7b5;
+      --accent-2: #f7c948;
+      --accent-3: #ff7a90;
+      --accent-4: #71a7ff;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.36);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(120deg, rgba(66, 215, 181, 0.10), transparent 34%),
+        linear-gradient(240deg, rgba(247, 201, 72, 0.08), transparent 36%),
+        #08111f;
+      color: var(--ink);
+      letter-spacing: 0;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 78%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 42px 0 36px;
+    }
+
+    .hero {
+      min-height: 36vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: 28px;
+      align-items: end;
+      padding: 34px 0 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      margin-bottom: 20px;
+      color: #d8fff4;
+      font-size: 0.84rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .kicker svg {
+      width: 22px;
+      height: 22px;
+      color: var(--accent);
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(3.1rem, 8vw, 7.5rem);
+      line-height: 0.88;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 620px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.7vw, 1.2rem);
+      line-height: 1.65;
+    }
+
+    .visual {
+      min-height: 310px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 30% 28%, rgba(66, 215, 181, 0.22), transparent 28%),
+        linear-gradient(150deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03)),
+        var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+      border-radius: 8px;
+    }
+
+    .visual-grid {
+      position: absolute;
+      inset: 22px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .tile-mini {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 6px;
+      min-height: 40px;
+    }
+
+    .tile-mini:nth-child(2n) {
+      background: rgba(66, 215, 181, 0.16);
+    }
+
+    .tile-mini:nth-child(3n) {
+      background: rgba(247, 201, 72, 0.14);
+    }
+
+    .tile-mini:nth-child(5n) {
+      background: rgba(113, 167, 255, 0.15);
+    }
+
+    .visual-badge {
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(8, 17, 31, 0.78);
+      backdrop-filter: blur(16px);
+    }
+
+    .visual-badge strong {
+      display: block;
+      font-size: 1.05rem;
+    }
+
+    .visual-badge span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .visual-badge svg {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      color: var(--accent-2);
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 26px 0 18px;
+    }
+
+    .toolbar h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      letter-spacing: 0;
+    }
+
+    .toolbar span {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      min-height: 286px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22);
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      outline: none;
+    }
+
+    .card:focus-visible,
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 255, 255, 0.34);
+      background: var(--panel-strong);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .icon svg {
+      width: 25px;
+      height: 25px;
+    }
+
+    .tag {
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: #07111d;
+      font-size: 0.73rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      background: var(--accent);
+      white-space: nowrap;
+    }
+
+    .math .icon,
+    .math .tag { color: #08111f; background: var(--accent-2); }
+
+    .history .icon,
+    .history .tag { color: #08111f; background: var(--accent-3); }
+
+    .eco .icon,
+    .eco .tag { color: #08111f; background: var(--accent); }
+
+    .quiz .icon,
+    .quiz .tag { color: #08111f; background: var(--accent-4); }
+
+    .sports .icon,
+    .sports .tag { color: #08111f; background: #ffffff; }
+
+    .card h3 {
+      margin: 32px 0 12px;
+      font-size: 1.35rem;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.97rem;
+    }
+
+    .open {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: #eaf8ff;
+      font-weight: 850;
+    }
+
+    .open svg {
+      width: 21px;
+      height: 21px;
+      transition: transform 180ms ease;
+    }
+
+    .card:hover .open svg,
+    .card:focus-visible .open svg {
+      transform: translate(3px, -3px);
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 36px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 1050px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .sports {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .page {
+        width: min(100% - 24px, 680px);
+        padding-top: 22px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .visual {
+        min-height: 240px;
+      }
+
+      .toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sports {
+        grid-column: auto;
+      }
+
+      .card {
+        min-height: 252px;
+      }
+
+      .visual-badge {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+      }
+
+      footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <div class="kicker">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6L12 3Z"></path>
+            <path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"></path>
+          </svg>
+          Weiterbildung Lernlabor
+        </div>
+        <h1 id="page-title">Interaktive Module</h1>
+        <p>
+          Eine fokussierte Startseite für deine Lern-Experimente: Mathematik, Geschichte,
+          Ökosysteme, Schätzfragen und die zusätzliche Sports-Kachel.
+        </p>
+      </div>
+
+      <div class="visual" aria-hidden="true">
+        <div class="visual-grid">
+          <div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div>
+          <div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div>
+          <div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div>
+          <div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div>
+          <div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div>
+        </div>
+        <div class="visual-badge">
+          <div>
+            <strong>5 Ziele</strong>
+            <span>Alle öffnen in einem neuen Tab</span>
+          </div>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17 17 7"></path>
+            <path d="M7 7h10v10"></path>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <h2>Dokumente & Tools</h2>
+      <span>Lokale HTML-Dateien + externe App</span>
+    </div>
+
+    <section class="grid" aria-label="Interne Dokumente und externe Sports-App">
+      <a class="card math" href="bruchrechnen_entdecker.html" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 7h16"></path>
+                <path d="M4 17h16"></path>
+                <path d="M7 4l10 16"></path>
+              </svg>
+            </div>
+            <span class="tag">Mathe</span>
+          </div>
+          <h3>Bruch-Entdecker Studio</h3>
+          <p>Interaktive Bruchrechnung mit visuellen Aufgaben und direktem Ausprobieren.</p>
+        </div>
+        <span class="open">
+          Öffnen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17 17 7"></path><path d="M7 7h10v10"></path>
+          </svg>
+        </span>
+      </a>
+
+      <a class="card history" href="interaktives_dilemma_1789.html" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 20h16"></path>
+                <path d="M6 20V9l6-4 6 4v11"></path>
+                <path d="M9 20v-6h6v6"></path>
+              </svg>
+            </div>
+            <span class="tag">Geschichte</span>
+          </div>
+          <h3>Interaktives Dilemma: 1789</h3>
+          <p>Eine Entscheidungssimulation rund um das Jahr 1789 und historische Perspektiven.</p>
+        </div>
+        <span class="open">
+          Öffnen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17 17 7"></path><path d="M7 7h10v10"></path>
+          </svg>
+        </span>
+      </a>
+
+      <a class="card eco" href="kosystem_simulator.html" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22c4-4 8-7.5 8-13a8 8 0 0 0-16 0c0 5.5 4 9 8 13Z"></path>
+                <path d="M9 10c1.6-1.2 4.4-1.2 6 0"></path>
+                <path d="M8 14c2.2 1.4 5.8 1.4 8 0"></path>
+              </svg>
+            </div>
+            <span class="tag">Systeme</span>
+          </div>
+          <h3>Ökosystem Simulator</h3>
+          <p>Dynamische Räuber-Beute-Zusammenhänge als interaktives Modell erleben.</p>
+        </div>
+        <span class="open">
+          Öffnen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17 17 7"></path><path d="M7 7h10v10"></path>
+          </svg>
+        </span>
+      </a>
+
+      <a class="card quiz" href="schatten_quiz.html" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9.1 9a3 3 0 1 1 5.8 1c-.8 1.6-2.9 1.9-2.9 4"></path>
+                <path d="M12 18h.01"></path>
+                <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path>
+              </svg>
+            </div>
+            <span class="tag">Quiz</span>
+          </div>
+          <h3>Aha-Effekt: 10 Schätzfragen</h3>
+          <p>Ein pointiertes Quiz für überraschende Einschätzungen und schnelle Aha-Momente.</p>
+        </div>
+        <span class="open">
+          Öffnen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17 17 7"></path><path d="M7 7h10v10"></path>
+          </svg>
+        </span>
+      </a>
+
+      <a class="card sports" href="https://sports-fr.vercel.app/" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 4h12l2 7-8 9-8-9 2-7Z"></path>
+                <path d="M8 4l4 16"></path>
+                <path d="M16 4l-4 16"></path>
+                <path d="M4 11h16"></path>
+              </svg>
+            </div>
+            <span class="tag">Extern</span>
+          </div>
+          <h3>Sports FR</h3>
+          <p>Zusätzliche Kachel zur externen Sports-App auf Vercel.</p>
+        </div>
+        <span class="open">
+          Öffnen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17 17 7"></path><path d="M7 7h10v10"></path>
+          </svg>
+        </span>
+      </a>
+    </section>
+
+    <footer>
+      <span>Weiterbildung Lernlabor</span>
+      <span>Alle Kacheln öffnen in einem neuen Browser-Tab.</span>
+    </footer>
+  </main>
+</body>
+</html>

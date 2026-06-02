@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aha-Effekt: 10 Schätzfragen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --theme-color: #3b82f6;
+            --theme-glow: rgba(59, 130, 246, 0.3);
+        }
+
+        body {
+            background-color: #0f172a; /* slate-900 */
+            color: #f8fafc;
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            transition: background-color 1s ease;
+        }
+
+        /* Dynamic Background Orbs */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 0;
+            opacity: 0.4;
+            transition: all 1.5s ease-in-out;
+            pointer-events: none;
+        }
+        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--theme-color); }
+        .orb-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: var(--theme-color); opacity: 0.2; }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+            position: relative;
+            z-index: 10;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            margin-top: -16px;
+            box-shadow: 0 0 20px var(--theme-glow), inset 0 0 0 6px var(--theme-color);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        input[type=range]::-webkit-slider-thumb:hover, input[type=range]::-webkit-slider-thumb:active {
+            transform: scale(1.2);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
+        }
+        input[type=range]:focus { outline: none; }
+
+        /* Glass Cards */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7); /* slate-800 with opacity */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Animations */
+        @keyframes popIn {
+            0% { transform: scale(0) translateY(20px) rotate(-10deg); opacity: 0; }
+            70% { transform: scale(1.2) translateY(-5px) rotate(5deg); opacity: 1; }
+            100% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes fillUp {
+            0% { transform: scaleY(0); }
+            100% { transform: scaleY(1); }
+        }
+
+        .icon-item {
+            opacity: 0;
+            transform: scale(0);
+            will-change: transform, opacity;
+        }
+        
+        .icon-item.animate {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .icon-fill {
+            transform-origin: bottom;
+            transform: scaleY(0);
+        }
+        
+        .icon-item.animate .icon-fill {
+            animation: fillUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: 0.3s;
+        }
+
+        /* Transitions between questions */
+        .fade-enter { opacity: 0; transform: translateX(50px); }
+        .fade-enter-active { opacity: 1; transform: translateX(0); transition: opacity 0.5s, transform 0.5s; }
+        .fade-exit { opacity: 1; transform: translateX(0); }
+        .fade-exit-active { opacity: 0; transform: translateX(-50px); transition: opacity 0.5s, transform 0.5s; }
+
+        /* Hero Animations */
+        @keyframes heroFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-15px) scale(1.02); }
+        }
+        @keyframes heroFloatRotate {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+        @keyframes heroPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px var(--theme-color)); }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 40px var(--theme-color)); }
+        }
+        @keyframes heroHeartbeat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.15); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
+            60% { transform: scale(1); }
+        }
+        @keyframes heroSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .hero-graphic {
+            filter: drop-shadow(0 0 30px var(--theme-glow));
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #fff, rgba(255,255,255,0.7));
+        }
+
+        /* Smooth scrollbar for grid */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center">
+
+    <!-- Background Orbs -->
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+
+    <main class="w-full max-w-5xl mx-auto px-4 py-6 md:py-12 flex flex-col flex-1 relative min-h-screen">
+        
+        <!-- Header / Progress -->
+        <header class="w-full flex items-center justify-between mb-8 z-20">
+            <div class="text-slate-400 font-semibold tracking-wider text-sm uppercase" id="progressText">
+                Frage 1 von 10
+            </div>
+            <div class="flex-1 ml-6 h-2 bg-slate-800 rounded-full overflow-hidden relative">
+                <div id="progressBar" class="absolute top-0 left-0 h-full rounded-full transition-all duration-500 ease-out" style="width: 10%; background: var(--theme-color);"></div>
+            </div>
+        </header>
+
+        <!-- Main Card container for transitions -->
+        <div id="cardContainer" class="flex-1 flex flex-col transition-all duration-500">
+            
+            <div class="glass-panel rounded-3xl p-6 md:p-12 w-full text-center flex-shrink-0">
+                
+                <h1 id="questionTitle" class="text-3xl md:text-5xl font-extrabold text-white leading-tight mb-10 text-gradient">
+                    <!-- Title injected via JS -->
+                </h1>
+
+                <!-- Hero Graphic Area -->
+                <div id="heroGraphicContainer" class="flex justify-center items-center h-48 md:h-56 mb-8 transition-all duration-500 origin-center">
+                    <!-- SVG injected via JS -->
+                </div>
+
+                <!-- Interactive Area -->
+                <div id="estimationArea" class="space-y-12 transition-all duration-500">
+                    
+                    <div class="relative pt-6">
+                        <div class="flex justify-between text-sm font-bold text-slate-400 mb-6 px-2">
+                            <span id="sliderMinLabel">0</span>
+                            <span id="sliderMaxLabel">100</span>
+                        </div>
+                        
+                        <input type="range" id="mainSlider" min="0" max="100" step="1" value="50">
+                        
+                        <div class="mt-10 text-center">
+                            <span class="text-slate-400 font-medium text-sm uppercase tracking-widest block mb-3">Deine Schätzung</span>
+                            <div class="inline-flex items-baseline justify-center space-x-3 bg-slate-900/50 px-8 py-4 rounded-2xl border border-slate-700/50 shadow-inner">
+                                <span id="sliderValue" class="text-5xl md:text-6xl font-black tracking-tighter" style="color: var(--theme-color);">50</span>
+                                <span id="sliderUnit" class="text-2xl font-bold text-slate-500">Einheit</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="revealBtn" class="w-full md:w-auto relative group overflow-hidden bg-white text-slate-900 text-xl font-extrabold py-5 px-12 rounded-full shadow-[0_0_40px_var(--theme-glow)] transition-all hover:scale-105 active:scale-95">
+                        <span class="relative z-10">Auflösen</span>
+                        <div class="absolute inset-0 h-full w-full opacity-0 group-hover:opacity-20 transition-opacity duration-300" style="background: var(--theme-color);"></div>
+                    </button>
+                </div>
+
+                <!-- Result Area (Hidden initially) -->
+                <div id="resultArea" class="hidden opacity-0 space-y-8 mt-2 transition-all duration-700">
+                    
+                    <div class="relative rounded-2xl p-6 md:p-8 overflow-hidden border border-white/10" style="background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));">
+                        
+                        <h2 class="text-slate-400 font-bold uppercase tracking-widest text-sm mb-4">Die Realität</h2>
+                        <div class="flex flex-col items-center justify-center gap-2">
+                            <div class="flex items-baseline gap-3">
+                                <div id="actualValueDisplay" class="text-6xl md:text-8xl font-black tracking-tighter" style="color: var(--theme-color);">
+                                    <!-- Actual Value -->
+                                </div>
+                                <div id="actualUnitDisplay" class="text-2xl md:text-3xl font-bold text-slate-300">
+                                    <!-- Unit -->
+                                </div>
+                            </div>
+                            <div id="feedbackText" class="mt-4 text-lg font-medium px-4 py-1 rounded-full bg-slate-900/50 border border-slate-700">
+                                <!-- Feedback -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="visualExplanation" class="text-xl md:text-3xl font-light text-slate-200 leading-relaxed max-w-2xl mx-auto">
+                        <!-- e.g. "Das entspricht 50 Badewannen!" -->
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Visual Resolution: Grid Container -->
+            <div id="visualContainer" class="w-full mt-8 hidden flex-1 min-h-[300px]">
+                <div class="glass-panel rounded-3xl p-6 h-full max-h-[50vh] overflow-y-auto custom-scrollbar">
+                    <div id="iconGrid" class="flex flex-wrap justify-center gap-3 md:gap-5">
+                        <!-- Icons injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Button Container -->
+            <div id="nextBtnContainer" class="w-full mt-8 flex justify-center hidden pb-12">
+                <button id="nextBtn" class="flex items-center gap-3 text-white text-lg font-bold py-4 px-8 rounded-full transition-all hover:bg-white/10 border border-white/20 hover:border-white/40">
+                    <span>Nächste Frage</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Data Configuration for 10 Questions
+        const quizData = [
+            {
+                id: 1,
+                question: 'Wie viel Liter Wasser wird für die Herstellung von <span class="whitespace-nowrap text-[var(--theme-color)]">einer Jeans</span> benötigt?',
+                unit: 'Liter',
+                min: 0, max: 20000, step: 100, default: 10000,
+                actualValue: 8000,
+                themeColor: '#3b82f6', // Blue
+                visualDivisor: 160,
+                visualUnit: 'randvolle Badewannen',
+                explanation: 'Ein Großteil geht in den Anbau der Baumwolle und das Färben.',
+                heroSvg: `<svg class="w-32 h-32 md:w-40 md:h-40 hero-graphic" style="animation: heroFloat 4s ease-in-out infinite; color: var(--theme-color);" viewBox="0 0 24 24" fill="currentColor"><path d="M12,22A10,10 0 0,1 2,12C2,7 12,0 12,0C12,0 22,7 22,12A10,10 0 0,1 12,22Z" opacity="0.8"/><path d="M12,19.5A7.5,7.5 0 0,1 4.5,12C4.5,8.25 12,2.8 12,2.8C12,2.8 19.5,8.25 19.5,12A7.5,7.5 0 0,1 12,19.5Z" fill="#ffffff" opacity="0.3"/></svg>`,
+                iconSvg: `<svg viewBox="0 0 100 80" class="w-8 h-8 md:w-12 md:h-12" style="color: var(--theme-color)"><g class="icon-fill" fill="currentColor" opacity="0.6"><path d="M15 45 L85 45 Q85 65 75 65 L25 65 Q15 65 15 45 Z"/></g><path d="M10 35 L90 35 C95 35 95 40 90 40 L85 40 Q85 65 75 65 L80 75 L75 75 L70 65 L30 65 L25 75 L20 75 L25 65 Q15 65 15 40 L10 40 C5 40 5 35 10 35 Z" fill="currentColor" opacity="0.9"/><path d="M80 35 L80 20 Q80 15 75 15 L70 15 L70 10 L75 10 Q85 10 85 20 L85 35 Z" fill="currentColor"/><circle cx="70" cy="18" r="3" fill="#fff" opacity="0.8"/></svg>`
+            },
+            {
+                id: 2,
+                question: 'Wie viel Mikroplastik isst ein Mensch im Durchschnitt <span class="whitespace-nowrap text-[var(--theme-color)]">pro Jahr</span>?',
+                unit: 'Gramm',
+                min: 0, max: 1000, step: 10, default: 500,
+                actualValue: 260,
+                themeColor: '#a855f7', // Purple
+                visualDivisor: 5,
+                visualUnit: 'Kreditkarten',
+                explanation: 'Das entspricht ca. 5 Gramm pro Woche (Gewicht einer Kreditkarte).',
+                heroSvg: `<svg class="w-32 h-32 md:w-40 md:h-40 hero-graphic" style="animation: heroFloatRotate 5s ease-in-out infinite; color: var(--theme-color);" viewBox="0 0 100 60"><rect width="100" height="60" rx="8" fill="currentColor" opacity="0.9"/><rect x="15" y="15" width="25" height="18" rx="4" fill="#ffffff" opacity="0.7"/><path d="M15 45 L50 45 M15 50 L35 50" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.5"/><circle cx="80" cy="20" r="3" fill="#ffffff"/><circle cx="75" cy="35" r="2" fill="#ffffff" opacity="0.6"/><circle cx="85" cy="45" r="4" fill="#ffffff" opacity="0.4"/></svg>`,
+                iconSvg: `<svg viewBox="0 0 100 60" class="w-10 h-6 md:w-14 md:h-8" style="color: var(--theme-color)"><rect width="100" height="60" rx="6" fill="currentColor" opacity="0.8"/><rect x="10" y="15" width="20" height="15" rx="2" fill="#fff" opacity="0.6"/><path d="M10 45 L50 45" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity="0.5"/></svg>`
+            },
+            {
+                id: 3,
+                question: 'Wie viel CO₂ verursacht ein Economy-Flug von <span class="whitespace-nowrap text-[var(--theme-color)]">Zürich nach New York</span> und zurück?',
+                unit: 'kg CO₂',
+                min: 0, max: 10000, step: 100, default: 5000,
+                actualValue: 2000,
+                themeColor: '#10b981', // Emerald
+                visualDivisor: 10,
+                visualUnit: 'Bäume',
+                explanation: 'Eine ausgewachsene Buche bindet ca. 10 kg CO₂ pro Jahr. So viele bräuchte es für 1 Jahr Kompensation.',
+                heroSvg: `<svg class="w-32 h-32 md:w-40 md:h-40 hero-graphic" style="animation: heroFloat 3.5s ease-in-out infinite; color: var(--theme-color);" viewBox="0 0 24 24" fill="currentColor"><path d="M19.3,16.9C20.4,16.5 21,15.3 20.7,14.2C20.3,12.8 18.8,12 17.5,12.4C17.1,10.6 15.3,9.4 13.5,9.8C12.8,9.9 12.2,10.3 11.8,10.8C10.7,10 9.2,9.9 8.2,10.7C7.6,9.5 6.1,9 5,9.6C3.8,10.2 3.3,11.7 3.9,12.9C2.7,13.2 1.9,14.4 2.1,15.6C2.3,16.9 3.6,17.7 4.9,17.5H18C18.6,17.5 19,17.2 19.3,16.9M21,11L14,7V3.5C14,2.7 13.3,2 12.5,2C11.7,2 11,2.7 11,3.5V7L4,11V13L11,11.5V17L9,18.5V20L12.5,19L16,20V18.5L14,17V11.5L21,13V11Z" opacity="0.9"/></svg>`,
+                iconSvg: `<svg viewBox="0 0 100 100" class="w-8 h-8 md:w-10 md:h-10" style="color: var(--theme-color)"><path d="M50 10 L80 40 L65 40 L85 70 L15 70 L35 40 L20 40 Z" fill="currentColor" opacity="0.9"/><rect x="42" y="70" width="16" height="20" fill="#8B4513"/></svg>`
+            },
+            {
+                id: 4,
+                question: 'Wie viel weggeworfene Lebensmittel (Food Waste) fallen in der Schweiz <span class="whitespace-nowrap text-[var(--theme-color)]">pro Kopf und Jahr</span> an?',
+                unit: 'kg',
+                min: 0, max: 400, step: 5, default: 200,
+                actualValue: 120,
+                themeColor: '#f59e0b', // Amber
+                visualDivisor: 5,
+                visualUnit: 'volle Abfallsäcke',
+                explanation: 'Ein durchschnittlicher gefüllter 35-Liter Gebührensack wiegt ca. 5 kg.',
+                heroSvg: `<svg class="w-32 h-32 md:w-40 md:h-40 hero-graphic" style="animation: heroPulse 3s ease-in-out infinite; color: var(--theme-color);" viewBox="0 0 24 24" fill="currentColor"><path d="M20,10V21A2,2 0 0,1 18,23H6A2,2 0 0,1 4,21V10A2,2 0 0,1 6,8H9V6A2,2 0 0,1 11,4H13A2,2 0 0,1 15,6V8H18A2,2 0 0,1 20,10M11,6H13V8H11V6M18,10H6V21H18V10M8,12H10V19H8V12M14,12H16V19H14V12Z" opacity="0.9"/><path d="M9 13.5A2.5 2.5 0 0 1 11.5 11 2.5 2.5 0 0 1 14 13.5V17.5A2.5 2.5 0 0 1 11.5 20 2.5 2.5 0 0 1 9 17.5V13.5Z" fill="#0f172a" opacity="0.4"/></svg>`,
+                iconSvg: `<svg viewBox="0 0 100 100" class="w-8 h-8 md:w-10 md:h-10" style="color: var(--theme-color)"><path d="M30 20 Q50 0 70 20 L85 85 Q85 95 50 95 Q15 95 15 85 Z" fill="currentColor" opacity="0.8"/><path d="M40 25 Q50 35 60 25" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/></svg>`
+            },
+            {
+                id: 5,
+                question: 'Wie viel reines Gold steckt in einer <span class="whitespace-nowrap text-[var(--theme-color)]">Olympischen Goldmedaille</span>?',
+                unit: 'Gramm',
+                min: 0, max: 500, step: 1, default: 250,
+                actualValue: 6,
+                themeColor: '#eab308', // Yellow/Gold
+                visualDivisor: 1,
+                visualUnit: 'Gramm reines Gold',
+                explanation: 'Der Rest der 529 Gramm schweren Medaille besteht zu über 98% aus Silber.',
+                heroSvg: `<svg class="w-32 h-32 md:w-40 md:h-40 hero-graphic" style="animation: heroFloatRotate 4s ease-in-out infinite; color: var(--theme-color);" viewBox="0 0 100 100"><circle cx="50" cy="55" r="40" fill="currentColor" opacity="0.9"/><circle cx="50" cy="55" r="32" stroke="#ffffff" stroke-width="2" fill="none" opacity="0.6"/><path d="M35 15 L45 35 L55 35 L65 15 Z" fill="#ffffff" opacity="0.8"/><path d="M50 40 L55 50 L65 52 L57 60 L60 70 L50 64 L40 70 L43 60 L35 52 L45 50 Z" fill="#ffffff" opacity="0.9"/></svg>`,
+                iconSvg: `<svg viewBox="0 0 100 100" class="w-8 h-8 md:w-10 md:h-10" style="color: var(--theme-color)"><circle cx="50" cy="50" r="40" fill="currentColor" opacity="0.9"/><circle cx="50" cy="50" r="30" stroke="#fff" stroke-width="2" fill="none" opacity="0.5"/><path d="M50 30 L55 45 L70 50 L55 55 L50 70 L45 55 L30 50 L45 45 Z" fill="#fff" opacity="0.8"/></svg>`
+            },
+            {
+                id: 6,
+                question: 'Wie viele Stunden Videomaterial werden <span class="whitespace-nowrap text-[var(--theme-color)]">pro Minute</span> auf YouTube hochgeladen?',
+                unit: 'Stunden',
+                min: 0, max: 2000, step: 10, default: 1000,
+                actualValue: 500,
+                themeColor: '#ef4444', // Red
+                visualDivisor: 2,
+                visualUnit: 'Spielfilme',
+                explanation: 'Das entspricht 250 Spielfilmen (à 2 Stunden) – jede einzelne Minute.',
+                heroSvg: `<svg class="w-32 h-32 md:w-40 md:h-40 hero-graphic" style="animation: heroPulse 2s ease-in-out infinite; color: var(--theme-color);" viewBox="0 0 24 24" fill="currentColor"><path d="M19.6,4.5C19.6,4.5 19.4,3 18,2.6C17.1,2.4 12,2.4 12,2.4C12,2.4 6.9,2.4 6,2.6C4.6,3 4.4,4.5 4.4,4.5C4.4,4.5 4.2,6.4 4.2,8.3V11.7C4.2,13.6 4.4,15.5 4.4,15.5C4.4,15.5 4.6,17 6,17.4C6.9,17.6 12,17.6 12,17.6C12,17.6 17.1,17.6 18,17.4C19.4,17 19.6,15.5 19.6,15.5C19.6,15.5 19.8,13.6 19.8,11.7V8.3C19.8,6.4 19.6,4.5 19.6,4.5M10.4,13.2V6.8L15.6,10L10.4,13.2Z" opacity="0.9"/></svg>`,
+                iconSvg: `<svg viewBox="0 0 100 100" class="w-8 h-8 md:w-10 md:h-10" style="color: var(--theme-color)"><rect x="10" y="25" width="80" height="50" rx="10" fill="currentColor" opacity="0.9"/><polygon points="40,40 65,50 40,60" fill="#fff"/></svg>`
+            },
+            {
+                id: 7,
+                question: 'Wie oft schlägt das menschliche Herz <span class="whitespace-nowrap text-[var(--theme-color)]">an einem einzigen Tag</span>?',
+                unit: 'Schläge',
+                min: 0, max: 250000, step: 1000, default: 50000,
+                actualValue: 100000,
+                themeColor: '#f43f5e', // Rose
+                visualDivisor: 1000,
+                visualUnit: 'Tausend Schläge',
+                explanation: 'Bei einem Puls von ca. 70 Schlägen pro Minute pumpt es rund 7.000 Liter Blut täglich.',
+                heroSvg: `<svg class="w-32 h-32 md:w-40 md:h-40 hero-graphic" style="animation: heroHeartbeat 1.2s infinite; color: var(--theme-color);" viewBox="0 0 24 24" fill="currentColor"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.28 2,8.5C2,5.42 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.09C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.42 22,8.5C22,12.28 18.6,15.36 13.45,20.04L12,21.35Z" opacity="0.9"/><path d="M12,7C10.5,5.5 8.5,5.5 7.5,6.5C6.5,7.5 6.5,9.5 8,11L12,15L16,11C17.5,9.5 17.5,7.5 16.5,6.5C15.5,5.5 13.5,5.5 12,7Z" fill="#ffffff" opacity="0.3"/></svg>`,
+                iconSvg: `<svg viewBox="0 0 100 100" class="w-8 h-8 md:w-10 md:h-10" style="color: var(--theme-color)"><path d="M50 90 L20 60 Q0 40 20 20 Q35 5 50 25 Q65 5 80 20 Q100 40 80 60 Z" fill="currentColor" opacity="0.9"/></svg>`
+            },
+            {
+                id: 8,
+                question: 'Wie viel Papier verbraucht eine Person in der Schweiz im Durchschnitt <span class="whitespace-nowrap text-[var(--theme-color)]">pro Jahr</span>?',
+                unit: 'kg',
+                min: 0, max: 400, step: 5, default: 200,
+                actualValue: 110,
+                themeColor: '#94a3b8', // Slate
+                visualDivisor: 5,
+                visualUnit: 'Papiertaschen',
+                explanation: 'Das entspricht ca. 22 vollen Papiertaschen à 5 kg (Kartonverpackungen inklusive).',
+                heroSvg: `<svg class="w-32 h-32 md:w-40 md:h-40 hero-graphic" style="animation: heroFloat 4s ease-in-out infinite; color: var(--theme-color);" viewBox="0 0 24 24" fill="currentColor"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M8,12H16V14H8V12M8,16H13V18H8V16Z" opacity="0.9"/><path d="M3 6 L10 13 L3 20" stroke="#ffffff" stroke-width="2" fill="none" opacity="0.3"/></svg>`,
+                iconSvg: `<svg viewBox="0 0 100 100" class="w-8 h-8 md:w-10 md:h-10" style="color: var(--theme-color)"><path d="M20 30 L80 30 L85 90 L15 90 Z" fill="currentColor" opacity="0.7"/><path d="M35 30 Q50 0 65 30" stroke="currentColor" stroke-width="6" fill="none" opacity="0.9"/></svg>`
+            },
+            {
+                id: 9,
+                question: 'Wie viel Schokolade isst eine Person in der Schweiz <span class="whitespace-nowrap text-[var(--theme-color)]">pro Jahr</span>?',
+                unit: 'kg',
+                min: 0, max: 50, step: 1, default: 25,
+                actualValue: 11,
+                themeColor: '#d97706', // Chocolate/Amber
+                visualDivisor: 0.1, // 100g
+                visualUnit: 'Tafeln Schokolade',
+                explanation: 'Das sind exakt 110 handelsübliche Tafeln (à 100g) pro Person und Jahr. Weltrekord.',
+                heroSvg: `<svg class="w-32 h-32 md:w-40 md:h-40 hero-graphic" style="animation: heroFloatRotate 5s ease-in-out infinite; color: var(--theme-color);" viewBox="0 0 100 100"><rect x="25" y="10" width="50" height="80" rx="4" fill="currentColor" opacity="0.9"/><line x1="25" y1="30" x2="75" y2="30" stroke="#ffffff" stroke-width="2" opacity="0.4"/><line x1="25" y1="50" x2="75" y2="50" stroke="#ffffff" stroke-width="2" opacity="0.4"/><line x1="25" y1="70" x2="75" y2="70" stroke="#ffffff" stroke-width="2" opacity="0.4"/><line x1="50" y1="10" x2="50" y2="90" stroke="#ffffff" stroke-width="2" opacity="0.4"/><path d="M60 10 Q70 20 75 10 Z" fill="#0f172a" opacity="0.6"/></svg>`,
+                iconSvg: `<svg viewBox="0 0 100 100" class="w-8 h-8 md:w-10 md:h-10" style="color: var(--theme-color)"><rect x="20" y="10" width="60" height="80" rx="5" fill="currentColor" opacity="0.9"/><line x1="20" y1="36" x2="80" y2="36" stroke="#fff" stroke-width="2" opacity="0.3"/><line x1="20" y1="63" x2="80" y2="63" stroke="#fff" stroke-width="2" opacity="0.3"/><line x1="50" y1="10" x2="50" y2="90" stroke="#fff" stroke-width="2" opacity="0.3"/></svg>`
+            },
+            {
+                id: 10,
+                question: 'Wie lang sind alle Blutgefässe eines erwachsenen Menschen <span class="whitespace-nowrap text-[var(--theme-color)]">zusammengelegt</span>?',
+                unit: 'Kilometer',
+                min: 0, max: 200000, step: 1000, default: 50000,
+                actualValue: 100000,
+                themeColor: '#0ea5e9', // Light Blue/Earth
+                visualDivisor: 40000, // Erdumfang
+                visualUnit: 'Erdumrundungen',
+                explanation: 'Der Äquator ist ca. 40.000 km lang. Unsere Adern reichen 2.5 Mal um die ganze Erde.',
+                heroSvg: `<svg class="w-32 h-32 md:w-40 md:h-40 hero-graphic" style="animation: heroSpin 15s linear infinite; color: var(--theme-color);" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="currentColor" opacity="0.3"/><circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="2" fill="none" opacity="0.6"/><path d="M15 35 Q50 10 85 35 T15 65 Q50 90 85 65" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.5"/><path d="M50 5 C30 20 30 80 50 95 C70 80 70 20 50 5" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.5"/><path d="M5 50 Q50 70 95 50" stroke="#ef4444" stroke-width="6" fill="none" opacity="0.9" filter="drop-shadow(0 0 5px #ef4444)"/></svg>`,
+                iconSvg: `<svg viewBox="0 0 100 100" class="w-12 h-12 md:w-16 md:h-16" style="color: var(--theme-color)"><circle cx="50" cy="50" r="45" fill="currentColor" opacity="0.3"/><path d="M10 50 Q30 20 50 50 T90 50" stroke="currentColor" stroke-width="4" fill="none" opacity="0.8"/><circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="4" fill="none"/></svg>`
+            }
+        ];
+
+        let currentIndex = 0;
+        let isRevealed = false;
+
+        // DOM Elements
+        const root = document.documentElement;
+        const progressText = document.getElementById('progressText');
+        const progressBar = document.getElementById('progressBar');
+        const questionTitle = document.getElementById('questionTitle');
+        const heroGraphicContainer = document.getElementById('heroGraphicContainer');
+        const mainSlider = document.getElementById('mainSlider');
+        const sliderValue = document.getElementById('sliderValue');
+        const sliderUnit = document.getElementById('sliderUnit');
+        const sliderMinLabel = document.getElementById('sliderMinLabel');
+        const sliderMaxLabel = document.getElementById('sliderMaxLabel');
+        const revealBtn = document.getElementById('revealBtn');
+        
+        const estimationArea = document.getElementById('estimationArea');
+        const resultArea = document.getElementById('resultArea');
+        const actualValueDisplay = document.getElementById('actualValueDisplay');
+        const actualUnitDisplay = document.getElementById('actualUnitDisplay');
+        const feedbackText = document.getElementById('feedbackText');
+        const visualExplanation = document.getElementById('visualExplanation');
+        
+        const visualContainer = document.getElementById('visualContainer');
+        const iconGrid = document.getElementById('iconGrid');
+        const nextBtnContainer = document.getElementById('nextBtnContainer');
+        const nextBtn = document.getElementById('nextBtn');
+        const cardContainer = document.getElementById('cardContainer');
+
+        // Number Formatter (Swiss Format 20'000)
+        const formatNum = (num) => {
+            if (num >= 1000) return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+            return num.toString();
+        };
+
+        function loadQuestion(index) {
+            isRevealed = false;
+            const q = quizData[index];
+            
+            // Update Theme Variables
+            root.style.setProperty('--theme-color', q.themeColor);
+            
+            // Hex to RGB for glow
+            let hex = q.themeColor.replace('#', '');
+            let r = parseInt(hex.substring(0, 2), 16);
+            let g = parseInt(hex.substring(2, 4), 16);
+            let b = parseInt(hex.substring(4, 6), 16);
+            root.style.setProperty('--theme-glow', `rgba(${r}, ${g}, ${b}, 0.4)`);
+
+            // Update Header
+            progressText.innerText = `Frage ${index + 1} von ${quizData.length}`;
+            progressBar.style.width = `${((index + 1) / quizData.length) * 100}%`;
+
+            // Update Content
+            questionTitle.innerHTML = q.question;
+            mainSlider.min = q.min;
+            mainSlider.max = q.max;
+            mainSlider.step = q.step;
+            mainSlider.value = q.default;
+            
+            sliderMinLabel.innerText = formatNum(q.min);
+            sliderMaxLabel.innerText = formatNum(q.max);
+            sliderValue.innerText = formatNum(q.default);
+            sliderUnit.innerText = q.unit;
+
+            // Reset UI Visibility
+            estimationArea.classList.remove('hidden', 'opacity-0');
+            heroGraphicContainer.classList.remove('h-0', 'opacity-0', 'scale-50');
+            heroGraphicContainer.classList.add('h-48', 'md:h-56');
+            heroGraphicContainer.innerHTML = q.heroSvg;
+            
+            resultArea.classList.add('hidden', 'opacity-0');
+            visualContainer.classList.add('hidden');
+            nextBtnContainer.classList.add('hidden');
+            iconGrid.innerHTML = '';
+            
+            // For the specific question 10 where it's 2.5
+            if(q.id === 10) {
+                 actualValueDisplay.innerText = "100'000";
+            } else {
+                 actualValueDisplay.innerText = formatNum(q.actualValue);
+            }
+            actualUnitDisplay.innerText = q.unit;
+        }
+
+        // Slider Interaction
+        mainSlider.addEventListener('input', (e) => {
+            sliderValue.innerText = formatNum(e.target.value);
+        });
+
+        // Reveal Logic
+        revealBtn.addEventListener('click', () => {
+            if (isRevealed) return;
+            isRevealed = true;
+            const q = quizData[currentIndex];
+            const guess = parseFloat(mainSlider.value);
+            const actual = q.actualValue;
+            const diff = Math.abs(actual - guess);
+            const percentageOff = (diff / actual) * 100;
+
+            // Calculate feedback
+            if (guess === actual) {
+                feedbackText.innerText = "🎯 Perfekter Treffer!";
+                feedbackText.className = "mt-4 text-lg font-bold px-5 py-2 rounded-full bg-green-500/20 text-green-400 border border-green-500/50";
+            } else if (percentageOff <= 15) {
+                feedbackText.innerText = `🔥 Extrem nah dran! (Nur ${formatNum(diff)} daneben)`;
+                feedbackText.className = "mt-4 text-lg font-bold px-5 py-2 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/50";
+            } else {
+                const direction = guess > actual ? "zu hoch" : "zu niedrig";
+                feedbackText.innerText = `Um ${formatNum(diff)} ${direction} geschätzt.`;
+                feedbackText.className = "mt-4 text-lg font-medium px-5 py-2 rounded-full bg-slate-800 text-slate-300 border border-slate-700";
+            }
+
+            // Number of icons to render
+            let iconCount = Math.round(actual / q.visualDivisor);
+            // Handle edge case for partial icons like 2.5 earth circumferences
+            let displayCount = (actual / q.visualDivisor);
+            if(displayCount % 1 !== 0) displayCount = displayCount.toFixed(1);
+
+            visualExplanation.innerHTML = `Das entspricht <span class="font-black text-4xl mx-2" style="color: var(--theme-color);">${displayCount}</span> ${q.visualUnit}.<br><span class="text-base text-slate-400 mt-2 block">${q.explanation}</span>`;
+
+            // UI Transitions
+            estimationArea.classList.add('opacity-0');
+            heroGraphicContainer.classList.remove('h-48', 'md:h-56');
+            heroGraphicContainer.classList.add('h-0', 'opacity-0', 'scale-50');
+            
+            setTimeout(() => {
+                estimationArea.classList.add('hidden');
+                
+                resultArea.classList.remove('hidden');
+                visualContainer.classList.remove('hidden');
+                nextBtnContainer.classList.remove('hidden');
+                
+                // Trigger reflow
+                void resultArea.offsetWidth;
+                resultArea.classList.remove('opacity-0');
+
+                // Render Grid Elements
+                const frag = document.createDocumentFragment();
+                for (let i = 0; i < iconCount; i++) {
+                    const div = document.createElement('div');
+                    div.className = 'icon-item';
+                    div.innerHTML = q.iconSvg;
+                    frag.appendChild(div);
+                }
+                iconGrid.appendChild(frag);
+
+                // Animate Grid Items with Stagger
+                const items = document.querySelectorAll('.icon-item');
+                items.forEach((item, index) => {
+                    // Limit delay so user doesn't wait forever on 250 items
+                    const delay = Math.min(index * 20, 1500); 
+                    setTimeout(() => {
+                        item.classList.add('animate');
+                    }, delay);
+                });
+
+                // Auto Scroll to visual
+                setTimeout(() => {
+                    visualContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }, 100);
+
+            }, 400); // Wait for fade out
+        });
+
+        // Next Question Logic
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < quizData.length - 1) {
+                // Fade out card
+                cardContainer.classList.add('opacity-0', 'scale-95');
+                
+                setTimeout(() => {
+                    currentIndex++;
+                    loadQuestion(currentIndex);
+                    // Fade in card
+                    cardContainer.classList.remove('opacity-0', 'scale-95');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 400);
+
+                // If last question next time
+                if (currentIndex === quizData.length - 2) {
+                    nextBtn.innerHTML = `<span>Quiz beenden</span><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+                }
+            } else {
+                // End of Quiz
+                cardContainer.innerHTML = `
+                    <div class="glass-panel rounded-3xl p-12 text-center">
+                        <h1 class="text-5xl font-extrabold text-white mb-6">🎉 Quiz beendet!</h1>
+                        <p class="text-xl text-slate-300 mb-10">Dein Gefühl für Dimensionen wurde frisch kalibriert.</p>
+                        <button onclick="location.reload()" class="bg-white text-slate-900 text-xl font-bold py-4 px-10 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:scale-105 transition-transform">
+                            Neu starten
+                        </button>
+                    </div>
+                `;
+            }
+        });
+
+        // Initialize First Question
+        loadQuestion(0);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktives Ökosystem: Räuber & Beute</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        
+        /* Custom Slider Styling */
+        input[type=range].main-slider { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range].main-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%;
+            background: #ffffff; cursor: pointer; margin-top: -8px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2); border: 2px solid #cbd5e1; transition: transform 0.1s;
+        }
+        input[type=range].main-slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+        input[type=range].main-slider::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; background: #e2e8f0; border-radius: 4px; }
+        input[type=range].main-slider:focus { outline: none; }
+        
+        #predatorSlider::-webkit-slider-thumb { border-color: #ef4444; }
+        #predatorSlider::-webkit-slider-runnable-track { background: #fee2e2; }
+        #foodSlider::-webkit-slider-thumb { border-color: #22c55e; }
+        #foodSlider::-webkit-slider-runnable-track { background: #dcfce7; }
+        #appetiteSlider::-webkit-slider-thumb { border-color: #f97316; }
+        #appetiteSlider::-webkit-slider-runnable-track { background: #ffedd5; }
+
+        input[type=range].mini-slider { -webkit-appearance: none; width: 60px; background: transparent; }
+        input[type=range].mini-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 14px; width: 14px; border-radius: 50%;
+            background: #ffffff; cursor: pointer; margin-top: -4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2); border: 2px solid #cbd5e1;
+        }
+        input[type=range].mini-slider::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: #e2e8f0; border-radius: 3px; }
+        #miniPredatorSlider::-webkit-slider-thumb { border-color: #ef4444; }
+        #miniPredatorSlider::-webkit-slider-runnable-track { background: #fee2e2; }
+        #miniFoodSlider::-webkit-slider-thumb { border-color: #22c55e; }
+        #miniFoodSlider::-webkit-slider-runnable-track { background: #dcfce7; }
+        #miniAppetiteSlider::-webkit-slider-thumb { border-color: #f97316; }
+        #miniAppetiteSlider::-webkit-slider-runnable-track { background: #ffedd5; }
+
+        .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex flex-col items-center">
+
+    <div class="max-w-6xl w-full space-y-6">
+        <header class="text-center space-y-2">
+            <div class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-semibold mb-2">
+                Live-Demo für Lehrkräfte
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-800">Dynamische Systeme begreifen</h1>
+            <p class="text-slate-500 max-w-2xl mx-auto">
+                Erleben Sie den Effekt von Variablen in Echtzeit. Statt abstrakter Kurven im Schulbuch zeigt dieser Simulator die Lotka-Volterra-Regeln interaktiv.
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="glass-panel p-6 rounded-2xl shadow-xl flex flex-col space-y-8">
+                <div>
+                    <h2 class="text-xl font-bold flex items-center gap-2 mb-4"><span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center">🎛️</span> Steuerung</h2>
+                    <div class="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-100 mb-2">
+                        <span class="text-sm font-semibold text-slate-600">Ansicht:</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-500 font-bold" id="viewSimpleLabel">Abstrakt</span>
+                            <button id="viewToggleBtn" class="w-10 h-5 bg-slate-300 rounded-full relative transition-colors focus:outline-none">
+                                <span id="viewToggleKnob" class="absolute left-1 top-0.5 w-4 h-4 bg-white rounded-full transition-transform"></span>
+                            </button>
+                            <span class="text-xs text-slate-500" id="viewEmojiLabel">Lebhaft</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex justify-between items-end">
+                        <label class="font-semibold text-red-600 flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span> Luchse (Raubtiere)
+                        </label>
+                        <span id="predatorCountDisplay" class="text-xl font-bold text-slate-700 tabular-nums w-8 text-right">5</span>
+                    </div>
+                    <input type="range" id="predatorSlider" class="main-slider" min="0" max="50" value="5">
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex justify-between items-end">
+                        <label class="font-semibold text-green-600 flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span> Waldfläche (Lebensraum)
+                        </label>
+                        <span id="foodCountDisplay" class="text-xl font-bold text-slate-700 w-24 text-right">Mittel</span>
+                    </div>
+                    <input type="range" id="foodSlider" class="main-slider" min="10" max="100" value="50">
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex justify-between items-end">
+                        <label class="font-semibold text-orange-600 flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-orange-500 inline-block"></span> Appetit (Rehe pro Wurf)
+                        </label>
+                        <span id="appetiteDisplay" class="text-xl font-bold text-slate-700 tabular-nums w-8 text-right">3</span>
+                    </div>
+                    <input type="range" id="appetiteSlider" class="main-slider" min="1" max="15" value="3">
+                </div>
+
+                <div class="mt-auto pt-6 border-t border-slate-100 flex gap-3">
+                    <button id="toggleBtn" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 px-4 rounded-xl transition shadow-lg shadow-slate-200">Pausieren</button>
+                    <button id="resetBtn" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 px-4 rounded-xl transition">Neustart</button>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Canvas 1: Simulation -->
+                <div class="glass-panel rounded-2xl shadow-xl overflow-hidden flex flex-col bg-white">
+                    <div class="bg-slate-50 px-4 py-3 border-b border-slate-100 flex justify-between items-center flex-wrap gap-2">
+                        <span class="font-semibold text-sm text-slate-600">📍 Live-Simulation (Ökosystem)</span>
+                        <div class="flex items-center gap-4 text-xs font-medium">
+                            <!-- Mouse Tool -->
+                            <div class="hidden sm:flex items-center gap-1 bg-slate-200/70 border border-slate-200 rounded-lg p-1 mr-2">
+                                <span class="text-[10px] text-slate-500 uppercase tracking-wider font-bold px-1">Maus:</span>
+                                <button id="toolPrey" class="w-6 h-6 rounded flex items-center justify-center bg-white shadow-sm text-green-600 transition-all text-sm opacity-100">🦌</button>
+                                <button id="toolPred" class="w-6 h-6 rounded flex items-center justify-center text-slate-500 hover:text-red-600 transition-all text-sm opacity-50 grayscale">🐆</button>
+                            </div>
+                            <!-- Mini Controls -->
+                            <div class="flex items-center gap-1 w-24" title="Luchse">
+                                <span class="text-red-600">🐆</span> <input type="range" id="miniPredatorSlider" class="mini-slider" min="0" max="50" value="5">
+                            </div>
+                            <div class="flex items-center gap-1 w-24" title="Waldfläche">
+                                <span class="text-green-600">🍃</span> <input type="range" id="miniFoodSlider" class="mini-slider" min="10" max="100" value="50">
+                            </div>
+                            <span class="text-slate-300">|</span>
+                            <div class="flex items-center justify-end w-16 text-green-600"><span id="livePrey" class="tabular-nums">0</span>&nbsp;Rehe</div>
+                            <div class="flex items-center justify-end w-20 text-red-600"><span id="livePreds" class="tabular-nums">0</span>&nbsp;Luchse</div>
+                        </div>
+                    </div>
+                    <div class="relative w-full aspect-video bg-[#f0fdf4] overflow-hidden" id="simContainer">
+                        <canvas id="simCanvas" class="absolute inset-0 w-full h-full cursor-crosshair"></canvas>
+                    </div>
+                </div>
+
+                <!-- Canvas 2: Graph -->
+                <div class="glass-panel rounded-2xl shadow-xl overflow-hidden bg-white">
+                    <div class="bg-slate-50 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
+                        <span class="font-semibold text-sm text-slate-600">📈 Populationsentwicklung</span>
+                        <span id="ecoStatus" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 transition-colors duration-300">System startet...</span>
+                    </div>
+                    <div class="relative w-full h-48 sm:h-56 p-4">
+                        <canvas id="graphCanvas" class="w-full h-full"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const simCanvas = document.getElementById('simCanvas');
+        const simCtx = simCanvas.getContext('2d');
+        const graphCanvas = document.getElementById('graphCanvas');
+        const graphCtx = graphCanvas.getContext('2d');
+        const simContainer = document.getElementById('simContainer');
+        
+        const predatorSlider = document.getElementById('predatorSlider');
+        const predatorDisplay = document.getElementById('predatorCountDisplay');
+        const foodSlider = document.getElementById('foodSlider');
+        const foodDisplay = document.getElementById('foodCountDisplay');
+        const appetiteSlider = document.getElementById('appetiteSlider');
+        const appetiteDisplay = document.getElementById('appetiteDisplay');
+        
+        const toggleBtn = document.getElementById('toggleBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        const livePrey = document.getElementById('livePrey');
+        const livePreds = document.getElementById('livePreds');
+        const miniPredatorSlider = document.getElementById('miniPredatorSlider');
+        const miniFoodSlider = document.getElementById('miniFoodSlider');
+
+        const viewToggleBtn = document.getElementById('viewToggleBtn');
+        const viewToggleKnob = document.getElementById('viewToggleKnob');
+        const viewSimpleLabel = document.getElementById('viewSimpleLabel');
+        const viewEmojiLabel = document.getElementById('viewEmojiLabel');
+
+        const toolPrey = document.getElementById('toolPrey');
+        const toolPred = document.getElementById('toolPred');
+        const ecoStatus = document.getElementById('ecoStatus');
+
+        let isRunning = true;
+        let animationId;
+        let frameCount = 0;
+        let useEmojis = false;
+        let activeTool = 'prey'; 
+        
+        const PREY_SPEED = 1.0;
+        const PREDATOR_SPEED = 1.4; 
+        const INTERACTION_RADIUS = 10;
+        
+        let preys = [];
+        let predators = [];
+        let historyData = []; 
+        const maxHistory = 300; 
+        let simWidth, simHeight, graphWidth, graphHeight;
+
+        function resizeCanvases() {
+            simWidth = simContainer.clientWidth;
+            simHeight = simContainer.clientHeight;
+            simCanvas.width = simWidth;
+            simCanvas.height = simHeight;
+            
+            const graphRect = graphCanvas.parentElement.getBoundingClientRect();
+            graphWidth = graphRect.width - 32; 
+            graphHeight = graphRect.height - 32;
+            graphCanvas.width = graphWidth;
+            graphCanvas.height = graphHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvases);
+
+        class Agent {
+            constructor(x, y, isPredator) {
+                this.x = x; this.y = y; this.isPredator = isPredator;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = isPredator ? PREDATOR_SPEED : PREY_SPEED;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.energy = 100; 
+            }
+
+            move() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0) { this.x = 0; this.vx *= -1; }
+                if (this.x > simWidth) { this.x = simWidth; this.vx *= -1; }
+                if (this.y < 0) { this.y = 0; this.vy *= -1; }
+                if (this.y > simHeight) { this.y = simHeight; this.vy *= -1; }
+            }
+
+            draw(ctx) {
+                if (useEmojis) {
+                    ctx.font = '24px "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText(this.isPredator ? '🐆' : '🦌', this.x, this.y);
+                } else {
+                    ctx.beginPath();
+                    if (this.isPredator) {
+                        ctx.moveTo(this.x, this.y - 6); ctx.lineTo(this.x - 5, this.y + 4); ctx.lineTo(this.x + 5, this.y + 4);
+                        ctx.fillStyle = '#ef4444'; 
+                    } else {
+                        ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                        ctx.fillStyle = '#22c55e'; 
+                    }
+                    ctx.fill(); ctx.closePath();
+                }
+            }
+        }
+
+        function initSimulation() {
+            preys = []; predators = []; historyData = []; frameCount = 0;
+            const initialPredators = parseInt(predatorSlider.value);
+            const foodValue = parseInt(foodSlider.value);
+            const initialPrey = foodValue * 2; 
+
+            for (let i = 0; i < initialPrey; i++) preys.push(new Agent(Math.random() * simWidth, Math.random() * simHeight, false));
+            for (let i = 0; i < initialPredators; i++) predators.push(new Agent(Math.random() * simWidth, Math.random() * simHeight, true));
+            miniPredatorSlider.value = initialPredators; miniFoodSlider.value = foodValue;
+        }
+
+        function updateLogic() {
+            const foodValue = parseInt(foodSlider.value);
+            const appetiteValue = parseInt(appetiteSlider.value);
+            const energyGain = 100 / appetiteValue; 
+            const maxPreyCapacity = foodValue * 4; 
+            const preySpawnRate = Math.max(1, 20 - Math.floor(foodValue / 10)); 
+
+            preys.forEach(p => p.move());
+            predators.forEach(p => p.move());
+
+            for (let i = predators.length - 1; i >= 0; i--) {
+                let pred = predators[i];
+                pred.energy -= 0.15; 
+                for (let j = preys.length - 1; j >= 0; j--) {
+                    let prey = preys[j];
+                    let dx = pred.x - prey.x, dy = pred.y - prey.y;
+                    if (Math.sqrt(dx*dx + dy*dy) < INTERACTION_RADIUS) {
+                        preys.splice(j, 1);
+                        pred.energy += energyGain; 
+                        if (pred.energy >= 200) {
+                            predators.push(new Agent(pred.x, pred.y, true));
+                            pred.energy = 100;
+                        }
+                        break; 
+                    }
+                }
+                if (pred.energy <= 0) predators.splice(i, 1);
+            }
+
+            if (frameCount % preySpawnRate === 0 && preys.length < maxPreyCapacity) {
+                if (preys.length > 0) {
+                    let parent = preys[Math.floor(Math.random() * preys.length)];
+                    preys.push(new Agent(parent.x + (Math.random() * 20 - 10), parent.y + (Math.random() * 20 - 10), false));
+                } else {
+                    preys.push(new Agent(Math.random() * simWidth, Math.random() * simHeight, false));
+                }
+            }
+
+            if (frameCount % 10 === 0) {
+                historyData.push({ prey: preys.length, pred: predators.length });
+                if (historyData.length > maxHistory) historyData.shift();
+            }
+        }
+
+        function drawSimulation() {
+            simCtx.fillStyle = useEmojis ? '#f0fdf4' : 'rgba(240, 253, 244, 0.4)'; 
+            simCtx.fillRect(0, 0, simWidth, simHeight);
+            preys.forEach(p => p.draw(simCtx));
+            predators.forEach(p => p.draw(simCtx));
+        }
+
+        function drawGraph() {
+            graphCtx.clearRect(0, 0, graphWidth, graphHeight);
+            if (historyData.length === 0) return;
+
+            let maxVal = 10; 
+            historyData.forEach(d => { maxVal = Math.max(maxVal, d.prey, d.pred); });
+            const scaleX = graphWidth / maxHistory;
+            const scaleY = (graphHeight - 10) / maxVal; 
+
+            const drawLine = (key, lineColor, fillColor) => {
+                graphCtx.beginPath(); graphCtx.strokeStyle = lineColor; graphCtx.lineWidth = 2.5; graphCtx.lineJoin = 'round';
+                for (let i = 0; i < historyData.length; i++) {
+                    const x = i * scaleX, y = graphHeight - (historyData[i][key] * scaleY);
+                    if (i === 0) graphCtx.moveTo(x, y); else graphCtx.lineTo(x, y);
+                }
+                graphCtx.stroke();
+                if (historyData.length > 0) {
+                    graphCtx.lineTo((historyData.length - 1) * scaleX, graphHeight);
+                    graphCtx.lineTo(0, graphHeight);
+                    graphCtx.fillStyle = fillColor; graphCtx.fill();
+                }
+            };
+
+            graphCtx.strokeStyle = '#f1f5f9'; graphCtx.lineWidth = 1; graphCtx.beginPath();
+            graphCtx.moveTo(0, graphHeight / 2); graphCtx.lineTo(graphWidth, graphHeight / 2); graphCtx.stroke();
+
+            drawLine('prey', '#22c55e', 'rgba(34, 197, 94, 0.15)'); 
+            drawLine('pred', '#ef4444', 'rgba(239, 68, 68, 0.15)'); 
+        }
+
+        function updateStatus() {
+            if (frameCount % 30 !== 0) return; 
+            const maxPreyCapacity = parseInt(foodSlider.value) * 4;
+            if (predators.length === 0 && preys.length > 0) {
+                ecoStatus.innerText = "⚠️ Raubtiere ausgestorben!";
+                ecoStatus.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-red-100 text-red-700 shadow-sm transition-colors";
+            } else if (preys.length === 0) {
+                ecoStatus.innerText = "☠️ Beute ausgestorben!";
+                ecoStatus.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-white shadow-sm transition-colors";
+            } else if (preys.length > maxPreyCapacity * 0.9) {
+                ecoStatus.innerText = "🌿 Überweidung droht!";
+                ecoStatus.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 shadow-sm transition-colors";
+            } else if (predators.length > preys.length * 0.8) {
+                ecoStatus.innerText = "📉 Populationskollaps steht bevor";
+                ecoStatus.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-100 text-orange-700 shadow-sm transition-colors";
+            } else {
+                ecoStatus.innerText = "⚖️ System im Gleichgewicht";
+                ecoStatus.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700 shadow-sm transition-colors";
+            }
+        }
+
+        function gameLoop() {
+            if (isRunning) {
+                updateLogic(); updateStatus(); drawSimulation(); drawGraph();
+                frameCount++;
+                livePrey.innerText = preys.length; livePreds.innerText = predators.length;
+            }
+            animationId = requestAnimationFrame(gameLoop);
+        }
+
+        function syncPredators(target) {
+            predatorDisplay.innerText = target;
+            if (target > predators.length) {
+                for(let i=0; i < target - predators.length; i++) predators.push(new Agent(Math.random() * simWidth, Math.random() * simHeight, true));
+            } else if (target < predators.length) {
+                predators.splice(0, predators.length - target);
+            }
+        }
+
+        predatorSlider.addEventListener('input', (e) => { syncPredators(e.target.value); miniPredatorSlider.value = e.target.value; });
+        miniPredatorSlider.addEventListener('input', (e) => { syncPredators(e.target.value); predatorSlider.value = e.target.value; });
+
+        foodSlider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value); miniFoodSlider.value = val;
+            if(val < 30) foodDisplay.innerText = "Wenig"; else if (val > 80) foodDisplay.innerText = "Sehr viel"; else foodDisplay.innerText = "Mittel";
+        });
+        miniFoodSlider.addEventListener('input', (e) => { foodSlider.value = e.target.value; foodSlider.dispatchEvent(new Event('input')); });
+
+        appetiteSlider.addEventListener('input', (e) => { appetiteDisplay.innerText = e.target.value; });
+
+        viewToggleBtn.addEventListener('click', () => {
+            useEmojis = !useEmojis;
+            if (useEmojis) {
+                viewToggleBtn.classList.replace('bg-slate-300', 'bg-blue-500'); viewToggleKnob.classList.add('translate-x-5');
+                viewSimpleLabel.classList.remove('font-bold'); viewEmojiLabel.classList.add('font-bold');
+            } else {
+                viewToggleBtn.classList.replace('bg-blue-500', 'bg-slate-300'); viewToggleKnob.classList.remove('translate-x-5');
+                viewEmojiLabel.classList.remove('font-bold'); viewSimpleLabel.classList.add('font-bold');
+            }
+        });
+
+        toolPrey.addEventListener('click', () => {
+            activeTool = 'prey';
+            toolPrey.classList.add('bg-white', 'shadow-sm', 'opacity-100'); toolPrey.classList.remove('grayscale', 'opacity-50');
+            toolPred.classList.remove('bg-white', 'shadow-sm', 'opacity-100'); toolPred.classList.add('grayscale', 'opacity-50');
+        });
+
+        toolPred.addEventListener('click', () => {
+            activeTool = 'pred';
+            toolPred.classList.add('bg-white', 'shadow-sm', 'opacity-100'); toolPred.classList.remove('grayscale', 'opacity-50');
+            toolPrey.classList.remove('bg-white', 'shadow-sm', 'opacity-100'); toolPrey.classList.add('grayscale', 'opacity-50');
+        });
+
+        simCanvas.addEventListener('mousedown', (e) => {
+            const rect = simCanvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (simCanvas.width / rect.width);
+            const y = (e.clientY - rect.top) * (simCanvas.height / rect.height);
+            
+            if (activeTool === 'prey') preys.push(new Agent(x, y, false));
+            else {
+                predators.push(new Agent(x, y, true));
+                if (parseInt(predatorSlider.value) < predators.length) {
+                    predatorSlider.value = predators.length; miniPredatorSlider.value = predators.length; predatorDisplay.innerText = predators.length;
+                }
+            }
+            drawSimulation();
+            simCtx.beginPath(); simCtx.arc(x, y, 12, 0, Math.PI * 2);
+            simCtx.strokeStyle = activeTool === 'prey' ? '#22c55e' : '#ef4444'; simCtx.lineWidth = 2; simCtx.stroke(); simCtx.closePath();
+        });
+
+        toggleBtn.addEventListener('click', () => {
+            isRunning = !isRunning;
+            if (isRunning) {
+                toggleBtn.innerText = "Pausieren"; toggleBtn.classList.replace('bg-green-600', 'bg-slate-800'); toggleBtn.classList.replace('hover:bg-green-700', 'hover:bg-slate-700');
+            } else {
+                toggleBtn.innerText = "Fortsetzen"; toggleBtn.classList.replace('bg-slate-800', 'bg-green-600'); toggleBtn.classList.replace('hover:bg-slate-700', 'hover:bg-green-700');
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            predatorSlider.value = 5; predatorDisplay.innerText = 5;
+            foodSlider.value = 50; foodDisplay.innerText = "Mittel";
+            appetiteSlider.value = 3; appetiteDisplay.innerText = 3;
+            initSimulation();
+        });
+
+        window.onload = () => { resizeCanvases(); initSimulation(); gameLoop(); };
+    </script>
+</body>
+</html>
