@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktives Photosynthese-Labor & Quiz</title>
+    <!-- Tailwind CSS für modernes, responsives UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter für hervorragende Lesbarkeit -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti für das finale Erfolgserlebnis -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #070f1e 0%, #0f172a 100%);
+            color: #f8fafc;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-green {
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.2);
+        }
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+        }
+        .glow-gold {
+            box-shadow: 0 0 25px rgba(234, 179, 8, 0.3);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(74, 222, 128, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(74, 222, 128, 0.5);
+        }
+        /* Shake Animation für Fehler */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        .shake-element {
+            animation: shake 0.4s ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+
+    <!-- Nav / Header -->
+    <header class="w-full max-w-6xl mx-auto px-4 pt-6 pb-2 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="bg-emerald-500/10 p-2.5 rounded-2xl border border-emerald-500/30 glow-green">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-black bg-gradient-to-r from-emerald-400 to-sky-400 bg-clip-text text-transparent">PHOTOSYNTHESE PRO</h1>
+                <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Interaktives NMG-Labor • Level-Up Edition</p>
+            </div>
+        </div>
+        
+        <!-- Globaler Fortschritt über alle Aufgaben hinweg -->
+        <div class="flex items-center gap-4 bg-slate-800/80 px-4 py-2.5 rounded-2xl border border-slate-700 w-full md:w-auto">
+            <div class="text-right flex-1 md:flex-initial">
+                <div class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Gesamter Labor-Fortschritt</div>
+                <div class="font-bold text-emerald-400 text-sm" id="global-progress-text">0 / 15 Aufgaben gelöst</div>
+            </div>
+            <div class="w-32 bg-slate-700 h-3 rounded-full overflow-hidden relative">
+                <div id="global-progress-bar" class="bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400 h-full transition-all duration-500 w-0"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-6xl mx-auto px-4 mt-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Linke Seite: Labor-Zentrale & Drag-Karten (Stufe 1) -->
+        <section class="lg:col-span-4 flex flex-col gap-5">
+            <div class="glass-panel p-5 rounded-3xl border-emerald-500/20">
+                <h2 class="text-lg font-bold text-slate-200 mb-1 flex items-center gap-2">
+                    <span class="bg-emerald-500/20 text-emerald-400 w-7 h-7 rounded-lg flex items-center justify-center text-sm font-black">1</span>
+                    <span>Die Labor-Bausteine</span>
+                </h2>
+                <p class="text-xs text-slate-400 mb-4">
+                    Klicke einen Baustein an und wähle danach das passende kreisförmige Ziel im Diagramm rechts, oder ziehe die Karte direkt dorthin.
+                </p>
+
+                <!-- Pool von Molekülen / Stoffen -->
+                <div id="card-pool" class="flex flex-col gap-2.5">
+                    <!-- Edukte (Ausgangsstoffe) -->
+                    <div class="text-xs font-semibold text-sky-400 tracking-wider uppercase mt-1 mb-1">Eingangsstoffe (Edukte)</div>
+                    
+                    <div class="item-card bg-slate-800/60 hover:bg-slate-800 border-2 border-dashed border-sky-500/30 hover:border-sky-400/80 p-3 rounded-2xl cursor-grab active:cursor-grabbing transition-all flex items-center justify-between"
+                         draggable="true" data-id="water" data-type="edukt">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">💧</span>
+                            <div>
+                                <h3 class="font-bold text-sm text-slate-200">Wasser</h3>
+                                <p class="text-[10px] text-slate-400">Formel: H₂O • Aus dem Boden</p>
+                            </div>
+                        </div>
+                        <span class="bg-sky-500/10 text-sky-300 text-[10px] px-2 py-1 rounded-md font-bold uppercase">Edukt</span>
+                    </div>
+
+                    <div class="item-card bg-slate-800/60 hover:bg-slate-800 border-2 border-dashed border-sky-500/30 hover:border-sky-400/80 p-3 rounded-2xl cursor-grab active:cursor-grabbing transition-all flex items-center justify-between"
+                         draggable="true" data-id="co2" data-type="edukt">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">💨</span>
+                            <div>
+                                <h3 class="font-bold text-sm text-slate-200">Kohlenstoffdioxid</h3>
+                                <p class="text-[10px] text-slate-400">Formel: CO₂ • Aus der Luft</p>
+                            </div>
+                        </div>
+                        <span class="bg-sky-500/10 text-sky-300 text-[10px] px-2 py-1 rounded-md font-bold uppercase">Edukt</span>
+                    </div>
+
+                    <div class="item-card bg-slate-800/60 hover:bg-slate-800 border-2 border-dashed border-sky-500/30 hover:border-sky-400/80 p-3 rounded-2xl cursor-grab active:cursor-grabbing transition-all flex items-center justify-between"
+                         draggable="true" data-id="light" data-type="edukt">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">☀️</span>
+                            <div>
+                                <h3 class="font-bold text-sm text-slate-200">Lichtenergie</h3>
+                                <p class="text-[10px] text-slate-400">Sonne • Motor der Reaktion</p>
+                            </div>
+                        </div>
+                        <span class="bg-amber-500/10 text-amber-300 text-[10px] px-2 py-1 rounded-md font-bold uppercase">Energie</span>
+                    </div>
+
+                    <!-- Produkte (Ergebnisse) -->
+                    <div class="text-xs font-semibold text-emerald-400 tracking-wider uppercase mt-3 mb-1">Entstehende Stoffe (Produkte)</div>
+
+                    <div class="item-card bg-slate-800/60 hover:bg-slate-800 border-2 border-dashed border-emerald-500/30 hover:border-emerald-400/80 p-3 rounded-2xl cursor-grab active:cursor-grabbing transition-all flex items-center justify-between"
+                         draggable="true" data-id="oxygen" data-type="produkt">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🍃</span>
+                            <div>
+                                <h3 class="font-bold text-sm text-slate-200">Sauerstoff</h3>
+                                <p class="text-[10px] text-slate-400">Formel: O₂ • Wird abgegeben</p>
+                            </div>
+                        </div>
+                        <span class="bg-emerald-500/10 text-emerald-300 text-[10px] px-2 py-1 rounded-md font-bold uppercase">Produkt</span>
+                    </div>
+
+                    <div class="item-card bg-slate-800/60 hover:bg-slate-800 border-2 border-dashed border-emerald-500/30 hover:border-emerald-400/80 p-3 rounded-2xl cursor-grab active:cursor-grabbing transition-all flex items-center justify-between"
+                         draggable="true" data-id="glucose" data-type="produkt">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🍇</span>
+                            <div>
+                                <h3 class="font-bold text-sm text-slate-200">Glucose</h3>
+                                <p class="text-[10px] text-slate-400">Traubenzucker • Power für die Pflanze</p>
+                            </div>
+                        </div>
+                        <span class="bg-emerald-500/10 text-emerald-300 text-[10px] px-2 py-1 rounded-md font-bold uppercase">Produkt</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Didaktische Notizen -->
+            <div class="bg-slate-800/40 border border-slate-700/60 p-4 rounded-3xl text-xs text-slate-300 leading-relaxed">
+                <span class="font-bold text-emerald-400">Formel-Spickzettel für 7. Klasse:</span>
+                <div class="mt-2 font-mono bg-slate-900/60 p-2 rounded-lg border border-slate-700 text-center text-[11px] text-slate-200">
+                    6 H₂O + 6 CO₂ + Licht ➔ C₆H₁₂O₆ + 6 O₂
+                </div>
+            </div>
+        </section>
+
+        <!-- Rechte Seite: Visualisierung & Interaktives Diagramm (8 cols) -->
+        <section class="lg:col-span-8 flex flex-col gap-6">
+            
+            <!-- Das interaktive Grafik-Panel -->
+            <div class="glass-panel p-6 rounded-3xl flex flex-col relative overflow-hidden min-h-[480px]">
+                <div class="absolute top-4 right-4 z-10">
+                    <span class="bg-slate-900/80 text-[10px] text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-full font-bold uppercase tracking-wider">
+                        Grafik-Station 1
+                    </span>
+                </div>
+
+                <h2 class="text-lg font-bold text-slate-200 mb-4 flex items-center gap-2">
+                    <span class="bg-emerald-500/20 text-emerald-400 w-7 h-7 rounded-lg flex items-center justify-center text-sm font-black">2</span>
+                    <span>Modell-Zuordnung</span>
+                </h2>
+
+                <!-- Hauptgrafik-Arbeitsplatz -->
+                <div class="relative flex-1 bg-slate-950/40 rounded-2xl border border-slate-800/60 flex items-center justify-center p-4 min-h-[350px]">
+                    
+                    <!-- SVG Pflanze & Natur -->
+                    <svg class="w-full max-w-md h-auto" viewBox="0 0 400 350" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Die Sonne -->
+                        <circle cx="50" cy="50" r="25" fill="#f59e0b" fill-opacity="0.15" />
+                        <circle cx="50" cy="50" r="15" fill="#fbbf24" class="animate-pulse" />
+                        <!-- Sonnenstrahlen -->
+                        <path d="M50 15V5M50 95v-10M15 50h10M95 50H85M25 25l8 8M75 75l8 8M25 75l8-8M75 25l-8 8" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" />
+
+                        <!-- Der Boden -->
+                        <path d="M20 280 H380 C390 280 390 310 380 310 H20 C10 310 10 280 20 280 Z" fill="#451a03" fill-opacity="0.4" />
+                        <line x1="10" y1="280" x2="390" y2="280" stroke="#78350f" stroke-width="3" />
+
+                        <!-- Wurzeln im Boden -->
+                        <path d="M200 240 Q180 260 170 290 M200 245 Q210 270 230 295 M200 240 L195 305" stroke="#78350f" stroke-width="2.5" stroke-linecap="round" />
+
+                        <!-- Stängel -->
+                        <path d="M200 280 L200 130" stroke="#10b981" stroke-width="12" stroke-linecap="round" />
+                        <path d="M200 280 L200 130" stroke="#047857" stroke-width="4" stroke-linecap="round" />
+
+                        <!-- Hauptblatt Links -->
+                        <path d="M200 180 C130 180 90 130 90 100 C130 90 180 120 200 160 Z" fill="#10b981" />
+                        <path d="M200 180 C130 180 90 130 90 100 C130 90 180 120 200 160 Z" fill="#059669" fill-opacity="0.4" />
+                        <!-- Blattadern links -->
+                        <path d="M185 150 Q150 140 120 120" stroke="#047857" stroke-width="2" stroke-linecap="round" />
+                        <path d="M160 160 Q130 165 105 155" stroke="#047857" stroke-width="1.5" stroke-linecap="round" />
+
+                        <!-- Hauptblatt Rechts -->
+                        <path d="M200 150 C270 140 310 90 310 60 C270 50 220 80 200 120 Z" fill="#059669" />
+                        <path d="M200 150 C270 140 310 90 310 60 C270 50 220 80 200 120 Z" fill="#10b981" fill-opacity="0.3" />
+                        <!-- Blattadern rechts -->
+                        <path d="M215 115 Q250 100 280 80" stroke="#047857" stroke-width="2" stroke-linecap="round" />
+                        <path d="M240 130 Q275 125 295 110" stroke="#047857" stroke-width="1.5" stroke-linecap="round" />
+
+                        <!-- Transportpfeile visualisiert -->
+                        <!-- Wasser-Aufnahme (Blau, gestrichelt nach oben) -->
+                        <path d="M195 290 L195 190" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round" class="animate-[dash_2s_linear_infinite]" />
+                        
+                        <!-- Spaltöffnung / CO2 Eingang (Grauer Pfeil ins linke Blatt) -->
+                        <path d="M50 140 Q80 135 110 130" stroke="#a5f3fc" stroke-width="2" stroke-dasharray="5 3" stroke-linecap="round" />
+                        <polygon points="110,130 102,125 105,135" fill="#a5f3fc" />
+
+                        <!-- Sauerstoff Ausgang (Grüner Pfeil aus dem rechten Blatt) -->
+                        <path d="M290 80 Q320 65 350 50" stroke="#4ade80" stroke-width="2" stroke-dasharray="5 3" stroke-linecap="round" />
+                        <polygon points="350,50 340,49 346,56" fill="#4ade80" />
+                    </svg>
+
+                    <!-- Absolute Hotspots (Interaktive Ablage-Zonen auf dem SVG) -->
+                    <!-- 1. LICHTENERGIE (Oben Links bei der Sonne) -->
+                    <div class="absolute top-[8%] left-[8%] md:top-[12%] md:left-[15%] w-24 h-24 flex flex-col items-center justify-center">
+                        <div class="drop-target w-16 h-16 rounded-full border-2 border-dashed border-amber-500/50 bg-amber-500/5 hover:bg-amber-500/10 flex flex-col items-center justify-center transition-all cursor-pointer"
+                             data-accept="light" id="target-light">
+                            <span class="text-xs font-bold text-amber-400">SONNE</span>
+                        </div>
+                    </div>
+
+                    <!-- 2. WASSER (Unten bei den Wurzeln) -->
+                    <div class="absolute bottom-[10%] left-[38%] md:left-[41%] w-24 h-24 flex flex-col items-center justify-center">
+                        <div class="drop-target w-16 h-16 rounded-full border-2 border-dashed border-sky-500/50 bg-sky-500/5 hover:bg-sky-500/10 flex flex-col items-center justify-center transition-all cursor-pointer"
+                             data-accept="water" id="target-water">
+                            <span class="text-xs font-bold text-sky-400">WURZELN</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. CO2 (Links beim Blatteingang) -->
+                    <div class="absolute top-[38%] left-[10%] md:left-[18%] w-24 h-24 flex flex-col items-center justify-center">
+                        <div class="drop-target w-16 h-16 rounded-full border-2 border-dashed border-cyan-500/50 bg-cyan-500/5 hover:bg-cyan-500/10 flex flex-col items-center justify-center transition-all cursor-pointer"
+                             data-accept="co2" id="target-co2">
+                            <span class="text-[10px] font-bold text-cyan-400 text-center leading-tight">BLATT-<br>EINGANG</span>
+                        </div>
+                    </div>
+
+                    <!-- 4. OXYGEN (Rechts beim Blattausgang) -->
+                    <div class="absolute top-[18%] right-[8%] md:right-[15%] w-24 h-24 flex flex-col items-center justify-center">
+                        <div class="drop-target w-16 h-16 rounded-full border-2 border-dashed border-emerald-500/50 bg-emerald-500/5 hover:bg-emerald-500/10 flex flex-col items-center justify-center transition-all cursor-pointer"
+                             data-accept="oxygen" id="target-oxygen">
+                            <span class="text-[10px] font-bold text-emerald-400 text-center leading-tight">BLATT-<br>AUSGANG</span>
+                        </div>
+                    </div>
+
+                    <!-- 5. GLUCOSE (Mitte im Blatt/Stängel als Speicher) -->
+                    <div class="absolute top-[48%] right-[25%] md:right-[32%] w-24 h-24 flex flex-col items-center justify-center">
+                        <div class="drop-target w-16 h-16 rounded-full border-2 border-dashed border-teal-500/50 bg-teal-500/5 hover:bg-teal-500/10 flex flex-col items-center justify-center transition-all cursor-pointer"
+                             data-accept="glucose" id="target-glucose">
+                            <span class="text-xs font-bold text-teal-400">SPEICHER</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info-Bar & Feedback -->
+                <div class="mt-4 p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-between">
+                    <div id="status-message" class="text-xs md:text-sm font-medium text-slate-300">
+                        Ordne alle 5 Elemente zu, um das Kraftwerk der Pflanze zu aktivieren!
+                    </div>
+                    <button onclick="resetLab()" class="text-xs text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                        Zurücksetzen
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Zweiter Zeilenblock: Chemie-Mikroskop -->
+    <section class="w-full max-w-6xl mx-auto px-4 mt-6">
+        <div class="glass-panel p-6 rounded-3xl">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-slate-200 flex items-center gap-2">
+                    <span class="bg-emerald-500/20 text-emerald-400 w-7 h-7 rounded-lg flex items-center justify-center text-sm font-black">3</span>
+                    <span>Das Chemie-Mikroskop: Wie entsteht Sauerstoff?</span>
+                </h2>
+                <span class="text-xs text-sky-400 font-bold bg-sky-500/10 px-2.5 py-1 rounded-full border border-sky-500/20">Schrittweise Visualisierung</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                
+                <!-- Animations-Screen -->
+                <div class="md:col-span-7 bg-slate-950/80 p-5 rounded-2xl border border-slate-800 min-h-[240px] flex flex-col justify-between relative overflow-hidden">
+                    
+                    <!-- Mikroskop-Schnittkreis (Simulierter Blick durchs Okular) -->
+                    <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+                        <div class="w-48 h-48 rounded-full border-[8px] border-slate-700"></div>
+                    </div>
+
+                    <!-- Molekül-Vorschaufläche -->
+                    <div id="chem-canvas" class="flex-1 flex items-center justify-center gap-6 relative min-h-[160px]">
+                        <!-- Standard-Ansicht -->
+                        <div id="chem-step-0" class="text-center p-4">
+                            <p class="text-sm text-slate-400">Klicke rechts auf die Mikroskop-Schritte, um die atomare Verwandlung zu untersuchen!</p>
+                        </div>
+
+                        <!-- Schritt 1: Wasser & CO2 kommen an -->
+                        <div id="chem-step-1" class="hidden flex-col items-center gap-3">
+                            <div class="flex gap-6">
+                                <!-- H2O -->
+                                <div class="flex flex-col items-center">
+                                    <div class="flex items-center gap-1">
+                                        <span class="w-6 h-6 rounded-full bg-sky-500 text-[10px] font-bold flex items-center justify-center text-white">H</span>
+                                        <span class="w-8 h-8 rounded-full bg-red-500 text-xs font-bold flex items-center justify-center text-white">O</span>
+                                        <span class="w-6 h-6 rounded-full bg-sky-500 text-[10px] font-bold flex items-center justify-center text-white">H</span>
+                                    </div>
+                                    <span class="text-[10px] text-sky-400 mt-1.5 font-bold">Wasser (H₂O)</span>
+                                </div>
+                                <!-- CO2 -->
+                                <div class="flex flex-col items-center">
+                                    <div class="flex items-center gap-1">
+                                        <span class="w-6 h-6 rounded-full bg-red-500 text-[10px] font-bold flex items-center justify-center text-white">O</span>
+                                        <span class="w-7 h-7 rounded-full bg-neutral-600 text-xs font-bold flex items-center justify-center text-white">C</span>
+                                        <span class="w-6 h-6 rounded-full bg-red-500 text-[10px] font-bold flex items-center justify-center text-white">O</span>
+                                    </div>
+                                    <span class="text-[10px] text-cyan-400 mt-1.5 font-bold">Kohlenstoffdioxid (CO₂)</span>
+                                </div>
+                            </div>
+                            <p class="text-xs text-center text-slate-300 max-w-sm">
+                                Wasser steigt aus den Wurzeln herauf. Das CO₂ dringt durch die Spaltöffnungen des Blattes in den Chloroplasten ein.
+                            </p>
+                        </div>
+
+                        <!-- Schritt 2: Lichtenergie spaltet Wasser -->
+                        <div id="chem-step-2" class="hidden flex-col items-center gap-3 w-full">
+                            <div class="relative w-full flex justify-center py-2">
+                                <div class="absolute inset-0 bg-yellow-400/5 blur-md rounded-full animate-pulse"></div>
+                                <div class="flex items-center gap-4 z-10">
+                                    <!-- Gespaltenes Wasser -->
+                                    <div class="flex flex-col items-center border border-yellow-500/30 p-2.5 rounded-xl bg-yellow-500/5">
+                                        <div class="flex gap-2">
+                                            <span class="w-6 h-6 rounded-full bg-sky-400 text-xs font-bold flex items-center justify-center text-slate-900 animate-bounce">H</span>
+                                            <span class="w-6 h-6 rounded-full bg-sky-400 text-xs font-bold flex items-center justify-center text-slate-900 animate-bounce">H</span>
+                                        </div>
+                                        <span class="text-[9px] text-slate-400 mt-1">Wasserstoff (H) bleibt im Werk</span>
+                                    </div>
+                                    <span class="text-yellow-400 text-2xl font-bold animate-pulse">⚡</span>
+                                    <!-- Abgespaltener Sauerstoff -->
+                                    <div class="flex flex-col items-center border border-emerald-500/30 p-2.5 rounded-xl bg-emerald-500/5">
+                                        <div class="flex gap-1 items-center">
+                                            <span class="w-7 h-7 rounded-full bg-red-500 text-xs font-bold flex items-center justify-center text-white">O</span>
+                                            <span class="w-7 h-7 rounded-full bg-red-500 text-xs font-bold flex items-center justify-center text-white">O</span>
+                                        </div>
+                                        <span class="text-[9px] text-emerald-400 mt-1">Sauerstoff (O₂) zieht weiter!</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-center text-slate-300 max-w-sm">
+                                Die energiereichen Lichtstrahlen knacken das stabile Wassermolekül. Der Sauerstoff ist für die Pflanze in diesem Moment nur ein Abfallprodukt und strömt aus!
+                            </p>
+                        </div>
+
+                        <!-- Schritt 3: Glucose-Bau -->
+                        <div id="chem-step-3" class="hidden flex-col items-center gap-3">
+                            <div class="flex flex-col items-center bg-teal-500/5 border border-teal-500/20 p-3 rounded-2xl">
+                                <div class="grid grid-cols-4 gap-1">
+                                    <span class="w-5 h-5 rounded-full bg-neutral-600 text-[9px] font-bold flex items-center justify-center text-white">C</span>
+                                    <span class="w-5 h-5 rounded-full bg-sky-500 text-[9px] font-bold flex items-center justify-center text-white">H</span>
+                                    <span class="w-5 h-5 rounded-full bg-red-500 text-[9px] font-bold flex items-center justify-center text-white">O</span>
+                                    <span class="w-5 h-5 rounded-full bg-neutral-600 text-[9px] font-bold flex items-center justify-center text-white">C</span>
+                                    <span class="w-5 h-5 rounded-full bg-sky-500 text-[9px] font-bold flex items-center justify-center text-white">H</span>
+                                    <span class="w-5 h-5 rounded-full bg-red-500 text-[9px] font-bold flex items-center justify-center text-white">O</span>
+                                    <span class="w-5 h-5 rounded-full bg-sky-500 text-[9px] font-bold flex items-center justify-center text-white">H</span>
+                                    <span class="w-5 h-5 rounded-full bg-neutral-600 text-[9px] font-bold flex items-center justify-center text-white">C</span>
+                                </div>
+                                <span class="text-[10px] text-teal-400 mt-2 font-black tracking-wider">Glucose-Baustein (Traubenzucker) • C₆H₁₂O₆</span>
+                            </div>
+                            <p class="text-xs text-center text-slate-300 max-w-sm">
+                                Aus dem restlichen Wasserstoff (H) und dem Kohlenstoff aus dem CO₂ synthetisiert die Pflanze energiereiche Glucose.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Status-Bar Mikroskop -->
+                    <div class="text-[10px] uppercase tracking-wider text-slate-500 flex justify-between border-t border-slate-800/80 pt-2.5 mt-2 font-bold">
+                        <span>Fokus: Chloroplasten-Inhalt</span>
+                        <span id="step-indicator" class="text-slate-400">Modus: Standby</span>
+                    </div>
+                </div>
+
+                <!-- Schritt-Regler -->
+                <div class="md:col-span-5 flex flex-col gap-2.5">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Mikroskop-Steuerung:</h3>
+                    
+                    <button onclick="setChemStep(1)" class="chem-btn w-full text-left p-3 rounded-xl bg-slate-800/40 border border-slate-700/80 hover:border-sky-500/50 transition flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full bg-sky-500/20 text-sky-400 text-xs font-bold flex items-center justify-center">1</span>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-200">Rohstoffe strömen ein</h4>
+                            <p class="text-[10px] text-slate-400">Sammlung von H₂O und CO₂</p>
+                        </div>
+                    </button>
+
+                    <button onclick="setChemStep(2)" class="chem-btn w-full text-left p-3 rounded-xl bg-slate-800/40 border border-slate-700/80 hover:border-yellow-500/50 transition flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-bold flex items-center justify-center">2</span>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-200">Wasserspaltung durch Licht</h4>
+                            <p class="text-[10px] text-slate-400">Sonnenlicht spaltet Moleküle</p>
+                        </div>
+                    </button>
+
+                    <button onclick="setChemStep(3)" class="chem-btn w-full text-left p-3 rounded-xl bg-slate-800/40 border border-slate-700/80 hover:border-teal-500/50 transition flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-xs font-bold flex items-center justify-center">3</span>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-200">Synthese von Glucose</h4>
+                            <p class="text-[10px] text-slate-400">Energie-Baustein wird generiert</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dritter Zeilenblock: Das Grosse Sortier-Duell -->
+    <section class="w-full max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 md:grid-cols-12 gap-6">
+        
+        <!-- Sortier-Karten-Spalte -->
+        <div class="md:col-span-4 glass-panel p-6 rounded-3xl flex flex-col justify-between">
+            <div>
+                <h2 class="text-lg font-bold text-slate-200 mb-2 flex items-center gap-2">
+                    <span class="bg-emerald-500/20 text-emerald-400 w-7 h-7 rounded-lg flex items-center justify-center text-sm font-black">4</span>
+                    <span>Sortier-Duell</span>
+                </h2>
+                <p class="text-xs text-slate-400 mb-4">
+                    Ziehe die Begriffe in die korrekte Zone oder klicke eine Karte an und wähle danach die passende Box aus.
+                </p>
+
+                <!-- Pool für das Sortier-Quiz -->
+                <div id="quiz-pool" class="flex flex-wrap gap-2">
+                    <!-- Die Quizkarten -->
+                    <div class="quiz-card bg-slate-800 hover:bg-slate-700 border border-slate-600/50 px-3.5 py-2.5 rounded-xl cursor-grab active:cursor-grabbing text-xs font-semibold text-slate-200 flex items-center gap-2 transition"
+                         draggable="true" data-id="q-co2" data-role="edukt">
+                        <span>💨</span> Kohlenstoffdioxid
+                    </div>
+                    <div class="quiz-card bg-slate-800 hover:bg-slate-700 border border-slate-600/50 px-3.5 py-2.5 rounded-xl cursor-grab active:cursor-grabbing text-xs font-semibold text-slate-200 flex items-center gap-2 transition"
+                         draggable="true" data-id="q-water" data-role="edukt">
+                        <span>💧</span> Wasser
+                    </div>
+                    <div class="quiz-card bg-slate-800 hover:bg-slate-700 border border-slate-600/50 px-3.5 py-2.5 rounded-xl cursor-grab active:cursor-grabbing text-xs font-semibold text-slate-200 flex items-center gap-2 transition"
+                         draggable="true" data-id="q-light" data-role="edukt">
+                        <span>☀️</span> Lichtenergie
+                    </div>
+                    <div class="quiz-card bg-slate-800 hover:bg-slate-700 border border-slate-600/50 px-3.5 py-2.5 rounded-xl cursor-grab active:cursor-grabbing text-xs font-semibold text-slate-200 flex items-center gap-2 transition"
+                         draggable="true" data-id="q-oxygen" data-role="produkt">
+                        <span>🍃</span> Sauerstoff
+                    </div>
+                    <div class="quiz-card bg-slate-800 hover:bg-slate-700 border border-slate-600/50 px-3.5 py-2.5 rounded-xl cursor-grab active:cursor-grabbing text-xs font-semibold text-slate-200 flex items-center gap-2 transition"
+                         draggable="true" data-id="q-glucose" data-role="produkt">
+                        <span>🍇</span> Glucose
+                    </div>
+                    <div class="quiz-card bg-slate-800 hover:bg-slate-700 border border-slate-600/50 px-3.5 py-2.5 rounded-xl cursor-grab active:cursor-grabbing text-xs font-semibold text-slate-200 flex items-center gap-2 transition"
+                         draggable="true" data-id="q-starch" data-role="produkt">
+                        <span>🥔</span> Stärke (Speicherstoff)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interaktions-Status für das Sortieren -->
+            <div id="sort-status" class="mt-4 p-3 bg-slate-900/40 rounded-xl border border-slate-800 text-[11px] text-slate-400">
+                Wähle eine Karte aus, um sie fliegend einzuordnen!
+            </div>
+        </div>
+
+        <!-- Sortier-Ziele -->
+        <div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <!-- Box 1: Edukte -->
+            <div id="bucket-edukt" class="quiz-bucket border-2 border-dashed border-sky-500/30 bg-sky-500/5 p-5 rounded-3xl min-h-[180px] flex flex-col gap-3 transition" data-accept="edukt">
+                <div class="flex items-center justify-between border-b border-sky-500/20 pb-2">
+                    <h3 class="text-sm font-black text-sky-400 uppercase tracking-wider flex items-center gap-2">
+                        <span>🧪</span> Edukte (Ausgangsstoffe)
+                    </h3>
+                    <span class="text-[10px] bg-sky-500/20 text-sky-300 font-bold px-2 py-0.5 rounded-md" id="count-edukte">0 / 3</span>
+                </div>
+                <div class="bucket-content flex flex-wrap gap-2 items-start content-start flex-1">
+                    <!-- Platzierte Karten landen hier -->
+                </div>
+            </div>
+
+            <!-- Box 2: Produkte -->
+            <div id="bucket-produkt" class="quiz-bucket border-2 border-dashed border-emerald-500/30 bg-emerald-500/5 p-5 rounded-3xl min-h-[180px] flex flex-col gap-3 transition" data-accept="produkt">
+                <div class="flex items-center justify-between border-b border-emerald-500/20 pb-2">
+                    <h3 class="text-sm font-black text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                        <span>🍯</span> Produkte (Endstoffe)
+                    </h3>
+                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-md" id="count-produkte">0 / 3</span>
+                </div>
+                <div class="bucket-content flex flex-wrap gap-2 items-start content-start flex-1">
+                    <!-- Platzierte Karten landen hier -->
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Vierter Zeilenblock: Die Wissens-Rallye (4 Context-Fragen) -->
+    <section class="w-full max-w-6xl mx-auto px-4 mt-6">
+        <div class="glass-panel p-6 rounded-3xl border-sky-500/20">
+            <h2 class="text-lg font-bold text-slate-200 mb-4 flex items-center gap-2">
+                <span class="bg-sky-500/20 text-sky-400 w-7 h-7 rounded-lg flex items-center justify-center text-sm font-black">5</span>
+                <span>Die Wissens-Rallye: Zeige dein Können</span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Frage 1 -->
+                <div class="question-card bg-slate-900/50 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between" data-qid="1">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] bg-slate-800 text-slate-400 font-bold px-2 py-0.5 rounded-md uppercase">Frage 1</span>
+                            <span class="q-badge text-xs font-bold text-amber-400">Offen</span>
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-200 mb-3">Woher holt sich eine Pflanze das unsichtbare Kohlenstoffdioxid (CO₂)?</h3>
+                        <div class="flex flex-col gap-2">
+                            <button onclick="checkAnswer(1, 'A', this)" class="option-btn text-left text-xs bg-slate-800/60 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-700 transition">
+                                A) Sie saugt es flüssig über die Wurzeln aus der Erde auf.
+                            </button>
+                            <button onclick="checkAnswer(1, 'B', this)" class="option-btn text-left text-xs bg-slate-800/60 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-700 transition">
+                                B) Über winzige Poren (Spaltöffnungen) an der Unterseite ihrer Blätter.
+                            </button>
+                            <button onclick="checkAnswer(1, 'C', this)" class="option-btn text-left text-xs bg-slate-800/60 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-700 transition">
+                                C) Sie stellt das Gas im Stängel selbst her.
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frage 2 -->
+                <div class="question-card bg-slate-900/50 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between" data-qid="2">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] bg-slate-800 text-slate-400 font-bold px-2 py-0.5 rounded-md uppercase">Frage 2</span>
+                            <span class="q-badge text-xs font-bold text-amber-400">Offen</span>
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-200 mb-3">Welcher spezielle Farbstoff fängt in den Blättern die Sonnenenergie ein?</h3>
+                        <div class="flex flex-col gap-2">
+                            <button onclick="checkAnswer(2, 'A', this)" class="option-btn text-left text-xs bg-slate-800/60 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-700 transition">
+                                A) Carotin, das die Blätter im Herbst rot färbt.
+                            </button>
+                            <button onclick="checkAnswer(2, 'B', this)" class="option-btn text-left text-xs bg-slate-800/60 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-700 transition">
+                                B) Hämoglobin, das den Sauerstoff im Blut transportiert.
+                            </button>
+                            <button onclick="checkAnswer(2, 'C', this)" class="option-btn text-left text-xs bg-slate-800/60 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-700 transition">
+                                C) Chlorophyll, das auch für die grüne Farbe verantwortlich ist.
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frage 3 -->
+                <div class="question-card bg-slate-900/50 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between" data-qid="3">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] bg-slate-800 text-slate-400 font-bold px-2 py-0.5 rounded-md uppercase">Frage 3</span>
+                            <span class="q-badge text-xs font-bold text-amber-400">Offen</span>
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-200 mb-3">Warum ist die Photosynthese für uns Menschen & Tiere überlebenswichtig?</h3>
+                        <div class="flex flex-col gap-2">
+                            <button onclick="checkAnswer(3, 'A', this)" class="option-btn text-left text-xs bg-slate-800/60 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-700 transition">
+                                A) Weil Pflanzen dabei Sauerstoff (O₂) herstellen, den wir einatmen müssen.
+                            </button>
+                            <button onclick="checkAnswer(3, 'B', this)" class="option-btn text-left text-xs bg-slate-800/60 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-700 transition">
+                                B) Weil sie giftiges Wasser aus dem Erdboden in reines Quellwasser filtert.
+                            </button>
+                            <button onclick="checkAnswer(3, 'C', this)" class="option-btn text-left text-xs bg-slate-800/60 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-700 transition">
+                                C) Weil dadurch nachts die Temperatur auf der Erde sinkt.
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frage 4 -->
+                <div class="question-card bg-slate-900/50 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between" data-qid="4">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] bg-slate-800 text-slate-400 font-bold px-2 py-0.5 rounded-md uppercase">Frage 4</span>
+                            <span class="q-badge text-xs font-bold text-amber-400">Offen</span>
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-200 mb-3">Was macht die Pflanze mit der hergestellten Glucose (Traubenzucker)?</h3>
+                        <div class="flex flex-col gap-2">
+                            <button onclick="checkAnswer(4, 'A', this)" class="option-btn text-left text-xs bg-slate-800/60 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-700 transition">
+                                A) Sie schwitzt sie komplett über die Blütenblätter wieder aus.
+                            </button>
+                            <button onclick="checkAnswer(4, 'B', this)" class="option-btn text-left text-xs bg-slate-800/60 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-700 transition">
+                                B) Sie lagert sie als Stärke (z. B. in Kartoffeln, Blättern) als Energievorrat ein.
+                            </button>
+                            <button onclick="checkAnswer(4, 'C', this)" class="option-btn text-left text-xs bg-slate-800/60 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-700 transition">
+                                C) Sie verdampft sie im Licht, um sich vor Überhitzung zu schützen.
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Erfolgs-Modale (Wird angezeigt, wenn alles richtig ist) -->
+    <div id="success-modal" class="fixed inset-0 bg-slate-950/95 backdrop-filter backdrop-blur-md z-50 flex items-center justify-center hidden px-4">
+        <div class="glass-panel p-8 rounded-3xl max-w-lg w-full text-center border border-emerald-500/30 glow-gold relative overflow-hidden">
+            <div class="absolute -top-12 -left-12 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-12 -right-12 w-40 h-40 bg-yellow-500/10 rounded-full blur-2xl"></div>
+
+            <span class="text-6xl animate-bounce inline-block">👑</span>
+            <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-yellow-400 to-sky-400 mt-4 uppercase">
+                Photosynthese-Superstar!
+            </h2>
+            <p class="text-sm text-slate-300 mt-3 leading-relaxed">
+                Hervorragend gelöst! Du hast die 5 Grafikelemente richtig zugeordnet, alle 6 chemischen Bausteine korrekt sortiert und die 4 kniffligen Fragen fehlerfrei beantwortet!
+            </p>
+            
+            <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl my-5 text-left">
+                <h4 class="text-xs font-black text-amber-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                    <span>🏆</span> Deine NMG-Leistungsdaten:
+                </h4>
+                <ul class="text-xs text-slate-300 space-y-2">
+                    <li class="flex items-center gap-2">
+                        <span class="text-emerald-400">✔</span> Diagramm-Positionierung: <strong>5 / 5 richtig</strong>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-emerald-400">✔</span> Stoffklassen-Einteilung: <strong>6 / 6 richtig</strong>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-emerald-400">✔</span> Theoriewissen: <strong>4 / 4 richtig</strong>
+                    </li>
+                </ul>
+            </div>
+            
+            <button onclick="resetWholeGame(); closeModal()" class="w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 hover:from-emerald-400 hover:to-sky-400 text-slate-950 font-black py-3.5 px-6 rounded-2xl transition-all shadow-lg transform hover:scale-[1.02]">
+                Labor zurücksetzen & erneut starten
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript für Interaktivität, Logik, Sound und Konfetti -->
+    <script>
+        // --- SOUND SYNTHESE (Web Audio API) ---
+        function playVictorySound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const now = ctx.currentTime;
+                
+                // Arpeggio C-Dur für epischen Triumph
+                const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50]; 
+                
+                notes.forEach((freq, index) => {
+                    setTimeout(() => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                        
+                        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+                        
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        
+                        osc.start();
+                        osc.stop(ctx.currentTime + 1.2);
+                    }, index * 120);
+                });
+            } catch (e) {
+                console.log("Web Audio API wird nicht unterstützt oder blockiert.");
+            }
+        }
+
+        function playSuccessChime() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                osc.frequency.exponentialRampToValueAtTime(783.99, ctx.currentTime + 0.15); // G5
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.3);
+            } catch (e) {}
+        }
+
+        function playFailBuzz() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, ctx.currentTime); 
+                osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.2); 
+                gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.25);
+            } catch (e) {}
+        }
+
+        // --- GLOBALER STATE ---
+        const totalItems = 5;
+        let solvedCount = 0; // Station 1: Diagramm
+        const placedItems = {}; // Speichert gelöste Diagramm-IDs
+
+        // Station 2: Sortier-Duell State
+        const totalQuizCards = 6;
+        let solvedQuizCards = 0;
+        const placedQuizCards = {};
+        let selectedQuizCard = null;
+
+        // Station 3: Quiz-Fragen State
+        const correctAnswers = {
+            1: 'B',
+            2: 'C',
+            3: 'A',
+            4: 'B'
+        };
+        const solvedQuestions = {};
+
+        // --- DOM-ELEMENTE ---
+        const itemCards = document.querySelectorAll('.item-card');
+        const dropTargets = document.querySelectorAll('.drop-target');
+        const statusMessage = document.getElementById('status-message');
+        const successModal = document.getElementById('success-modal');
+
+        const quizCards = document.querySelectorAll('.quiz-card');
+        const quizBuckets = document.querySelectorAll('.quiz-bucket');
+        const sortStatus = document.getElementById('sort-status');
+
+        let selectedItem = null; // Für Click-to-Place Station 1
+
+        // --- INITIALISIERUNG ---
+        window.onload = function () {
+            initDiagramDragAndDrop();
+            initDiagramClickToPlace();
+            initSortGame();
+            updateGlobalProgress();
+        };
+
+        // --- MASTER SCORE BERECHNUNG ---
+        function updateGlobalProgress() {
+            // Total Aufgaben: 5 (Diagramm) + 6 (Sortieren) + 4 (Fragen) = 15 Aufgaben
+            const correctQuestionsCount = Object.keys(solvedQuestions).filter(k => solvedQuestions[k] === true).length;
+            const grandTotalSolved = solvedCount + solvedQuizCards + correctQuestionsCount;
+            
+            const percentage = (grandTotalSolved / 15) * 100;
+            document.getElementById('global-progress-bar').style.width = `${percentage}%`;
+            document.getElementById('global-progress-text').innerText = `${grandTotalSolved} / 15 Aufgaben gelöst`;
+
+            // Überprüfe ob absolut alles gelöst ist!
+            if (grandTotalSolved === 15) {
+                setTimeout(() => {
+                    triggerMajorVictory();
+                }, 800);
+            }
+        }
+
+        // --- STATION 1: DIAGRAMM LOGIK ---
+        function initDiagramDragAndDrop() {
+            itemCards.forEach(card => {
+                card.addEventListener('dragstart', (e) => {
+                    if (placedItems[card.dataset.id]) {
+                        e.preventDefault();
+                        return;
+                    }
+                    card.classList.add('opacity-40');
+                    e.dataTransfer.setData('text/plain', card.dataset.id);
+                });
+
+                card.addEventListener('dragend', () => {
+                    card.classList.remove('opacity-40');
+                });
+            });
+
+            dropTargets.forEach(target => {
+                target.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (!placedItems[target.dataset.accept]) {
+                        target.classList.add('bg-slate-700/50', 'scale-110');
+                    }
+                });
+
+                target.addEventListener('dragleave', () => {
+                    target.classList.remove('bg-slate-700/50', 'scale-110');
+                });
+
+                target.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    target.classList.remove('bg-slate-700/50', 'scale-110');
+                    const itemId = e.dataTransfer.getData('text/plain');
+                    attemptPlacement(itemId, target);
+                });
+            });
+        }
+
+        function initDiagramClickToPlace() {
+            itemCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    if (placedItems[card.dataset.id]) return;
+
+                    itemCards.forEach(c => c.classList.remove('ring-4', 'ring-sky-500/80', 'bg-slate-700'));
+                    
+                    if (selectedItem === card) {
+                        selectedItem = null;
+                        statusMessage.innerText = "Klicke eine Karte und das Diagramm-Ziel an.";
+                    } else {
+                        selectedItem = card;
+                        card.classList.add('ring-4', 'ring-sky-500/80', 'bg-slate-700');
+                        statusMessage.innerHTML = `Wähle das passende <span class="text-sky-400 font-bold">Ziel im Diagramm</span> für <span class="underline font-bold">${card.querySelector('h3').innerText}</span>!`;
+                    }
+                });
+            });
+
+            dropTargets.forEach(target => {
+                target.addEventListener('click', () => {
+                    if (selectedItem) {
+                        const itemId = selectedItem.dataset.id;
+                        attemptPlacement(itemId, target);
+                    }
+                });
+            });
+        }
+
+        function attemptPlacement(itemId, target) {
+            const expectedId = target.dataset.accept;
+            const card = document.querySelector(`.item-card[data-id="${itemId}"]`);
+
+            if (!card) return;
+
+            if (itemId === expectedId) {
+                placedItems[itemId] = true;
+                solvedCount++;
+                playSuccessChime();
+                
+                const emoji = card.querySelector('.text-2xl').innerText;
+                const name = card.querySelector('h3').innerText;
+                const isEdukt = card.dataset.type === 'edukt';
+                const borderColor = isEdukt ? 'border-sky-500' : 'border-emerald-500';
+                const bgColor = isEdukt ? 'bg-sky-500/20' : 'bg-emerald-500/20';
+                const textColor = isEdukt ? 'text-sky-300' : 'text-emerald-300';
+
+                target.innerHTML = `
+                    <div class="flex flex-col items-center justify-center animate-ping absolute w-full h-full rounded-full ${bgColor} opacity-20 pointer-events-none"></div>
+                    <span class="text-2xl z-10">${emoji}</span>
+                    <span class="text-[9px] font-bold ${textColor} text-center leading-tight mt-1 z-10">${name}</span>
+                `;
+                target.className = `drop-target w-20 h-20 rounded-full border-2 ${borderColor} ${bgColor} flex flex-col items-center justify-center transition-all shadow-lg`;
+
+                card.classList.add('opacity-30', 'pointer-events-none');
+                card.classList.remove('ring-4', 'ring-sky-500/80', 'bg-slate-700');
+                
+                statusMessage.innerHTML = `🎉 Korrekt! <span class="font-bold text-emerald-400">${name}</span> passt genau an diese Position.`;
+                statusMessage.className = "text-sm font-medium text-emerald-400";
+                
+                selectedItem = null;
+                updateGlobalProgress();
+            } else {
+                playFailBuzz();
+                target.classList.add('border-red-500', 'bg-red-500/20', 'shake-element');
+                statusMessage.innerHTML = `❌ Das passt leider nicht dorthin. Lies die Pflanzenhinweise!`;
+                statusMessage.className = "text-sm font-medium text-red-400";
+                
+                setTimeout(() => {
+                    target.classList.remove('border-red-500', 'bg-red-500/20', 'shake-element');
+                }, 1000);
+            }
+        }
+
+        function resetLab() {
+            // Nur das Diagramm zurücksetzen
+            Object.keys(placedItems).forEach(key => delete placedItems[key]);
+            solvedCount = 0;
+            location.reload(); // Für ein sauberes Reset
+        }
+
+        // --- MIKROSKOP SCHRITTE ---
+        function setChemStep(stepNum) {
+            for (let i = 0; i <= 3; i++) {
+                const el = document.getElementById(`chem-step-${i}`);
+                if (el) el.classList.add('hidden');
+            }
+
+            const activeEl = document.getElementById(`chem-step-${stepNum}`);
+            if (activeEl) activeEl.classList.remove('hidden');
+
+            const buttons = document.querySelectorAll('.chem-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-emerald-400', 'bg-slate-700/80');
+                btn.classList.add('bg-slate-800/40');
+            });
+
+            const activeBtn = buttons[stepNum - 1];
+            if (activeBtn) {
+                activeBtn.classList.add('ring-2', 'ring-emerald-400', 'bg-slate-700/80');
+                activeBtn.classList.remove('bg-slate-800/40');
+            }
+
+            const indicator = document.getElementById('step-indicator');
+            if (stepNum === 1) {
+                indicator.innerText = "Modus: 🧪 Rohstoffe";
+                indicator.className = "text-sky-400 font-bold";
+            } else if (stepNum === 2) {
+                indicator.innerText = "Modus: ⚡ Photolyse (Wasser-Spaltung)";
+                indicator.className = "text-yellow-400 font-bold";
+            } else if (stepNum === 3) {
+                indicator.innerText = "Modus: 🍇 Synthese (Glucose)";
+                indicator.className = "text-teal-400 font-bold";
+            }
+        }
+
+        // --- STATION 2: SORTIER-DUELL LOGIK ---
+        function initSortGame() {
+            // Drag and Drop
+            quizCards.forEach(card => {
+                card.addEventListener('dragstart', (e) => {
+                    if (placedQuizCards[card.dataset.id]) {
+                        e.preventDefault();
+                        return;
+                    }
+                    card.classList.add('opacity-40');
+                    e.dataTransfer.setData('text/plain', card.dataset.id);
+                });
+
+                card.addEventListener('dragend', () => {
+                    card.classList.remove('opacity-40');
+                });
+
+                // Click-to-Place für mobile Endgeräte
+                card.addEventListener('click', () => {
+                    if (placedQuizCards[card.dataset.id]) return;
+
+                    quizCards.forEach(c => c.classList.remove('ring-4', 'ring-emerald-400', 'bg-slate-700'));
+                    
+                    if (selectedQuizCard === card) {
+                        selectedQuizCard = null;
+                        sortStatus.innerText = "Wähle eine Karte aus, um sie einzuordnen!";
+                    } else {
+                        selectedQuizCard = card;
+                        card.classList.add('ring-4', 'ring-emerald-400', 'bg-slate-700');
+                        sortStatus.innerHTML = `Wähle nun das Bucket <span class="text-emerald-400 font-bold">Edukte</span> oder <span class="text-sky-400 font-bold">Produkte</span>!`;
+                    }
+                });
+            });
+
+            quizBuckets.forEach(bucket => {
+                bucket.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    bucket.classList.add('bg-slate-800/60', 'scale-[1.01]');
+                });
+
+                bucket.addEventListener('dragleave', () => {
+                    bucket.classList.remove('bg-slate-800/60', 'scale-[1.01]');
+                });
+
+                bucket.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    bucket.classList.remove('bg-slate-800/60', 'scale-[1.01]');
+                    const cardId = e.dataTransfer.setData('text/plain', e.dataTransfer.getData('text/plain'));
+                    const finalCardId = e.dataTransfer.getData('text/plain');
+                    attemptSort(finalCardId, bucket);
+                });
+
+                // Click-Ziel für mobiles Platzieren
+                bucket.addEventListener('click', () => {
+                    if (selectedQuizCard) {
+                        attemptSort(selectedQuizCard.dataset.id, bucket);
+                    }
+                });
+            });
+        }
+
+        function attemptSort(cardId, bucket) {
+            const card = document.querySelector(`.quiz-card[data-id="${cardId}"]`);
+            if (!card) return;
+
+            const expectedRole = card.dataset.role;
+            const acceptRole = bucket.dataset.accept;
+
+            if (expectedRole === acceptRole) {
+                // Richtig sortiert!
+                placedQuizCards[cardId] = true;
+                solvedQuizCards++;
+                playSuccessChime();
+
+                // Style anpassen und Karte verschieben
+                card.classList.remove('ring-4', 'ring-emerald-400', 'bg-slate-700', 'cursor-grab', 'active:cursor-grabbing');
+                card.classList.add('bg-emerald-500/10', 'border-emerald-500/40', 'pointer-events-none', 'scale-95');
+                bucket.querySelector('.bucket-content').appendChild(card);
+
+                sortStatus.innerHTML = `🎉 Super! <strong class="text-emerald-400">${card.innerText.trim()}</strong> wurde korrekt zugeordnet.`;
+                
+                // Zähler updaten
+                updateSortCounts();
+                selectedQuizCard = null;
+                updateGlobalProgress();
+            } else {
+                // Falsche Einordnung
+                playFailBuzz();
+                card.classList.add('shake-element', 'border-red-500');
+                sortStatus.innerHTML = `❌ Halt! <strong class="text-red-400">${card.innerText.trim()}</strong> gehört nicht zu dieser Gruppe!`;
+                
+                setTimeout(() => {
+                    card.classList.remove('shake-element', 'border-red-500');
+                }, 1000);
+            }
+        }
+
+        function updateSortCounts() {
+            const eduktCount = document.querySelectorAll('#bucket-edukt .quiz-card').length;
+            const produktCount = document.querySelectorAll('#bucket-produkt .quiz-card').length;
+
+            document.getElementById('count-edukte').innerText = `${eduktCount} / 3`;
+            document.getElementById('count-produkte').innerText = `${produktCount} / 3`;
+        }
+
+
+        // --- STATION 4: MULTIPLE CHOICE WISSENS-RALLYE ---
+        function checkAnswer(qid, selectedOption, btn) {
+            if (solvedQuestions[qid] !== undefined) return; // Bereits gelöst oder beantwortet
+
+            const correctOpt = correctAnswers[qid];
+            const parentCard = document.querySelector(`.question-card[data-qid="${qid}"]`);
+            const badge = parentCard.querySelector('.q-badge');
+            const allOptionBtns = parentCard.querySelectorAll('.option-btn');
+
+            if (selectedOption === correctOpt) {
+                // Richtig gelöst
+                solvedQuestions[qid] = true;
+                playSuccessChime();
+                
+                btn.className = "option-btn text-left text-xs bg-emerald-500/20 text-emerald-300 p-2.5 rounded-xl border border-emerald-500/50 transition font-bold";
+                badge.innerText = "Richtig! ✔";
+                badge.className = "q-badge text-xs font-bold text-emerald-400";
+                
+                // Andere Buttons sperren
+                allOptionBtns.forEach(b => {
+                    if (b !== btn) {
+                        b.classList.add('opacity-40', 'pointer-events-none');
+                    }
+                });
+            } else {
+                // Falsche Antwort gewählt
+                playFailBuzz();
+                btn.className = "option-btn text-left text-xs bg-red-500/20 text-red-300 p-2.5 rounded-xl border border-red-500/50 transition font-bold shake-element";
+                
+                setTimeout(() => {
+                    btn.classList.remove('shake-element');
+                }, 600);
+            }
+
+            updateGlobalProgress();
+        }
+
+
+        // --- SPEKTAKULÄRER TRIUMPH (SUCCESS STATE) ---
+        function triggerMajorVictory() {
+            playVictorySound();
+            
+            // Konfetti auslösen (Über die geladene canvas-confetti Bibliothek)
+            if (typeof confetti === 'function') {
+                const duration = 4 * 1000;
+                const end = Date.now() + duration;
+
+                (function frame() {
+                    confetti({
+                        particleCount: 5,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: ['#34d399', '#38bdf8', '#fbbf24']
+                    });
+                    confetti({
+                        particleCount: 5,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: ['#34d399', '#38bdf8', '#fbbf24']
+                    });
+
+                    if (Date.now() < end) {
+                        requestAnimationFrame(frame);
+                    }
+                }());
+            }
+
+            // Zeige Erfolgs-Modal
+            successModal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            successModal.classList.add('hidden');
+        }
+
+        function resetWholeGame() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
