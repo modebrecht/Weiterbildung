@@ -455,6 +455,17 @@
     let coinsArray = [];
     let legL, legR; // Legs for walking animation
     let plantMesh, cartMesh; // Aesthetic props
+    let customerLookMaterials = {};
+    let customerHeadsetParts = [];
+    let customerAccessoryGroups = {};
+
+    const customerLooks = [
+        { hoodie: 0xf72585, pants: 0x3f37c9, hair: 0x582f0e, shoes: 0xffffff, headset: 0x4cc9f0, accessory: null },
+        { hoodie: 0x22c55e, pants: 0x1e3a8a, hair: 0x111827, shoes: 0xfffbeb, headset: null, accessory: 'cap' },
+        { hoodie: 0x8b5cf6, pants: 0x0f766e, hair: 0xf5c16c, shoes: 0xf8fafc, headset: null, accessory: 'beanie' },
+        { hoodie: 0xff8a3d, pants: 0x2563eb, hair: 0x3b2415, shoes: 0x111827, headset: null, accessory: 'backpack' },
+        { hoodie: 0x4895ef, pants: 0x475569, hair: 0x8b3a1f, shoes: 0xffffff, headset: null, accessory: 'scarf' }
+    ];
 
     function setupThreeScene() {
         const container = document.getElementById('canvas-container');
@@ -960,6 +971,84 @@
         cupR.position.x = 0.36;
         customerChar.add(cupR);
 
+        customerLookMaterials = {
+            hoodie: hoodieMat,
+            pants: pantsMat,
+            shoes: shoeMat,
+            hair: hairMat,
+            headset: headsetColorMat
+        };
+        customerHeadsetParts = [band, cupL, cupR];
+
+        const capGroup = new THREE.Group();
+        const capMat = new THREE.MeshStandardMaterial({ color: 0xffca3a, roughness: 0.45 });
+        const capTop = new THREE.Mesh(new THREE.SphereGeometry(0.34, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2), capMat);
+        capTop.position.y = 1.63;
+        capGroup.add(capTop);
+        const capVisor = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.05, 0.22), capMat);
+        capVisor.position.set(0, 1.62, 0.31);
+        capGroup.add(capVisor);
+        capGroup.visible = false;
+        customerChar.add(capGroup);
+
+        const beanieGroup = new THREE.Group();
+        const beanieMat = new THREE.MeshStandardMaterial({ color: 0x8b5cf6, roughness: 0.65 });
+        const beanie = new THREE.Mesh(new THREE.SphereGeometry(0.36, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2), beanieMat);
+        beanie.position.y = 1.66;
+        beanieGroup.add(beanie);
+        const pom = new THREE.Mesh(new THREE.SphereGeometry(0.08, 10, 10), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.7 }));
+        pom.position.y = 1.93;
+        beanieGroup.add(pom);
+        beanieGroup.visible = false;
+        customerChar.add(beanieGroup);
+
+        const backpackGroup = new THREE.Group();
+        const backpackMat = new THREE.MeshStandardMaterial({ color: 0x14b8a6, roughness: 0.55 });
+        const backpack = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.65, 0.18), backpackMat);
+        backpack.position.set(0, 0.86, -0.42);
+        backpack.castShadow = true;
+        backpackGroup.add(backpack);
+        const strapMat = new THREE.MeshStandardMaterial({ color: 0x0f766e, roughness: 0.55 });
+        [-0.22, 0.22].forEach((x) => {
+            const strap = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.55, 0.04), strapMat);
+            strap.position.set(x, 0.9, -0.29);
+            backpackGroup.add(strap);
+        });
+        backpackGroup.visible = false;
+        customerChar.add(backpackGroup);
+
+        const apronGroup = new THREE.Group();
+        const apronFront = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.54, 0.04), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.55 }));
+        apronFront.position.set(0, 0.82, 0.31);
+        apronGroup.add(apronFront);
+        const apronPocket = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.13, 0.045), new THREE.MeshStandardMaterial({ color: 0x4caf50, roughness: 0.5 }));
+        apronPocket.position.set(0, 0.73, 0.34);
+        apronGroup.add(apronPocket);
+        apronGroup.visible = false;
+        customerChar.add(apronGroup);
+
+        const scarfGroup = new THREE.Group();
+        const scarfMat = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.65 });
+        const scarfLoop = new THREE.Mesh(new THREE.TorusGeometry(0.28, 0.035, 8, 24), scarfMat);
+        scarfLoop.position.set(0, 1.14, 0.02);
+        scarfLoop.rotation.x = Math.PI / 2;
+        scarfGroup.add(scarfLoop);
+        const scarfTail = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.42, 0.055), scarfMat);
+        scarfTail.position.set(0.18, 0.92, 0.31);
+        scarfTail.rotation.z = -0.15;
+        scarfTail.castShadow = true;
+        scarfGroup.add(scarfTail);
+        scarfGroup.visible = false;
+        customerChar.add(scarfGroup);
+
+        customerAccessoryGroups = {
+            cap: capGroup,
+            beanie: beanieGroup,
+            backpack: backpackGroup,
+            apron: apronGroup,
+            scarf: scarfGroup
+        };
+
         // Beine für Geh-Animation
         legL = new THREE.Group();
         legL.position.set(-0.16, 0.45, 0);
@@ -1038,6 +1127,28 @@
         scene.add(activeItemMesh);
     }
 
+    function applyCustomerLook(index) {
+        const look = customerLooks[index % customerLooks.length];
+        if (!look || !customerLookMaterials.hoodie) return;
+
+        customerLookMaterials.hoodie.color.setHex(look.hoodie);
+        customerLookMaterials.pants.color.setHex(look.pants);
+        customerLookMaterials.hair.color.setHex(look.hair);
+        customerLookMaterials.shoes.color.setHex(look.shoes);
+
+        if (look.headset !== null) {
+            customerLookMaterials.headset.color.setHex(look.headset);
+        }
+
+        customerHeadsetParts.forEach((part) => {
+            part.visible = look.headset !== null;
+        });
+
+        Object.entries(customerAccessoryGroups).forEach(([key, group]) => {
+            group.visible = key === look.accessory;
+        });
+    }
+
     let walkingTime = 0;
     let isWalking = false;
 
@@ -1061,7 +1172,7 @@
         if (activeItemMesh.children.length > 1) {
             const spawnedProduct = activeItemMesh.children[1];
             spawnedProduct.rotation.y += 0.015;
-            spawnedProduct.position.y = 0.35 + Math.sin(Date.now() * 0.003) * 0.05;
+            spawnedProduct.position.y = 0.62 + Math.sin(Date.now() * 0.003) * 0.04;
         }
 
         // Parabelflug der Goldmünzen in Richtung Kasse
@@ -1369,6 +1480,7 @@
         document.getElementById('hud-progress-val').innerText = `${activeQuestionStep + 1}/5`;
 
         const currentWordData = levelsData[activeLevelIndex].words[activeQuestionStep];
+        applyCustomerLook((activeLevelIndex * 5) + activeQuestionStep);
 
         // Reset customer character to walking entrance
         customerChar.position.set(-6, 0, 2.8);
@@ -1397,7 +1509,7 @@
 
                         // Neues Lebensmittel erstellen
                         const item3d = generateEmoji3DSprite(currentWordData.emoji);
-                        item3d.position.set(0, 0.35, 0);
+                        item3d.position.set(0, 0.62, 0);
                         activeItemMesh.add(item3d);
 
                         // Einblende-Animation des Lebensmittels
