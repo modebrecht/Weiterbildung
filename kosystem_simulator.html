@@ -28,8 +28,12 @@
         #predatorSlider::-webkit-slider-runnable-track { background: #fee2e2; }
         #foodSlider::-webkit-slider-thumb { border-color: #22c55e; }
         #foodSlider::-webkit-slider-runnable-track { background: #dcfce7; }
+        #birthSlider::-webkit-slider-thumb { border-color: #3b82f6; }
+        #birthSlider::-webkit-slider-runnable-track { background: #dbeafe; }
         #appetiteSlider::-webkit-slider-thumb { border-color: #f97316; }
         #appetiteSlider::-webkit-slider-runnable-track { background: #ffedd5; }
+        #winterSeveritySlider::-webkit-slider-thumb { border-color: #38bdf8; }
+        #winterSeveritySlider::-webkit-slider-runnable-track { background: #e0f2fe; }
 
         input[type=range].mini-slider { -webkit-appearance: none; width: 60px; background: transparent; }
         input[type=range].mini-slider::-webkit-slider-thumb {
@@ -42,9 +46,6 @@
         #miniPredatorSlider::-webkit-slider-runnable-track { background: #fee2e2; }
         #miniFoodSlider::-webkit-slider-thumb { border-color: #22c55e; }
         #miniFoodSlider::-webkit-slider-runnable-track { background: #dcfce7; }
-        #miniAppetiteSlider::-webkit-slider-thumb { border-color: #f97316; }
-        #miniAppetiteSlider::-webkit-slider-runnable-track { background: #ffedd5; }
-
         .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
     </style>
 </head>
@@ -75,6 +76,27 @@
                             <span class="text-xs text-slate-500" id="viewEmojiLabel">Lebhaft</span>
                         </div>
                     </div>
+                    <div class="flex items-center justify-between bg-blue-50 p-3 rounded-xl border border-blue-100">
+                        <span class="text-sm font-semibold text-blue-700">Wintermodus:</span>
+                        <button id="winterToggleBtn" class="w-12 h-6 bg-slate-300 rounded-full relative transition-colors focus:outline-none" aria-pressed="false">
+                            <span id="winterToggleKnob" class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform"></span>
+                        </button>
+                    </div>
+                    <div id="winterInfo" class="hidden mt-3 rounded-xl border border-blue-100 bg-blue-50 p-3 text-xs leading-relaxed text-blue-900">
+                        <strong class="block text-sm mb-1">❄️ Wintereffekt</strong>
+                        Tiere bewegen sich langsamer. Luchse verlieren mehr Energie und bekommen pro gefressenem Reh weniger Energie. Dadurch treffen sie weniger Beute und verhungern schneller.
+                        <div class="mt-3 space-y-2">
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="font-semibold">Winterstärke</span>
+                                <span id="winterSeverityDisplay" class="font-bold tabular-nums">Stufe 1</span>
+                            </div>
+                            <input type="range" id="winterSeveritySlider" class="main-slider" min="1" max="3" value="1">
+                            <div class="flex justify-between text-[10px] font-semibold uppercase tracking-wide text-blue-700">
+                                <span>Normal</span>
+                                <span>Extrem</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="space-y-3">
@@ -89,6 +111,16 @@
 
                 <div class="space-y-3">
                     <div class="flex justify-between items-end">
+                        <label class="font-semibold text-orange-600 flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-orange-500 inline-block"></span> Jagd-Erfolg (Energie pro konsumiertem Reh)
+                        </label>
+                        <span id="appetiteDisplay" class="text-xl font-bold text-slate-700 tabular-nums w-8 text-right">3</span>
+                    </div>
+                    <input type="range" id="appetiteSlider" class="main-slider" min="1" max="8" value="3">
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex justify-between items-end">
                         <label class="font-semibold text-green-600 flex items-center gap-2">
                             <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span> Waldfläche (Lebensraum)
                         </label>
@@ -99,12 +131,12 @@
 
                 <div class="space-y-3">
                     <div class="flex justify-between items-end">
-                        <label class="font-semibold text-orange-600 flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-orange-500 inline-block"></span> Appetit (Rehe pro Wurf)
+                        <label class="font-semibold text-blue-600 flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span> Nachwuchs (Kitze pro Wurf)
                         </label>
-                        <span id="appetiteDisplay" class="text-xl font-bold text-slate-700 tabular-nums w-8 text-right">3</span>
+                        <span id="birthDisplay" class="text-xl font-bold text-slate-700 tabular-nums w-8 text-right">3</span>
                     </div>
-                    <input type="range" id="appetiteSlider" class="main-slider" min="1" max="15" value="3">
+                    <input type="range" id="birthSlider" class="main-slider" min="1" max="8" value="3">
                 </div>
 
                 <div class="mt-auto pt-6 border-t border-slate-100 flex gap-3">
@@ -121,7 +153,7 @@
                         <div class="flex items-center gap-4 text-xs font-medium">
                             <!-- Mouse Tool -->
                             <div class="hidden sm:flex items-center gap-1 bg-slate-200/70 border border-slate-200 rounded-lg p-1 mr-2">
-                                <span class="text-[10px] text-slate-500 uppercase tracking-wider font-bold px-1">Maus:</span>
+                                <span class="text-[10px] text-slate-500 uppercase tracking-wider font-bold px-1">Spawner:</span>
                                 <button id="toolPrey" class="w-6 h-6 rounded flex items-center justify-center bg-white shadow-sm text-green-600 transition-all text-sm opacity-100">🦌</button>
                                 <button id="toolPred" class="w-6 h-6 rounded flex items-center justify-center text-slate-500 hover:text-red-600 transition-all text-sm opacity-50 grayscale">🐆</button>
                             </div>
@@ -167,6 +199,8 @@
         const predatorDisplay = document.getElementById('predatorCountDisplay');
         const foodSlider = document.getElementById('foodSlider');
         const foodDisplay = document.getElementById('foodCountDisplay');
+        const birthSlider = document.getElementById('birthSlider');
+        const birthDisplay = document.getElementById('birthDisplay');
         const appetiteSlider = document.getElementById('appetiteSlider');
         const appetiteDisplay = document.getElementById('appetiteDisplay');
         
@@ -182,6 +216,11 @@
         const viewToggleKnob = document.getElementById('viewToggleKnob');
         const viewSimpleLabel = document.getElementById('viewSimpleLabel');
         const viewEmojiLabel = document.getElementById('viewEmojiLabel');
+        const winterToggleBtn = document.getElementById('winterToggleBtn');
+        const winterToggleKnob = document.getElementById('winterToggleKnob');
+        const winterInfo = document.getElementById('winterInfo');
+        const winterSeveritySlider = document.getElementById('winterSeveritySlider');
+        const winterSeverityDisplay = document.getElementById('winterSeverityDisplay');
 
         const toolPrey = document.getElementById('toolPrey');
         const toolPred = document.getElementById('toolPred');
@@ -191,6 +230,7 @@
         let animationId;
         let frameCount = 0;
         let useEmojis = false;
+        let isWinter = false;
         let activeTool = 'prey'; 
         
         const PREY_SPEED = 1.0;
@@ -199,6 +239,7 @@
         
         let preys = [];
         let predators = [];
+        let snowflakes = [];
         let historyData = []; 
         const maxHistory = 300; 
         let simWidth, simHeight, graphWidth, graphHeight;
@@ -208,6 +249,7 @@
             simHeight = simContainer.clientHeight;
             simCanvas.width = simWidth;
             simCanvas.height = simHeight;
+            initSnowflakes();
             
             const graphRect = graphCanvas.parentElement.getBoundingClientRect();
             graphWidth = graphRect.width - 32; 
@@ -228,8 +270,8 @@
                 this.energy = 100; 
             }
 
-            move() {
-                this.x += this.vx; this.y += this.vy;
+            move(speedFactor = 1) {
+                this.x += this.vx * speedFactor; this.y += this.vy * speedFactor;
                 if (this.x < 0) { this.x = 0; this.vx *= -1; }
                 if (this.x > simWidth) { this.x = simWidth; this.vx *= -1; }
                 if (this.y < 0) { this.y = 0; this.vy *= -1; }
@@ -255,6 +297,41 @@
             }
         }
 
+        function initSnowflakes() {
+            const count = Math.max(28, Math.floor((simWidth || 600) / 18));
+            snowflakes = Array.from({ length: count }, () => ({
+                x: Math.random() * (simWidth || 600),
+                y: Math.random() * (simHeight || 340),
+                r: Math.random() * 2.4 + 1.2,
+                s: Math.random() * 0.6 + 0.35,
+                drift: Math.random() * 0.5 - 0.25
+            }));
+        }
+
+        function drawSnowflakes() {
+            if (!isWinter) return;
+            const severity = parseInt(winterSeveritySlider.value);
+            simCtx.save();
+            simCtx.fillStyle = 'rgba(255, 255, 255, 0.86)';
+            simCtx.strokeStyle = 'rgba(147, 197, 253, 0.55)';
+            snowflakes.forEach((flake, index) => {
+                if (severity === 1 && index % 2 === 0) return;
+                flake.y += flake.s * (0.8 + severity * 0.25);
+                flake.x += flake.drift * severity;
+                if (flake.y > simHeight + 8) {
+                    flake.y = -8;
+                    flake.x = Math.random() * simWidth;
+                }
+                if (flake.x < -8) flake.x = simWidth + 8;
+                if (flake.x > simWidth + 8) flake.x = -8;
+                simCtx.beginPath();
+                simCtx.arc(flake.x, flake.y, flake.r, 0, Math.PI * 2);
+                simCtx.fill();
+                simCtx.stroke();
+            });
+            simCtx.restore();
+        }
+
         function initSimulation() {
             preys = []; predators = []; historyData = []; frameCount = 0;
             const initialPredators = parseInt(predatorSlider.value);
@@ -268,17 +345,29 @@
 
         function updateLogic() {
             const foodValue = parseInt(foodSlider.value);
+            const birthValue = parseInt(birthSlider.value);
             const appetiteValue = parseInt(appetiteSlider.value);
-            const energyGain = 100 / appetiteValue; 
-            const maxPreyCapacity = foodValue * 4; 
-            const preySpawnRate = Math.max(1, 20 - Math.floor(foodValue / 10)); 
+            const winterSeverity = isWinter ? parseInt(winterSeveritySlider.value) : 0;
+            const foodMultipliers = [1, 0.82, 0.64, 0.48];
+            const birthPenalty = [0, 1, 2, 3];
+            const energyMultipliers = [1, 0.95, 0.82, 0.68];
+            const energyLossValues = [0.15, 0.18, 0.22, 0.27];
+            const movementFactors = [1, 0.68, 0.45, 0.28];
+            const spawnDelays = [0, 3, 7, 12];
+            const effectiveFood = foodValue * foodMultipliers[winterSeverity];
+            const effectiveBirth = Math.max(1, birthValue - birthPenalty[winterSeverity]);
+            const energyGain = appetiteValue * 12 * energyMultipliers[winterSeverity]; 
+            const predatorEnergyLoss = energyLossValues[winterSeverity];
+            const movementFactor = movementFactors[winterSeverity];
+            const maxPreyCapacity = effectiveFood * 4; 
+            const preySpawnRate = Math.max(1, 24 - Math.floor(effectiveFood / 10) - effectiveBirth + spawnDelays[winterSeverity]); 
 
-            preys.forEach(p => p.move());
-            predators.forEach(p => p.move());
+            preys.forEach(p => p.move(movementFactor));
+            predators.forEach(p => p.move(movementFactor));
 
             for (let i = predators.length - 1; i >= 0; i--) {
                 let pred = predators[i];
-                pred.energy -= 0.15; 
+                pred.energy -= predatorEnergyLoss; 
                 for (let j = preys.length - 1; j >= 0; j--) {
                     let prey = preys[j];
                     let dx = pred.x - prey.x, dy = pred.y - prey.y;
@@ -298,7 +387,9 @@
             if (frameCount % preySpawnRate === 0 && preys.length < maxPreyCapacity) {
                 if (preys.length > 0) {
                     let parent = preys[Math.floor(Math.random() * preys.length)];
-                    preys.push(new Agent(parent.x + (Math.random() * 20 - 10), parent.y + (Math.random() * 20 - 10), false));
+                    for (let i = 0; i < effectiveBirth && preys.length < maxPreyCapacity; i++) {
+                        preys.push(new Agent(parent.x + (Math.random() * 24 - 12), parent.y + (Math.random() * 24 - 12), false));
+                    }
                 } else {
                     preys.push(new Agent(Math.random() * simWidth, Math.random() * simHeight, false));
                 }
@@ -311,10 +402,11 @@
         }
 
         function drawSimulation() {
-            simCtx.fillStyle = useEmojis ? '#f0fdf4' : 'rgba(240, 253, 244, 0.4)'; 
+            simCtx.fillStyle = isWinter ? (useEmojis ? '#eff6ff' : 'rgba(239, 246, 255, 0.62)') : (useEmojis ? '#f0fdf4' : 'rgba(240, 253, 244, 0.4)'); 
             simCtx.fillRect(0, 0, simWidth, simHeight);
             preys.forEach(p => p.draw(simCtx));
             predators.forEach(p => p.draw(simCtx));
+            drawSnowflakes();
         }
 
         function drawGraph() {
@@ -347,9 +439,11 @@
             drawLine('pred', '#ef4444', 'rgba(239, 68, 68, 0.15)'); 
         }
 
-        function updateStatus() {
-            if (frameCount % 30 !== 0) return; 
-            const maxPreyCapacity = parseInt(foodSlider.value) * 4;
+        function updateStatus(force = false) {
+            if (!force && frameCount % 30 !== 0) return; 
+            const winterSeverity = isWinter ? parseInt(winterSeveritySlider.value) : 0;
+            const winterCapacityMultipliers = [4, 3.3, 2.6, 1.9];
+            const maxPreyCapacity = parseInt(foodSlider.value) * winterCapacityMultipliers[winterSeverity];
             if (predators.length === 0 && preys.length > 0) {
                 ecoStatus.innerText = "⚠️ Raubtiere ausgestorben!";
                 ecoStatus.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-red-100 text-red-700 shadow-sm transition-colors";
@@ -362,6 +456,9 @@
             } else if (predators.length > preys.length * 0.8) {
                 ecoStatus.innerText = "📉 Populationskollaps steht bevor";
                 ecoStatus.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-100 text-orange-700 shadow-sm transition-colors";
+            } else if (isWinter) {
+                ecoStatus.innerText = `❄️ Winter Stufe ${winterSeverity}: Nahrung knapp`;
+                ecoStatus.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 shadow-sm transition-colors";
             } else {
                 ecoStatus.innerText = "⚖️ System im Gleichgewicht";
                 ecoStatus.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700 shadow-sm transition-colors";
@@ -372,9 +469,18 @@
             if (isRunning) {
                 updateLogic(); updateStatus(); drawSimulation(); drawGraph();
                 frameCount++;
-                livePrey.innerText = preys.length; livePreds.innerText = predators.length;
+                updateLiveReadouts();
             }
             animationId = requestAnimationFrame(gameLoop);
+        }
+
+        function updateLiveReadouts() {
+            livePrey.innerText = preys.length;
+            livePreds.innerText = predators.length;
+            predatorDisplay.innerText = predators.length;
+            const sliderValue = Math.min(predators.length, parseInt(predatorSlider.max));
+            predatorSlider.value = sliderValue;
+            miniPredatorSlider.value = sliderValue;
         }
 
         function syncPredators(target) {
@@ -384,6 +490,7 @@
             } else if (target < predators.length) {
                 predators.splice(0, predators.length - target);
             }
+            updateLiveReadouts();
         }
 
         predatorSlider.addEventListener('input', (e) => { syncPredators(e.target.value); miniPredatorSlider.value = e.target.value; });
@@ -395,6 +502,7 @@
         });
         miniFoodSlider.addEventListener('input', (e) => { foodSlider.value = e.target.value; foodSlider.dispatchEvent(new Event('input')); });
 
+        birthSlider.addEventListener('input', (e) => { birthDisplay.innerText = e.target.value; });
         appetiteSlider.addEventListener('input', (e) => { appetiteDisplay.innerText = e.target.value; });
 
         viewToggleBtn.addEventListener('click', () => {
@@ -406,6 +514,27 @@
                 viewToggleBtn.classList.replace('bg-blue-500', 'bg-slate-300'); viewToggleKnob.classList.remove('translate-x-5');
                 viewEmojiLabel.classList.remove('font-bold'); viewSimpleLabel.classList.add('font-bold');
             }
+        });
+
+        winterToggleBtn.addEventListener('click', () => {
+            isWinter = !isWinter;
+            winterToggleBtn.setAttribute('aria-pressed', String(isWinter));
+            winterInfo.classList.toggle('hidden', !isWinter);
+            if (isWinter) {
+                winterToggleBtn.classList.replace('bg-slate-300', 'bg-blue-500');
+                winterToggleKnob.classList.add('translate-x-6');
+            } else {
+                winterToggleBtn.classList.replace('bg-blue-500', 'bg-slate-300');
+                winterToggleKnob.classList.remove('translate-x-6');
+            }
+            updateStatus(true);
+            drawSimulation();
+        });
+
+        winterSeveritySlider.addEventListener('input', (e) => {
+            winterSeverityDisplay.innerText = `Stufe ${e.target.value}`;
+            updateStatus(true);
+            drawSimulation();
         });
 
         toolPrey.addEventListener('click', () => {
@@ -428,10 +557,8 @@
             if (activeTool === 'prey') preys.push(new Agent(x, y, false));
             else {
                 predators.push(new Agent(x, y, true));
-                if (parseInt(predatorSlider.value) < predators.length) {
-                    predatorSlider.value = predators.length; miniPredatorSlider.value = predators.length; predatorDisplay.innerText = predators.length;
-                }
             }
+            updateLiveReadouts();
             drawSimulation();
             simCtx.beginPath(); simCtx.arc(x, y, 12, 0, Math.PI * 2);
             simCtx.strokeStyle = activeTool === 'prey' ? '#22c55e' : '#ef4444'; simCtx.lineWidth = 2; simCtx.stroke(); simCtx.closePath();
@@ -449,11 +576,13 @@
         resetBtn.addEventListener('click', () => {
             predatorSlider.value = 5; predatorDisplay.innerText = 5;
             foodSlider.value = 50; foodDisplay.innerText = "Mittel";
+            birthSlider.value = 3; birthDisplay.innerText = 3;
             appetiteSlider.value = 3; appetiteDisplay.innerText = 3;
             initSimulation();
+            updateLiveReadouts();
         });
 
-        window.onload = () => { resizeCanvases(); initSimulation(); gameLoop(); };
+        window.onload = () => { resizeCanvases(); initSimulation(); updateLiveReadouts(); gameLoop(); };
     </script>
 </body>
 </html>

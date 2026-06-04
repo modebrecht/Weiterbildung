@@ -373,6 +373,15 @@
     .google .icon,
     .google .tag { color: var(--tag-ink); background: #4285f4; }
 
+    .gemini .icon,
+    .gemini .tag { color: var(--tag-ink); background: #8ab4f8; }
+
+    .github .icon,
+    .github .tag { color: var(--ink); background: #24292f; }
+
+    .vercel .icon,
+    .vercel .tag { color: var(--tag-ink); background: #ffffff; }
+
     .ib .icon,
     .ib .tag { color: var(--tag-ink); background: #8b5cf6; }
 
@@ -780,8 +789,8 @@
         </div>
         <div class="visual-badge">
           <div>
-            <strong>7 Unterrichtsimpulse</strong>
-            <span>Materialien separat im neuen Tab öffnen</span>
+            <strong>Unterricht & Ressourcen</strong>
+            <span>Unterrichtsmaterial separat im neuen Tab öffnen</span>
           </div>
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M7 17 17 7"></path>
@@ -792,11 +801,11 @@
     </section>
 
     <div class="toolbar">
-      <h2>Materialien</h2>
+      <h2>Unterrichtsmaterial</h2>
       <span>Interaktive Beispiele für Unterricht und Weiterbildung</span>
     </div>
 
-    <section class="grid" aria-label="Unterrichtsmaterialien und externe Ressourcen">
+    <section class="grid" aria-label="Unterrichtsmaterial">
       <a class="card math" href="bruchrechnen_entdecker.html" target="_blank" rel="noopener noreferrer">
         <div>
           <div class="card-top">
@@ -897,58 +906,6 @@
         </span>
       </a>
 
-      <a class="card google" href="https://grow.google/ai-for-educators/?srsltid=AfmBOorXQiPfgcqZn3wtMzRUBX_Udi27m2iWZUbnefTca5folgEu7h50" target="_blank" rel="noopener noreferrer">
-        <div>
-          <div class="card-top">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 3v18"></path>
-                <path d="M5 7h14"></path>
-                <path d="M7 7v7a5 5 0 0 0 10 0V7"></path>
-                <path d="M8 21h8"></path>
-              </svg>
-            </div>
-            <span class="tag">Extern</span>
-          </div>
-          <h3>Google AI for Educators</h3>
-          <p>Ressource für Lehrpersonen zum verantwortungsvollen und praktischen Einsatz von KI im Unterricht.</p>
-        </div>
-        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Google AI for Educators">
-          Prompt anzeigen
-          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 7h16"></path>
-            <path d="M4 12h16"></path>
-            <path d="M4 17h10"></path>
-          </svg>
-        </span>
-      </a>
-
-      <a class="card ib" href="https://ib-pe.vercel.app/" target="_blank" rel="noopener noreferrer">
-        <div>
-          <div class="card-top">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 6h16"></path>
-                <path d="M4 12h10"></path>
-                <path d="M4 18h7"></path>
-                <path d="M17 14l3 3-3 3"></path>
-              </svg>
-            </div>
-            <span class="tag">KI</span>
-          </div>
-          <h3>IB PE: Prompt Engineering</h3>
-          <p>Kurs zum richtigen Prompten: klare Aufträge formulieren, bessere Antworten erhalten und KI gezielter nutzen.</p>
-        </div>
-        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="IB PE: Prompt Engineering">
-          Prompt anzeigen
-          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 7h16"></path>
-            <path d="M4 12h16"></path>
-            <path d="M4 17h10"></path>
-          </svg>
-        </span>
-      </a>
-
       <a class="card sports" href="https://sports-fr.vercel.app/" target="_blank" rel="noopener noreferrer">
         <div>
           <div class="card-top">
@@ -972,11 +929,109 @@
           </svg>
         </span>
       </a>
+
+    </section>
+
+    <div class="toolbar">
+      <h2>Entwicklung LernApp</h2>
+      <span>Werkzeuge zum Planen, Bauen und Veröffentlichen</span>
+    </div>
+
+    <section class="grid" aria-label="Entwicklung LernApp">
+      <a class="card gemini" href="https://gemini.google.com" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6L12 3Z"></path>
+                <path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"></path>
+              </svg>
+            </div>
+            <span class="tag">Idee</span>
+          </div>
+          <h3>Gemini</h3>
+          <p>KI-Werkzeug für Ideen, Struktur, Prompt-Entwürfe und erste App-Konzepte.</p>
+        </div>
+      </a>
+
+      <a class="card github" href="https://github.com" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 19c-4.5 1.5-4.5-2.5-6-3"></path>
+                <path d="M15 22v-3.9a3.4 3.4 0 0 0-.9-2.6c3-.3 6.1-1.5 6.1-6.7a5.2 5.2 0 0 0-1.4-3.6 4.8 4.8 0 0 0-.1-3.6s-1.1-.3-3.7 1.4a12.8 12.8 0 0 0-6.8 0C5.6 1.3 4.5 1.6 4.5 1.6a4.8 4.8 0 0 0-.1 3.6A5.2 5.2 0 0 0 3 8.8c0 5.2 3.1 6.4 6.1 6.7a3.4 3.4 0 0 0-.9 2.6V22"></path>
+              </svg>
+            </div>
+            <span class="tag">Code</span>
+          </div>
+          <h3>GitHub</h3>
+          <p>Code speichern, Versionen nachvollziehen und LernApp-Projekte gemeinsam weiterentwickeln.</p>
+        </div>
+      </a>
+
+      <a class="card vercel" href="https://vercel.com" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 4 22 20H2L12 4Z"></path>
+              </svg>
+            </div>
+            <span class="tag">Deploy</span>
+          </div>
+          <h3>Vercel</h3>
+          <p>LernApps veröffentlichen, teilen und direkt im Browser zugänglich machen.</p>
+        </div>
+      </a>
+    </section>
+
+    <div class="toolbar">
+      <h2>Weitere Ressourcen</h2>
+      <span>Externe Angebote zum Vertiefen und Weiterarbeiten</span>
+    </div>
+
+    <section class="grid" aria-label="Weitere Ressourcen">
+      <a class="card google" href="https://grow.google/ai-for-educators/?srsltid=AfmBOorXQiPfgcqZn3wtMzRUBX_Udi27m2iWZUbnefTca5folgEu7h50" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3v18"></path>
+                <path d="M5 7h14"></path>
+                <path d="M7 7v7a5 5 0 0 0 10 0V7"></path>
+                <path d="M8 21h8"></path>
+              </svg>
+            </div>
+            <span class="tag">Extern</span>
+          </div>
+          <h3>Google AI for Educators</h3>
+          <p>Ressource für Lehrpersonen zum verantwortungsvollen und praktischen Einsatz von KI im Unterricht.</p>
+        </div>
+      </a>
+
+      <a class="card ib" href="https://ib-pe.vercel.app/" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 6h16"></path>
+                <path d="M4 12h10"></path>
+                <path d="M4 18h7"></path>
+                <path d="M17 14l3 3-3 3"></path>
+              </svg>
+            </div>
+            <span class="tag">KI</span>
+          </div>
+          <h3>IB PE: Prompt Engineering</h3>
+          <p>Kurs zum richtigen Prompten: klare Aufträge formulieren, bessere Antworten erhalten und KI gezielter nutzen.</p>
+        </div>
+      </a>
     </section>
 
     <footer>
       <span>Weiterbildung: KI in der Schule</span>
-      <span>Alle Materialien öffnen in einem neuen Browser-Tab.</span>
+      <span>Alle Links öffnen in einem neuen Browser-Tab.</span>
     </footer>
   </main>
 
@@ -1067,21 +1122,156 @@
 
     const prompts = {
       "Bruch-Entdecker Studio": promptFallback,
-      "Interaktives Dilemma: 1789": promptFallback,
-      "Ökosystem Simulator": promptFallback,
+      "Interaktives Dilemma: 1789": [
+        {
+          label: "Einfache Human Version",
+          text: `HTML DEMO erstellen für unterricht geschichte. Sus treffen Entscheidungen mit direkter Konsequenz auf Textverlauf.
+
+bsp Ein Tag im Jahr 1789 (Französische Revolution)
+
+"Du bist ein armer Bauer in der Nähe von Paris. Deine Familie hungert, aber die Abgaben an den Grundherren stehen an. Was tust du?"
+
+Option A: Du jagst heimlich im Wald des Grafen, um Essen für deine Familie zu finden.
+
+Option B: Nach Paris ziehen und dich den Protesten anschliessen.
+
+GENERATE stunning IMAGES um die geschichte lebhaft zu machen`
+        },
+        {
+          label: "AI Enhanced Version",
+          text: `HTML DEMO Das interaktive Dilemma (Fach: Geschichte / Lebenskunde / Deutsch)
+
+Hier zeigst du, wie man Storytelling und kritisches Denken kombiniert.
+
+Die Idee: Ein „Choose-Your-Own-Adventure“-Mini-Szenario.
+
+Die Mechanik: Multiple-Choice-Entscheidungen mit direkter Konsequenz auf den Textverlauf.
+
+Konkretes Live-Beispiel: „Ein Tag im Jahr 1789 (Französische Revolution)“ oder „Ein moralisches Dilemma im Alltag“.
+
+Text: „Du bist ein armer Bauer in der Nähe von Paris. Deine Familie hungert, aber die Abgaben an den Grundherren stehen an. Was tust du?“
+
+Option A: Heimlich im Wald des Grafen wildern.
+
+Option B: Nach Paris ziehen und dich den Protesten anschliessen.
+
+Der Effekt: Je nach Klick verändert sich die Geschichte sofort. Nach drei Entscheidungen gibt es ein kurzes Fazit (z. B. „Du wurdest erwischt“ oder „Du stehst vor der Bastille“).
+
+Warum das zieht: Geisteswissenschaftliche Lehrkräfte sehen sofort, dass interaktive Medien nicht nur für Mathe oder Sprachen taugen, sondern Empathie und historische Perspektiven erlebbar machen.
+
+GENERATE stunning IMAGES um die geschichte lebhaft zu machen USING NANO BANANO`
+        }
+      ],
+      "Ökosystem Simulator": [
+        {
+          label: "Einfache Human Version",
+          text: `HTML DEMO erstellen für Biologie / NMG.
+
+Thema: Räuber-Beute-Beziehung; Luchse und Rehe.
+
+Baue Slider für:
+- Anzahl Luchse
+- Anzahl Rehe
+- Waldfläche / Lebensraum
+- Nachwuchs der Rehe
+- Jagd-Erfolg der Luchse
+
+Wenn ich einen Slider verändere, sieht man sofort die Auswirkung.
+
+Mach es visuell mit Punkten, Tieren oder einem einfachen Graphen.
+
+Zusätzlich: optionaler Wintermodus mit Stufe 1-3.
+Im Winter bewegen sich Tiere langsamer, Luchse verlieren mehr Energie und bekommen pro konsumiertem Reh weniger Energie.`
+        },
+        {
+          label: "AI Enhanced Version",
+          text: `HTML DEMO: Ökosystem-Simulator (Fach: Biologie / NMG)
+
+Erstelle eine interaktive Single-Page-Demo zur Räuber-Beute-Beziehung zwischen Luchsen und Rehen.
+
+Ziel:
+Die Lernenden sollen dynamische Zusammenhänge im Ökosystem live erforschen, statt nur Begriffe abzufragen.
+
+Mechanik:
+Die Simulation läuft automatisch. Es gibt keinen Start-Button. Sobald die Seite geöffnet ist, bewegen sich Populationen, Diagramm oder visuelle Punkte weiter. Änderungen an den Reglern wirken sofort sichtbar auf die Simulation.
+
+Regler:
+1. Luchse (Raubtiere)
+   - verändert den Druck auf die Rehpopulation
+   - mehr Luchse führen zu stärkerem Rückgang der Rehe
+
+2. Waldfläche (Lebensraum)
+   - beschreibt verfügbare Fläche, Schutz und ökologische Bedingungen
+   - mehr Lebensraum stabilisiert oder erhöht die Rehpopulation
+
+3. Nachwuchs (Kitze pro Wurf)
+   - steuert, wie stark Rehe sich vermehren
+   - höherer Wert lässt die Rehpopulation schneller wachsen
+
+4. Jagd-Erfolg (Energie pro konsumiertem Reh)
+   - steuert, wie viel Energie ein Luchs aus einem gefressenen Reh gewinnt
+   - höherer Wert erhöht den Druck auf die Rehpopulation und kann die Luchspopulation stabilisieren
+
+Wintermodus:
+Baue einen Toggle für Wintermodus ein.
+Wenn Winter aktiv ist, erscheint ein kleines Infofenster mit der Erklärung:
+"Tiere bewegen sich langsamer. Luchse verlieren mehr Energie und bekommen pro gefressenem Reh weniger Energie. Dadurch treffen sie weniger Beute und verhungern schneller."
+
+Zusätzlich gibt es einen Regler "Winterstärke" mit drei Stufen:
+1. Stufe 1 = milder Winter
+2. Stufe 2 = starker Winter
+3. Stufe 3 = extremer Winter
+
+Die Winterstärke soll die Effekte sichtbar verstärken:
+- Tiere bewegen sich langsamer
+- Rehe vermehren sich langsamer
+- Waldfläche / Lebensraum wirkt weniger stark
+- Luchse verlieren mehr Energie
+- Luchse gewinnen pro konsumiertem Reh weniger Energie
+- Schneeflocken erscheinen in der Simulation und werden bei stärkerem Winter dichter
+
+Visualisierung:
+Zeige die Entwicklung mit einer klaren Live-Grafik, z. B.:
+- wachsende und schrumpfende Punkte für Luchse und Rehe
+- ein einfaches Liniendiagramm mit zwei Kurven
+- farbige Zähler für aktuelle Populationswerte
+
+Interaktion:
+Wenn ein Regler bewegt wird, soll man sofort sehen:
+- Rehe nehmen ab, wenn es viele Luchse gibt
+- Rehe erholen sich, wenn mehr Waldfläche vorhanden ist
+- Rehe wachsen schneller, wenn der Nachwuchs-Wert steigt
+- Rehe geraten stärker unter Druck, wenn der Jagd-Erfolg-Wert steigt
+- Im Winter brechen Populationen schneller ein, besonders bei hoher Winterstufe
+
+Design:
+Modernes, klares Unterrichtsinterface mit grossen Labels, gut sichtbaren Slidern und ruhiger Farbgebung. Im Wintermodus soll die Visualisierung kälter wirken, z. B. mit bläulichem Hintergrund und fallenden Schneeflocken.
+
+Didaktischer Effekt:
+Die Demo soll zeigen, dass Ökosysteme dynamisch sind. Kleine Veränderungen an einem Parameter können grosse Auswirkungen auf das ganze System haben.`
+        }
+      ],
       "Schätzfragen & Datenblick": [
         {
-          label: "Prompt",
-          text: `Rolle: Du bist ein kreativer Frontend-Entwickler und UI/UX-Experte. 
+          label: "Einfache Human Version",
+          text: `HTML DEMO Erstellen über
+Schätzen von Grössenordnungen, Gewichten oder Wahrscheinlichkeiten.
 
+Baue Eingabefeld oder Slider, schätzung abgeben, gefolgt von der Einblendung der Lösung.
+
+bsp Wie viel Wasser wird für die Herstellung von einer einzigen Jeans benötigt?
+
+10 schätzfragen mit stunning graphics: zu jeder frage eine grafik oder animation`
+        },
+        {
+          label: "AI Enhanced Version",
+          text: `Rolle: Du bist ein kreativer Frontend-Entwickler und UI/UX-Experte. 
 Aufgabe: Erstelle eine interaktive, visuell beeindruckende Single-Page Web-App (HTML, CSS, JS in einer einzigen Datei) namens "Aha-Effekt: 10 Schätzfragen".
 
-## Kernelement & Mechanik (Der Aha-Effekt):
-
+Kernelement & Mechanik (Der Aha-Effekt):
 Der Nutzer sieht eine Schätzfrage und wählt über einen Slider einen Wert. Nach Klick auf "Auflösen" wird die tatsächliche Zahl groß eingeblendet. Der eigentliche "Aha-Effekt" entsteht danach: Die abstrakte Zahl wird visuell übersetzt, indem sich ein Raster mit dutzenden kleinen Icons füllt (z.B. 8000 Liter = 50 Badewannen, die nacheinander animiert aufpoppen).
 
-## Design & UI/UX (Stunning Graphics):
-
+Design & UI/UX (Stunning Graphics):
 1. Premium Dark Mode: Nutze dunkle Blautöne (z.B. Tailwind slate-900) als Basis.
 2. Glassmorphism: Die Haupt-Cards sollen halbtransparent sein mit einem Backdrop-Blur.
 3. Dynamische Thematisierung: Jede Frage hat eine eigene Akzentfarbe (Hex-Code). Ändere über CSS-Variablen dynamisch leuchtende Hintergrund-Orbs (Glow-Effekte) und die Farbe von Slider, Texten und Icons, passend zur aktuellen Frage.
@@ -1089,25 +1279,21 @@ Der Nutzer sieht eine Schätzfrage und wählt über einen Slider einen Wert. Nac
 5. Typografie: Modern, serifenlos, große Kontraste (z.B. sehr fette Zahlen, feine Beschriftungen).
 6. Zahlenformat: Verwende das Schweizer Format mit Apostroph für Tausender (z.B. 20'000).
 
-## Grafiken & Animationen (NUR Inline-SVGs, KEINE externen Bilder):
-
+Grafiken & Animationen (NUR Inline-SVGs, KEINE externen Bilder):
 Jede Frage benötigt ZWEI Arten von SVGs:
-
 1. Hero-Grafik: Eine große, thematisch passende SVG-Grafik, die unter der Frage schwebt. Sie muss eine Endlosschleifen-Animation haben (z.B. sanftes Schweben, Pulsieren oder Rotieren) und einen leichten Drop-Shadow in der jeweiligen Themenfarbe besitzen.
 2. Icon-Grafik: Ein kleines SVG für das Raster der Auflösung (z.B. kleine Badewanne, Baum, Kreditkarte).
-
 Wenn die Frage aufgelöst wird, muss die Hero-Grafik weich verschwinden und das Raster mit den Icon-Grafiken muss mit einem Stagger-Effekt (verzögertes Einblenden, z.B. Pop-In und Fill-Animation) nacheinander erscheinen.
 
-## Technische Anforderungen:
+Technische Anforderungen:
+- Frameworks: Nutze Tailwind CSS via CDN (<script src="https://cdn.tailwindcss.com"><\/script>).
+- Vanilla JavaScript für die Logik.
+- Alles MUSS zwingend in einer einzigen .html Datei liegen.
+- Responsiv: Perfekt bedienbar auf Mobile und Desktop (kein horizontales Scrollen).
+- Feedback-Logik: Gib dem Nutzer Feedback zu seiner Schätzung (Perfekt, sehr nah dran [<15% Abweichung], zu hoch, zu niedrig).
 
-- Frameworks: Nutze Tailwind CSS via CDN
-- Vanilla JavaScript für die Logik
-- Alles MUSS zwingend in einer einzigen .html Datei liegen
-- Responsiv: Perfekt bedienbar auf Mobile und Desktop (kein horizontales Scrollen)
-- Feedback-Logik: Gib dem Nutzer Feedback zu seiner Schätzung (Perfekt, sehr nah dran [<15% Abweichung], zu hoch, zu niedrig)
-
-## Inhalt (Die 10 Fragen):
-
+Inhalt (Die 10 Fragen):
+Integriere folgende 10 Fragen als Array in JS mit jeweils passendem Min/Max/Step für den Slider:
 1. Liter Wasser für 1 Jeans (Antwort: 8000L. Visualisierung: 50 Badewannen à 160L. Farbe: Blau).
 2. Mikroplastik gegessen pro Jahr (Antwort: 260g. Visualisierung: 52 Kreditkarten à 5g. Farbe: Violett).
 3. CO2 Flug Zürich-New York retour (Antwort: 2000kg. Visualisierung: 200 Bäume à 10kg. Farbe: Grün).
@@ -1119,9 +1305,8 @@ Wenn die Frage aufgelöst wird, muss die Hero-Grafik weich verschwinden und das 
 9. Schokolade gegessen pro Jahr CH (Antwort: 11kg. Visualisierung: 110 Tafeln à 100g. Farbe: Schokobraun).
 10. Länge Blutgefäße Mensch (Antwort: 100'000km. Visualisierung: 2.5 Erdumrundungen à 40'000km. Farbe: Hellblau).
 
-## Ablauf-Logik:
-
-Nach dem Laden startet Frage 1. Slider bewegen → Klick "Auflösen" → Berechnung & Feedback → Stagger-Animation des Rasters → "Nächste Frage" Button erscheint → Bei Klick Fade-Transition zur nächsten Frage mit Farbwechsel der App-Umgebung. Nach Frage 10 ein "Quiz beendet" Screen.`
+Ablauf-Logik:
+Nach dem Laden startet Frage 1. Slider bewegen -> Klick "Auflösen" -> Berechnung & Feedback -> Stagger-Animation des Rasters -> "Nächste Frage" Button erscheint -> Bei Klick Fade-Transition zur nächsten Frage mit Farbwechsel der App-Umgebung. Nach Frage 10 ein "Quiz beendet" Screen.`
         }
       ],
       "Faire ou Jouer? 🇫🇷": [
@@ -1529,9 +1714,7 @@ The final result should feel like a complete, polished educational mini game tha
 
 It should be visually impressive, easy to understand, mobile-first, and fun for secondary school students.`
         }
-      ],
-      "Google AI for Educators": promptFallback,
-      "IB PE: Prompt Engineering": promptFallback
+      ]
     };
 
     const pickPromptEntry = (entries, kind) => {
