@@ -364,6 +364,9 @@
     .eco .icon,
     .eco .tag { color: var(--tag-ink); background: var(--accent); }
 
+    .photosynthesis .icon,
+    .photosynthesis .tag { color: var(--tag-ink); background: #34d399; }
+
     .quiz .icon,
     .quiz .tag { color: var(--tag-ink); background: var(--accent-4); }
 
@@ -876,6 +879,37 @@
         </span>
       </a>
 
+      <a class="card photosynthesis" href="photosynthese.html" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3v3"></path>
+                <path d="M12 18v3"></path>
+                <path d="M4.2 4.2 6.3 6.3"></path>
+                <path d="M17.7 17.7l2.1 2.1"></path>
+                <path d="M3 12h3"></path>
+                <path d="M18 12h3"></path>
+                <path d="M4.2 19.8l2.1-2.1"></path>
+                <path d="M17.7 6.3l2.1-2.1"></path>
+                <path d="M12 8a4 4 0 0 1 4 4c0 3-4 6-4 6s-4-3-4-6a4 4 0 0 1 4-4Z"></path>
+              </svg>
+            </div>
+            <span class="tag">Biologie</span>
+          </div>
+          <h3>Photosynthese Labor</h3>
+          <p>Interaktives Lernlabor zu Edukten, Produkten, Sauerstoffbildung und Glucose-Speicherung.</p>
+        </div>
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Photosynthese Labor">
+          Prompt anzeigen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
+          </svg>
+        </span>
+      </a>
+
       <a class="card quiz" href="schatten_quiz.html" target="_blank" rel="noopener noreferrer">
         <div>
           <div class="card-top">
@@ -1171,6 +1205,236 @@
         {
           label: "AI Enhanced Version",
           text: "HTML DEMO: Ökosystem-Simulator (Fach: Biologie / NMG)\n\nErstelle eine interaktive Single-Page-Demo zur Räuber-Beute-Beziehung zwischen Luchsen und Rehen.\n\nZiel:\nDie Lernenden sollen dynamische Zusammenhänge im Ökosystem live erforschen, statt nur Begriffe abzufragen.\n\nMechanik:\nDie Simulation läuft automatisch. Es gibt keinen Start-Button. Sobald die Seite geöffnet ist, bewegen sich Populationen, Diagramm oder visuelle Punkte weiter. Änderungen an den Reglern wirken sofort sichtbar auf die Simulation.\n\nRegler:\n1. Luchse (Raubtiere)\n   - verändert den Druck auf die Rehpopulation\n   - mehr Luchse führen zu stärkerem Rückgang der Rehe\n\n2. Waldfläche (Lebensraum)\n   - beschreibt verfügbare Fläche, Schutz und ökologische Bedingungen\n   - mehr Lebensraum stabilisiert oder erhöht die Rehpopulation\n\n3. Nachwuchs (Kitze pro Wurf)\n   - steuert, wie stark Rehe sich vermehren\n   - höherer Wert lässt die Rehpopulation schneller wachsen\n\n4. Jagd-Erfolg (Energie pro konsumiertem Reh)\n   - steuert, wie viel Energie ein Luchs aus einem gefressenen Reh gewinnt\n   - höherer Wert erhöht den Druck auf die Rehpopulation und kann die Luchspopulation stabilisieren\n\nWintermodus:\nBaue einen Toggle für Wintermodus ein.\nWenn Winter aktiv ist, erscheint ein kleines Infofenster mit der Erklärung:\n\"Tiere bewegen sich langsamer. Luchse verlieren mehr Energie und bekommen pro gefressenem Reh weniger Energie. Dadurch treffen sie weniger Beute und verhungern schneller.\"\n\nZusätzlich gibt es einen Regler \"Winterstärke\" mit drei Stufen:\n1. Stufe 1 = milder Winter\n2. Stufe 2 = starker Winter\n3. Stufe 3 = extremer Winter\n\nDie Winterstärke soll die Effekte sichtbar verstärken:\n- Tiere bewegen sich langsamer\n- Rehe vermehren sich langsamer\n- Waldfläche / Lebensraum wirkt weniger stark\n- Luchse verlieren mehr Energie\n- Luchse gewinnen pro konsumiertem Reh weniger Energie\n- Schneeflocken erscheinen in der Simulation und werden bei stärkerem Winter dichter\n\nVisualisierung:\nZeige die Entwicklung mit einer klaren Live-Grafik, z. B.:\n- wachsende und schrumpfende Punkte für Luchse und Rehe\n- ein einfaches Liniendiagramm mit zwei Kurven\n- farbige Zähler für aktuelle Populationswerte\n\nInteraktion:\nWenn ein Regler bewegt wird, soll man sofort sehen:\n- Rehe nehmen ab, wenn es viele Luchse gibt\n- Rehe erholen sich, wenn mehr Waldfläche vorhanden ist\n- Rehe wachsen schneller, wenn der Nachwuchs-Wert steigt\n- Rehe geraten stärker unter Druck, wenn der Jagd-Erfolg-Wert steigt\n- Im Winter brechen Populationen schneller ein, besonders bei hoher Winterstufe\n\nDesign:\n- Modernes, klares Unterrichtsinterface mit grossen Labels, gut sichtbaren Slidern und ruhiger Farbgebung.\n- Mobile first dynamisches Design.\n- Im Wintermodus soll die Visualisierung kälter wirken, z. B. mit bläulichem Hintergrund und fallenden Schneeflocken.\n\nDidaktischer Effekt:\nDie Demo soll zeigen, dass Ökosysteme dynamisch sind. Kleine Veränderungen an einem Parameter können grosse Auswirkungen auf das ganze System haben."
+        }
+      ],
+      "Photosynthese Labor": [
+        {
+          label: "Einfache Human Version",
+          text: "Erstelle eine interaktive HTML-Demo zum Thema Photosynthese für die 7. Klasse. Station 1 und 2 sollen zusammen auf dem Startscreen sein: Karten mit Wasser, CO₂, Lichtenergie, Sauerstoff und Glucose werden einem Pflanzenmodell zugeordnet.\n\nDanach soll es separate Ansichten geben:\n- Wie entsteht Sauerstoff?\n- Sortier-Duell: Edukte und Produkte sortieren\n- Wissens-Rallye mit 4 Multiple-Choice-Fragen\n\nMobile first, modernes Dark-Mode-Design, Drag-and-drop plus Klick-Bedienung, Fortschritt 0/15, Erfolgmodal mit Konfetti. Verwende echte Formeln wie CO₂, O₂, H₂O und C₆H₁₂O₆, keine LaTeX-Reste wie $CO_2$."
+        },
+        {
+          label: "AI Enhanced Version",
+          text: `Erstelle eine interaktive HTML-Demo für den Unterricht zum Thema Photosynthese.
+
+## Thema
+Fach: Biologie / NMG
+Zielgruppe: 7. Klasse
+Lernziel: Die Lernenden verstehen, welche Stoffe bei der Photosynthese benötigt werden, welche Produkte entstehen, wo diese Stoffe in der Pflanze vorkommen und warum Sauerstoff entsteht.
+
+## Grundidee
+Baue ein interaktives Photosynthese-Labor als hochwertige Single-Page-Web-App.
+
+Die App darf nicht als lange Scrollseite wirken. Sie soll in mehrere separate Ansichten innerhalb derselben HTML-Datei aufgeteilt sein:
+
+1. Startansicht mit Station 1 und Station 2 auf einem Screen
+2. Eigene Ansicht: Wie entsteht Sauerstoff?
+3. Eigene Ansicht: Sortier-Duell
+4. Eigene Ansicht: Wissens-Rallye
+
+Zwischen den Ansichten gibt es klare Weiter- und Zurück-Buttons.
+
+## Technische Anforderungen
+- Alles in einer einzigen HTML-Datei
+- HTML, CSS und JavaScript direkt in derselben Datei
+- Tailwind CSS per CDN verwenden
+- Vanilla JavaScript für die gesamte Logik
+- Keine Build-Tools
+- Mobile-first und responsive
+- Touch-optimiert
+- Drag-and-drop und zusätzlich Click-to-place für Tablets/Smartphones
+- Fortschritt global zählen
+- Am Ende ein Erfolgserlebnis mit Modal, Sound und Konfetti
+
+## Design
+- Moderner Dark Mode
+- Glasartige Panels mit leichter Transparenz und Blur
+- Farben: Dunkles Slate/Navy als Basis, Akzente in Emerald, Sky, Teal und Amber
+- Grosse klickbare Elemente
+- Gute Lesbarkeit auf Mobile und Desktop
+- Klare Stationen, keine überladene Dauer-Scrollseite
+- Runde Zielpunkte im Diagramm
+- Kleine Animationen für korrekt/falsch, z. B. Shake bei Fehlern und Glow bei Erfolg
+
+## Header
+Oben steht ein kompakter Header:
+- Titel: PHOTOSYNTHESE PRO
+- Untertitel: Interaktives NMG-Labor • Level-Up Edition
+- Globaler Fortschritt: "0 / 15 Aufgaben gelöst"
+- Fortschrittsbalken
+
+Der Gesamtfortschritt zählt:
+- 5 Diagramm-Zuordnungen
+- 6 Sortierkarten
+- 4 Multiple-Choice-Fragen
+
+## Ansicht 1: Station 1 und 2
+Diese Ansicht ist der Startscreen.
+
+### Station 1: Die Labor-Bausteine
+Links gibt es Karten zum Zuordnen:
+
+Edukte / Eingangsstoffe:
+- Wasser, H₂O, aus dem Boden
+- Kohlenstoffdioxid, CO₂, aus der Luft
+- Lichtenergie, Sonne, Motor der Reaktion
+
+Produkte:
+- Sauerstoff, O₂, wird abgegeben
+- Glucose, Traubenzucker, Energie für die Pflanze
+
+Die Karten sollen per Drag-and-drop und per Klick auswählbar sein.
+
+Zusätzlich gibt es einen Formel-Spickzettel:
+6 H₂O + 6 CO₂ + Licht -> C₆H₁₂O₆ + 6 O₂
+
+### Station 2: Modell-Zuordnung
+Rechts gibt es ein interaktives Pflanzenmodell als Inline-SVG:
+- Sonne
+- Boden
+- Wurzeln
+- Stängel
+- Blätter
+- Pfeile für Wasseraufnahme, CO₂-Eingang und O₂-Ausgang
+
+Es gibt 5 Zielpunkte:
+- Sonne akzeptiert Lichtenergie
+- Wurzeln akzeptieren Wasser
+- Blatt-Eingang akzeptiert Kohlenstoffdioxid
+- Blatt-Ausgang akzeptiert Sauerstoff
+- Speicher akzeptiert Glucose
+
+Bei richtiger Zuordnung:
+- Zielpunkt wird ausgefüllt
+- Karte wird ausgegraut
+- Fortschritt steigt
+- positives Feedback
+
+Bei falscher Zuordnung:
+- rotes Feedback
+- Shake-Animation
+
+Unten gibt es einen Button:
+"Weiter: Wie entsteht Sauerstoff?"
+
+## Ansicht 2: Wie entsteht Sauerstoff?
+Diese Ansicht zeigt das Chemie-Mikroskop.
+
+Titel:
+"Das Chemie-Mikroskop: Wie entsteht Sauerstoff?"
+
+Baue eine schrittweise Visualisierung mit drei Buttons:
+
+1. Rohstoffe strömen ein
+   - Zeige Wasser (H₂O) und Kohlenstoffdioxid (CO₂)
+   - Erklärung: Wasser steigt aus den Wurzeln herauf. CO₂ dringt durch die Spaltöffnungen des Blattes in den Chloroplasten ein.
+
+2. Wasserspaltung durch Licht
+   - Zeige Wasserstoff (H) und Sauerstoff (O₂)
+   - Erklärung: Lichtstrahlen knacken das stabile Wassermolekül. Sauerstoff ist für die Pflanze in diesem Moment ein Abfallprodukt und strömt aus.
+
+3. Synthese von Glucose
+   - Zeige einen vereinfachten Glucose-Baustein C₆H₁₂O₆
+   - Erklärung: Aus Wasserstoff und Kohlenstoff aus CO₂ synthetisiert die Pflanze energiereiche Glucose.
+
+Wichtig:
+- Verwende echte Unicode-Formeln wie CO₂, O₂, H₂O und C₆H₁₂O₆.
+- Verwende keine Markdown- oder LaTeX-Reste wie $CO_2$, $O_2$ oder **Glucose**.
+
+Navigation:
+- Zurück zu 1 & 2
+- Weiter: Sortier-Duell
+
+## Ansicht 3: Sortier-Duell
+Die Lernenden sortieren Begriffe in zwei Zonen.
+
+Karten:
+- Kohlenstoffdioxid
+- Wasser
+- Lichtenergie
+- Sauerstoff
+- Glucose
+- Stärke (Speicherstoff)
+
+Zonen:
+- Edukte / Ausgangsstoffe
+- Produkte / Endstoffe
+
+Richtige Zuordnung:
+- Karte wird in die Zone verschoben
+- Karte wird grün markiert
+- Zähler steigt
+- Fortschritt steigt
+
+Falsche Zuordnung:
+- rotes Feedback
+- Shake-Animation
+
+Navigation:
+- Zurück: Sauerstoff
+- Weiter: Wissens-Rallye
+
+## Ansicht 4: Wissens-Rallye
+Baue vier Multiple-Choice-Fragen.
+
+Frage 1:
+Woher holt sich eine Pflanze das unsichtbare Kohlenstoffdioxid (CO₂)?
+- A) Sie saugt es flüssig über die Wurzeln aus der Erde auf.
+- B) Über winzige Poren (Spaltöffnungen) an der Unterseite ihrer Blätter. RICHTIG
+- C) Sie stellt das Gas im Stängel selbst her.
+
+Frage 2:
+Welcher spezielle Farbstoff fängt in den Blättern die Sonnenenergie ein?
+- A) Carotin, das die Blätter im Herbst rot färbt.
+- B) Hämoglobin, das den Sauerstoff im Blut transportiert.
+- C) Chlorophyll, das auch für die grüne Farbe verantwortlich ist. RICHTIG
+
+Frage 3:
+Warum ist die Photosynthese für uns Menschen und Tiere überlebenswichtig?
+- A) Weil Pflanzen dabei Sauerstoff (O₂) herstellen, den wir einatmen müssen. RICHTIG
+- B) Weil sie giftiges Wasser aus dem Erdboden in reines Quellwasser filtert.
+- C) Weil dadurch nachts die Temperatur auf der Erde sinkt.
+
+Frage 4:
+Was macht die Pflanze mit der hergestellten Glucose?
+- A) Sie schwitzt sie komplett über die Blütenblätter wieder aus.
+- B) Sie lagert sie als Stärke, z. B. in Kartoffeln oder Blättern, als Energievorrat ein. RICHTIG
+- C) Sie verdampft sie im Licht, um sich vor Überhitzung zu schützen.
+
+Bei richtiger Antwort:
+- Button grün markieren
+- Badge auf "Richtig!" setzen
+- andere Optionen deaktivieren
+- Fortschritt steigt
+
+Bei falscher Antwort:
+- Button rot markieren
+- kurzer Shake
+- Frage bleibt lösbar
+
+Navigation:
+- Zurück: Sortier-Duell
+
+## Erfolg
+Wenn alle 15 Aufgaben gelöst sind:
+- Erfolgmodal anzeigen
+- Titel: Photosynthese-Superstar!
+- Kurze Zusammenfassung der Leistung:
+  - Diagramm-Positionierung: 5 / 5 richtig
+  - Stoffklassen-Einteilung: 6 / 6 richtig
+  - Theoriewissen: 4 / 4 richtig
+- Konfetti auslösen
+- Kurzer Erfolgssound mit Web Audio API
+- Button: Labor zurücksetzen & erneut starten
+
+## Didaktischer Fokus
+Die App soll die Photosynthese nicht nur abfragen, sondern modellhaft sichtbar machen:
+- Was geht in die Pflanze hinein?
+- Was entsteht?
+- Wo passiert es?
+- Warum entsteht Sauerstoff?
+- Was macht die Pflanze mit Glucose?
+
+Das Endprodukt soll wie ein kleines, hochwertiges Lernlabor wirken, nicht wie ein Arbeitsblatt.`
         }
       ],
       "Schätzfragen & Datenblick": [

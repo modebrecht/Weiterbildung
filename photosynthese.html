@@ -85,7 +85,7 @@
         </div>
     </header>
 
-    <main class="w-full max-w-6xl mx-auto px-4 mt-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <main id="page-start" class="lab-page w-full max-w-6xl mx-auto px-4 mt-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         <!-- Linke Seite: Labor-Zentrale & Drag-Karten (Stufe 1) -->
         <section class="lg:col-span-4 flex flex-col gap-5">
@@ -295,10 +295,15 @@
                 </div>
             </div>
         </section>
+        <div class="lg:col-span-12 flex justify-end">
+            <button onclick="showPage('oxygen')" class="bg-gradient-to-r from-emerald-500 to-sky-500 hover:from-emerald-400 hover:to-sky-400 text-slate-950 font-black py-3 px-5 rounded-2xl transition-all shadow-lg">
+                Weiter: Wie entsteht Sauerstoff?
+            </button>
+        </div>
     </main>
 
     <!-- Zweiter Zeilenblock: Chemie-Mikroskop -->
-    <section class="w-full max-w-6xl mx-auto px-4 mt-6">
+    <section id="page-oxygen" class="lab-page hidden w-full max-w-6xl mx-auto px-4 mt-4">
         <div class="glass-panel p-6 rounded-3xl">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-lg font-bold text-slate-200 flex items-center gap-2">
@@ -438,11 +443,20 @@
                     </button>
                 </div>
             </div>
+            <div class="flex flex-col sm:flex-row justify-between gap-3 mt-6">
+                <button onclick="showPage('start')" class="text-sm text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-4 py-2.5 rounded-xl border border-slate-700 transition">
+                    Zurück zu 1 & 2
+                </button>
+                <button onclick="showPage('sort')" class="bg-gradient-to-r from-emerald-500 to-sky-500 hover:from-emerald-400 hover:to-sky-400 text-slate-950 font-black py-2.5 px-5 rounded-xl transition-all shadow-lg">
+                    Weiter: Sortier-Duell
+                </button>
+            </div>
         </div>
     </section>
 
     <!-- Dritter Zeilenblock: Das Grosse Sortier-Duell -->
-    <section class="w-full max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 md:grid-cols-12 gap-6">
+    <section id="page-sort" class="lab-page hidden w-full max-w-6xl mx-auto px-4 mt-4">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
         
         <!-- Sortier-Karten-Spalte -->
         <div class="md:col-span-4 glass-panel p-6 rounded-3xl flex flex-col justify-between">
@@ -521,10 +535,19 @@
             </div>
 
         </div>
+        </div>
+        <div class="flex flex-col sm:flex-row justify-between gap-3 mt-6">
+            <button onclick="showPage('oxygen')" class="text-sm text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-4 py-2.5 rounded-xl border border-slate-700 transition">
+                Zurück: Sauerstoff
+            </button>
+            <button onclick="showPage('quiz')" class="bg-gradient-to-r from-emerald-500 to-sky-500 hover:from-emerald-400 hover:to-sky-400 text-slate-950 font-black py-2.5 px-5 rounded-xl transition-all shadow-lg">
+                Weiter: Wissens-Rallye
+            </button>
+        </div>
     </section>
 
     <!-- Vierter Zeilenblock: Die Wissens-Rallye (4 Context-Fragen) -->
-    <section class="w-full max-w-6xl mx-auto px-4 mt-6">
+    <section id="page-quiz" class="lab-page hidden w-full max-w-6xl mx-auto px-4 mt-4">
         <div class="glass-panel p-6 rounded-3xl border-sky-500/20">
             <h2 class="text-lg font-bold text-slate-200 mb-4 flex items-center gap-2">
                 <span class="bg-sky-500/20 text-sky-400 w-7 h-7 rounded-lg flex items-center justify-center text-sm font-black">5</span>
@@ -622,6 +645,11 @@
                 </div>
 
             </div>
+            <div class="flex justify-start mt-6">
+                <button onclick="showPage('sort')" class="text-sm text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-4 py-2.5 rounded-xl border border-slate-700 transition">
+                    Zurück: Sortier-Duell
+                </button>
+            </div>
         </div>
     </section>
 
@@ -664,6 +692,18 @@
 
     <!-- JavaScript für Interaktivität, Logik, Sound und Konfetti -->
     <script>
+        const pageIds = ['start', 'oxygen', 'sort', 'quiz'];
+
+        function showPage(pageId) {
+            pageIds.forEach(id => {
+                const page = document.getElementById(`page-${id}`);
+                if (!page) return;
+                page.classList.toggle('hidden', id !== pageId);
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         // --- SOUND SYNTHESE (Web Audio API) ---
         function playVictorySound() {
             try {
