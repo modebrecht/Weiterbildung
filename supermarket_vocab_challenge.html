@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Supermarket Vocab Challenge Pro</title>
+    <!-- Tailwind CSS für modernstes UI-Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js für immersive 3D-Grafiken -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP für ultra-flüssige, professionelle UI-Animationen -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <!-- Playful Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Fredoka', 'sans-serif'],
+                    },
+                    colors: {
+                        superBlue: '#4cc9f0',
+                        superIndigo: '#4895ef',
+                        superPink: '#f72585',
+                        superGreen: '#4caf50',
+                        superYellow: '#ffca3a',
+                        superDark: '#2b2d42',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            outline: none;
+        }
+        /* Custom Scrollbar für die Vokabelliste */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(76, 201, 240, 0.5);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-[#ffeed0] text-superDark h-screen w-screen overflow-hidden select-none touch-manipulation">
+
+    <!-- Game Canvas Layer -->
+    <div id="canvas-container" class="absolute inset-0 w-full h-full z-0"></div>
+
+    <!-- UI Overlay Layer -->
+    <div class="absolute inset-0 w-full h-full z-10 pointer-events-none flex flex-col justify-between p-4 md:p-6">
+        
+        <!-- Header (HUD) -->
+        <header class="flex justify-between items-start w-full pointer-events-auto">
+            <!-- Home/Exit Button -->
+            <button id="btn-home" class="bg-white/95 hover:bg-white text-superDark font-bold px-4 py-2.5 rounded-2xl shadow-lg transition-transform active:scale-95 flex items-center gap-2 hidden border-2 border-slate-100">
+                <span>🚪</span> Hauptmenü
+            </button>
+            <div id="spacer" class="w-10"></div>
+
+            <!-- Stats and Sounds Control -->
+            <div class="flex flex-col items-end gap-2">
+                <!-- Sound & Music Toggle Buttons -->
+                <div class="flex gap-2">
+                    <button id="btn-sound" class="bg-white/95 hover:bg-white p-3 rounded-2xl shadow-lg transition-transform active:scale-95 flex items-center justify-center border-2 border-slate-100" title="Soundeffekte">
+                        <span id="sound-icon">🔊</span>
+                    </button>
+                </div>
+                
+                <!-- HUD Container -->
+                <div id="hud-container" class="bg-white/95 border-2 border-slate-100 rounded-2xl shadow-xl p-3 flex gap-4 hidden">
+                    <div class="text-center">
+                        <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Level</p>
+                        <p id="hud-level-val" class="text-lg font-bold text-superIndigo">1</p>
+                    </div>
+                    <div class="w-[1px] bg-slate-200 self-stretch"></div>
+                    <div class="text-center">
+                        <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Fortschritt</p>
+                        <p id="hud-progress-val" class="text-lg font-bold text-superPink">1/5</p>
+                    </div>
+                    <div class="w-[1px] bg-slate-200 self-stretch"></div>
+                    <div class="text-center">
+                        <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Combo</p>
+                        <p id="hud-combo-val" class="text-lg font-bold text-superPink">🔥 0</p>
+                    </div>
+                    <div class="w-[1px] bg-slate-200 self-stretch"></div>
+                    <div class="text-center">
+                        <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Münzen</p>
+                        <p id="hud-score-val" class="text-lg font-bold text-superYellow">🪙 0</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Central Content Area -->
+        <main class="flex-grow flex items-center justify-center relative my-4">
+            
+            <!-- Main Menu Screen -->
+            <div id="screen-menu" class="bg-white/95 border-4 border-superBlue rounded-[32px] shadow-2xl p-6 md:p-8 max-w-2xl w-full text-center pointer-events-auto transition-all duration-300 transform scale-100 max-h-[85vh] overflow-y-auto">
+                <div class="text-5xl md:text-6xl mb-2">🛒</div>
+                <h1 class="text-3xl md:text-5xl font-extrabold text-superIndigo tracking-tight mb-2">Supermarkt Fun!</h1>
+                <p class="text-slate-500 font-medium mb-6 text-sm md:text-base">Lerne spielend leicht englische Lebensmittel-Vokabeln im bunten 3D-Supermarkt.</p>
+                
+                <!-- Action Buttons: Learn Dictionary -->
+                <div class="flex justify-center gap-4 mb-6">
+                    <button id="btn-open-dictionary" class="bg-superIndigo hover:bg-indigo-600 text-white font-bold py-3 px-6 rounded-2xl shadow-md transition-transform active:scale-95 flex items-center gap-2">
+                        📖 Vokabelheft (Aussprache)
+                    </button>
+                </div>
+
+                <h2 class="text-xl font-bold text-superDark mb-4 flex items-center justify-center gap-2">
+                    <span>🏁</span> Wähle ein Level:
+                </h2>
+                
+                <!-- Level Grid -->
+                <div id="level-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                    <!-- Dynamic level buttons generated here -->
+                </div>
+
+                <div class="flex justify-between items-center border-t border-slate-200 pt-4 text-xs text-slate-400 font-semibold">
+                    <span>Interaktiver Schultrainer v3.5</span>
+                    <button id="btn-trigger-reset" class="hover:text-superPink transition-colors">Fortschritt zurücksetzen 🔄</button>
+                </div>
+            </div>
+
+            <!-- Vokabelheft (Dictionary Modal) -->
+            <div id="screen-dictionary" class="bg-white/98 border-4 border-superIndigo rounded-[32px] shadow-2xl p-6 max-w-2xl w-full pointer-events-auto transition-all duration-300 transform scale-90 opacity-0 hidden max-h-[85vh] flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-superIndigo flex items-center gap-2">📖 Englisches Vokabelheft</h2>
+                    <button id="btn-close-dictionary" class="text-slate-400 hover:text-superDark text-2xl font-bold">✕</button>
+                </div>
+                <p class="text-xs text-slate-500 mb-4">Klicke auf das Lautsprecher-Symbol (🔊), um dir die korrekte englische Aussprache anzuhören!</p>
+                
+                <div class="overflow-y-auto flex-grow space-y-4 pr-1" id="dictionary-list-container">
+                    <!-- Dynamic dictionary categories go here -->
+                </div>
+            </div>
+
+            <!-- Custom Confirmation Dialog (Reset Confirm) -->
+            <div id="modal-confirm" class="bg-white/98 border-4 border-superPink rounded-[28px] shadow-2xl p-6 max-w-sm w-full text-center pointer-events-auto transition-all duration-300 transform scale-90 opacity-0 hidden">
+                <div class="text-4xl mb-2">🚨</div>
+                <h3 class="text-xl font-bold text-superDark mb-2">Fortschritt zurücksetzen?</h3>
+                <p class="text-slate-500 text-sm mb-6">Möchtest du all deine Sterne, Highscores und Münzen unwiderruflich löschen?</p>
+                <div class="flex gap-4">
+                    <button id="btn-confirm-reset" class="flex-grow bg-superPink hover:bg-pink-600 text-white font-bold py-3 rounded-2xl active:scale-95 transition-all text-sm">Ja, zurücksetzen</button>
+                    <button id="btn-cancel-reset" class="flex-grow bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3 rounded-2xl active:scale-95 transition-all text-sm">Abbrechen</button>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="screen-result" class="bg-white/95 border-4 border-superYellow rounded-[32px] shadow-2xl p-6 md:p-8 max-w-md w-full text-center pointer-events-auto transition-all duration-300 transform scale-90 opacity-0 hidden">
+                <div id="result-badge-anim" class="text-7xl md:text-8xl mb-4 animate-bounce">🥇</div>
+                <h2 id="result-title" class="text-2xl md:text-4xl font-extrabold text-superDark mb-2">Unglaublich!</h2>
+                <p id="result-subtitle" class="text-slate-500 mb-6 font-medium">Du hast dieses Level mit Bravour bestanden.</p>
+                
+                <!-- Score Breakdown -->
+                <div class="bg-slate-50 rounded-2xl p-4 mb-6 border-2 border-slate-100">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-slate-500 font-semibold">Level-Punkte:</span>
+                        <span id="result-score" class="font-bold text-superIndigo">5 / 5 Richtig</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <span class="text-slate-500 font-semibold">Max Combo:</span>
+                        <span id="result-combo" class="font-bold text-superPink">🔥 5</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500 font-semibold">Erhaltenes Abzeichen:</span>
+                        <span id="result-badge-name" class="font-bold text-superYellow">Gold Abzeichen 🏆</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col gap-3">
+                    <button id="btn-next-level" class="bg-superGreen hover:bg-green-600 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-green-500/20 active:scale-95 transition-all text-lg">
+                        Nächstes Level spielen ➔
+                    </button>
+                    <button id="btn-menu-back" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3 px-6 rounded-2xl active:scale-95 transition-all text-sm">
+                        Zurück zur Levelauswahl
+                    </button>
+                </div>
+            </div>
+
+            <!-- Combo Floating Text Anchor (3D Space) -->
+            <div id="combo-popup" class="absolute pointer-events-none text-4xl font-extrabold text-superPink scale-0 opacity-0 transition-all duration-300 select-none z-20">
+                🔥 Double Combo!
+            </div>
+
+        </main>
+
+        <!-- Footer / Action Area (Answer Buttons for Gameplay) -->
+        <footer id="gameplay-footer" class="w-full max-w-4xl mx-auto pointer-events-auto transition-all duration-300 transform translate-y-24 opacity-0 hidden">
+            <!-- Progress indicators (Visual Steps) -->
+            <div class="flex justify-center gap-3 mb-4">
+                <div class="step-dot w-4 h-4 rounded-full bg-white/50 border-2 border-slate-300 transition-all duration-300"></div>
+                <div class="step-dot w-4 h-4 rounded-full bg-white/50 border-2 border-slate-300 transition-all duration-300"></div>
+                <div class="step-dot w-4 h-4 rounded-full bg-white/50 border-2 border-slate-300 transition-all duration-300"></div>
+                <div class="step-dot w-4 h-4 rounded-full bg-white/50 border-2 border-slate-300 transition-all duration-300"></div>
+                <div class="step-dot w-4 h-4 rounded-full bg-white/50 border-2 border-slate-300 transition-all duration-300"></div>
+            </div>
+
+            <!-- 2x2 Answer Grid -->
+            <div class="grid grid-cols-2 gap-3 md:gap-4 pb-4">
+                <button class="btn-answer group relative bg-white/95 active:scale-95 border-b-8 border-slate-200 hover:border-slate-300 text-superDark hover:text-superIndigo p-4 md:p-5 rounded-2xl md:rounded-3xl shadow-xl text-lg md:text-2xl font-bold transition-all flex items-center justify-between text-left">
+                    <span class="btn-letter bg-slate-100 text-slate-500 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-semibold mr-3 shadow-inner">1</span>
+                    <span class="flex-grow truncate btn-word-text">Apple</span>
+                    <span class="btn-emoji opacity-0 group-hover:opacity-100 transition-opacity text-xl">🛒</span>
+                </button>
+                <button class="btn-answer group relative bg-white/95 active:scale-95 border-b-8 border-slate-200 hover:border-slate-300 text-superDark hover:text-superIndigo p-4 md:p-5 rounded-2xl md:rounded-3xl shadow-xl text-lg md:text-2xl font-bold transition-all flex items-center justify-between text-left">
+                    <span class="btn-letter bg-slate-100 text-slate-500 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-semibold mr-3 shadow-inner">2</span>
+                    <span class="flex-grow truncate btn-word-text">Banana</span>
+                    <span class="btn-emoji opacity-0 group-hover:opacity-100 transition-opacity text-xl">🛒</span>
+                </button>
+                <button class="btn-answer group relative bg-white/95 active:scale-95 border-b-8 border-slate-200 hover:border-slate-300 text-superDark hover:text-superIndigo p-4 md:p-5 rounded-2xl md:rounded-3xl shadow-xl text-lg md:text-2xl font-bold transition-all flex items-center justify-between text-left">
+                    <span class="btn-letter bg-slate-100 text-slate-500 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-semibold mr-3 shadow-inner">3</span>
+                    <span class="flex-grow truncate btn-word-text">Milk</span>
+                    <span class="btn-emoji opacity-0 group-hover:opacity-100 transition-opacity text-xl">🛒</span>
+                </button>
+                <button class="btn-answer group relative bg-white/95 active:scale-95 border-b-8 border-slate-200 hover:border-slate-300 text-superDark hover:text-superIndigo p-4 md:p-5 rounded-2xl md:rounded-3xl shadow-xl text-lg md:text-2xl font-bold transition-all flex items-center justify-between text-left">
+                    <span class="btn-letter bg-slate-100 text-slate-500 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-semibold mr-3 shadow-inner">4</span>
+                    <span class="flex-grow truncate btn-word-text">Bread</span>
+                    <span class="btn-emoji opacity-0 group-hover:opacity-100 transition-opacity text-xl">🛒</span>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    // Audio State & Synthesizer Logic
+    let soundEnabled = true;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+        if (!soundEnabled) return;
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        const now = audioCtx.currentTime;
+
+        if (type === 'click') {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.setValueAtTime(400, now);
+            osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            osc.start(now);
+            osc.stop(now + 0.1);
+        } else if (type === 'scan') {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.setValueAtTime(1200, now);
+            osc.frequency.exponentialRampToValueAtTime(1500, now + 0.12);
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+            osc.start(now);
+            osc.stop(now + 0.15);
+        } else if (type === 'correct') {
+            // Happy up-sweep arpeggio
+            const freqs = [523.25, 659.25, 783.99, 1046.50];
+            freqs.forEach((f, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const startTime = now + (i * 0.08);
+                osc.frequency.setValueAtTime(f, startTime);
+                gain.gain.setValueAtTime(0.1, startTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.3);
+                osc.start(startTime);
+                osc.stop(startTime + 0.3);
+            });
+        } else if (type === 'combo') {
+            // Intense, glowing chord sweep
+            const freqs = [523.25, 659.25, 783.99, 1174.66, 1567.98];
+            freqs.forEach((f, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const startTime = now + (i * 0.04);
+                osc.frequency.setValueAtTime(f, startTime);
+                gain.gain.setValueAtTime(0.05, startTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
+                osc.start(startTime);
+                osc.stop(startTime + 0.4);
+            });
+        } else if (type === 'wrong') {
+            // Sad detune sweep
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.setValueAtTime(180, now);
+            osc.frequency.linearRampToValueAtTime(110, now + 0.3);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+            osc.start(now);
+            osc.stop(now + 0.35);
+        } else if (type === 'fanfare') {
+            const melody = [523.25, 523.25, 523.25, 659.25, 523.25, 783.99, 1046.50];
+            const times = [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9];
+            melody.forEach((f, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const startTime = now + times[i];
+                const duration = i === melody.length - 1 ? 0.6 : 0.15;
+                osc.frequency.setValueAtTime(f, startTime);
+                gain.gain.setValueAtTime(0.11, startTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+                osc.start(startTime);
+                osc.stop(startTime + duration);
+            });
+        }
+    }
+
+    const levelsData = [
+        {
+            id: 1,
+            name: "Level 1: Basic Foods",
+            subtitle: "Sehr einfache Grundlagen",
+            color: "border-superBlue",
+            bg: "bg-superBlue/10",
+            textColor: "text-superBlue",
+            words: [
+                { en: "apple", de: "Apfel", emoji: "🍎" },
+                { en: "banana", de: "Banane", emoji: "🍌" },
+                { en: "milk", de: "Milch", emoji: "🥛" },
+                { en: "bread", de: "Brot", emoji: "🍞" },
+                { en: "cheese", de: "Käse", emoji: "🧀" }
+            ]
+        },
+        {
+            id: 2,
+            name: "Level 2: Veggies & Co",
+            subtitle: "Einfache Lebensmittel",
+            color: "border-superIndigo",
+            bg: "bg-superIndigo/10",
+            textColor: "text-superIndigo",
+            words: [
+                { en: "carrot", de: "Karotte", emoji: "🥕" },
+                { en: "potato", de: "Kartoffel", emoji: "🥔" },
+                { en: "tomato", de: "Tomate", emoji: "🍅" },
+                { en: "water", de: "Wasser", emoji: "💧" },
+                { en: "egg", de: "Ei", emoji: "🥚" }
+            ]
+        },
+        {
+            id: 3,
+            name: "Level 3: Everyday Eats",
+            subtitle: "Mittelschwere Vokabeln",
+            color: "border-superPink",
+            bg: "bg-superPink/10",
+            textColor: "text-superPink",
+            words: [
+                { en: "chicken", de: "Hühnchen", emoji: "🍗" },
+                { en: "rice", de: "Reis", emoji: "🍚" },
+                { en: "juice", de: "Saft", emoji: "🧃" },
+                { en: "orange", de: "Orange", emoji: "🍊" },
+                { en: "pizza", de: "Pizza", emoji: "🍕" }
+            ]
+        },
+        {
+            id: 4,
+            name: "Level 4: Dairy & Herbs",
+            subtitle: "Mittel bis schwierig",
+            color: "border-superYellow",
+            bg: "bg-superYellow/10",
+            textColor: "text-amber-500",
+            words: [
+                { en: "strawberry", de: "Erdbeere", emoji: "🍓" },
+                { en: "cucumber", de: "Gurke", emoji: "🥒" },
+                { en: "broccoli", de: "Brokkoli", emoji: "🥦" },
+                { en: "butter", de: "Butter", emoji: "🧈" },
+                { en: "honey", de: "Honig", emoji: "🍯" }
+            ]
+        },
+        {
+            id: 5,
+            name: "Level 5: Kitchen Staples",
+            subtitle: "Schwierigerer Wortschatz",
+            color: "border-purple-500",
+            bg: "bg-purple-500/10",
+            textColor: "text-purple-500",
+            words: [
+                { en: "yoghurt", de: "Joghurt", emoji: "🍦" },
+                { en: "cereal", de: "Müsli", emoji: "🥣" },
+                { en: "flour", de: "Mehl", emoji: "🥡" },
+                { en: "mushroom", de: "Pilz", emoji: "🍄" },
+                { en: "garlic", de: "Knoblauch", emoji: "🧄" }
+            ]
+        },
+        {
+            id: 6,
+            name: "Level 6: Chef's Challenge",
+            subtitle: "Finale Vokabel-Meisterschaft",
+            color: "border-superGreen",
+            bg: "bg-superGreen/10",
+            textColor: "text-superGreen",
+            words: [
+                { en: "pineapple", de: "Ananas", emoji: "🍍" },
+                { en: "aubergine", de: "Aubergine", emoji: "🍆" },
+                { en: "spaghetti", de: "Spaghetti", emoji: "🍝" },
+                { en: "croissant", de: "Hörnchen", emoji: "🥐" },
+                { en: "shrimp", de: "Garnele", emoji: "🍤" }
+            ]
+        }
+    ];
+
+    let gameState = {
+        unlockedLevel: 1,
+        highscores: {}, 
+        badges: {},
+        bestStreak: 0
+    };
+
+    function saveToLocalStorage() {
+        localStorage.setItem('supermarket_vocab_save_v3', JSON.stringify(gameState));
+    }
+
+    function loadFromLocalStorage() {
+        const saved = localStorage.getItem('supermarket_vocab_save_v3');
+        if (saved) {
+            try {
+                gameState = JSON.parse(saved);
+            } catch (e) {
+                console.error("Fehler beim Laden des Spielstandes", e);
+            }
+        }
+    }
+
+    let scene, camera, renderer, shelf, checkoutDesk;
+    let customerChar, cashierChar, activeItemMesh, itemTray;
+    let conveyorBelt, scannerLaserMesh;
+    let coinsArray = [];
+    let legL, legR; // Legs for walking animation
+    let plantMesh, cartMesh; // Aesthetic props
+
+    function setupThreeScene() {
+        const container = document.getElementById('canvas-container');
+        
+        scene = new THREE.Scene();
+        // Warm peach-beige floor/wall fog ambience
+        scene.background = new THREE.Color(0xffeed0);
+        scene.fog = new THREE.FogExp2(0xffeed0, 0.04);
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
+        
+        // High-end isometric-style camera positioning
+        camera.position.set(-3.5, 4.2, 7.8);
+        camera.lookAt(0.3, 1.0, 1.2);
+
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        container.appendChild(renderer.domElement);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+        scene.add(ambientLight);
+
+        // Sunlight providing gorgeous warm tones
+        const sunLight = new THREE.DirectionalLight(0xfffaed, 0.85);
+        sunLight.position.set(8, 12, 6);
+        sunLight.castShadow = true;
+        sunLight.shadow.mapSize.width = 1024;
+        sunLight.shadow.mapSize.height = 1024;
+        sunLight.shadow.bias = -0.001;
+        scene.add(sunLight);
+
+        // Warm spotlights focusing on checkout area
+        const checkoutSpot = new THREE.SpotLight(0xfffae0, 1.8, 12, Math.PI / 4, 0.5, 1);
+        checkoutSpot.position.set(0.6, 6, 1.6);
+        checkoutSpot.target.position.set(0.6, 1.1, 1.6);
+        scene.add(checkoutSpot);
+        scene.add(checkoutSpot.target);
+
+        buildSupermarketWorld();
+        animate3D();
+    }
+
+    function createTileTexture() {
+        const size = 512;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        // Grout line base color (warm gray beige)
+        ctx.fillStyle = '#bfae9e';
+        ctx.fillRect(0, 0, size, size);
+
+        const tiles = 8;
+        const tileSize = size / tiles;
+        const border = 2.5;
+
+        for (let y = 0; y < tiles; y++) {
+            for (let x = 0; x < tiles; x++) {
+                const tx = x * tileSize + border;
+                const ty = y * tileSize + border;
+                const tw = tileSize - border * 2;
+                const th = tileSize - border * 2;
+
+                // Base elegant tile color (warm subtle checkerboard pattern)
+                const isEven = (x + y) % 2 === 0;
+                ctx.fillStyle = isEven ? '#fdfcf7' : '#f7f2e8';
+                
+                // Draw tile
+                ctx.fillRect(tx, ty, tw, th);
+
+                // Add subtle elegant terrazzo specks for realistic high-end supermarket look
+                ctx.fillStyle = 'rgba(150, 130, 110, 0.12)';
+                for (let i = 0; i < 20; i++) {
+                    const speckX = tx + Math.random() * tw;
+                    const speckY = ty + Math.random() * th;
+                    const r = Math.random() * 1.5 + 0.8;
+                    ctx.beginPath();
+                    ctx.arc(speckX, speckY, r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Soft inner highlight (bevel effect)
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(tx + 0.8, ty + 0.8, tw - 1.6, th - 1.6);
+
+                // Subtly darker edge line for geometric definition
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.03)';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(tx, ty, tw, th);
+            }
+        }
+        
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.RepeatWrapping;
+        tex.repeat.set(5, 5); // perfect tile density
+        return tex;
+    }
+
+    function buildSupermarketWorld() {
+        // --- 1. PROZEDURALER ELEGANTER FLIESENBODEN ---
+        const floorTex = createTileTexture();
+
+        const floorGeo = new THREE.PlaneGeometry(35, 35);
+        const floorMat = new THREE.MeshStandardMaterial({ 
+            map: floorTex,
+            roughness: 0.15, // elegant shiny surface reflecting spot lights
+            metalness: 0.05
+        });
+        const floor = new THREE.Mesh(floorGeo, floorMat);
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        // --- 2. WÄNDE MIT RETRO-STREIFEN ---
+        const wallMat = new THREE.MeshStandardMaterial({ color: 0xebe3d5, roughness: 0.9 }); // Warmes Beige
+        const backWall = new THREE.Mesh(new THREE.PlaneGeometry(35, 12), wallMat);
+        backWall.position.set(0, 6, -5);
+        backWall.receiveShadow = true;
+        scene.add(backWall);
+
+        const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(35, 12), wallMat);
+        leftWall.position.set(-15, 6, 5);
+        leftWall.rotation.y = Math.PI / 2;
+        leftWall.receiveShadow = true;
+        scene.add(leftWall);
+
+        // Retro Orange/Gelber Streifen an der Rückwand
+        const stripeMat = new THREE.MeshStandardMaterial({ color: 0xff9f1c, roughness: 0.8 });
+        const stripe = new THREE.Mesh(new THREE.BoxGeometry(35, 0.4, 0.1), stripeMat);
+        stripe.position.set(0, 4.0, -4.9);
+        scene.add(stripe);
+
+        // --- 3. „FRESH MARKET“ HOLZ-SCHILD ---
+        const signCanvas = document.createElement('canvas');
+        signCanvas.width = 512;
+        signCanvas.height = 128;
+        const sCtx = signCanvas.getContext('2d');
+        sCtx.fillStyle = '#a16646'; // Holzrahmen
+        sCtx.fillRect(0, 0, 512, 128);
+        sCtx.fillStyle = '#ff9f1c'; // Kernfarbe
+        sCtx.fillRect(15, 15, 482, 98);
+        sCtx.fillStyle = '#ffffff';
+        sCtx.font = 'bold 44px Fredoka, sans-serif';
+        sCtx.textAlign = 'center';
+        sCtx.textBaseline = 'middle';
+        sCtx.fillText('🛒 FRESH MARKET 🍎', 256, 64);
+
+        const signTex = new THREE.CanvasTexture(signCanvas);
+        const signMat = new THREE.MeshStandardMaterial({ map: signTex, roughness: 0.6 });
+        const signMesh = new THREE.Mesh(new THREE.BoxGeometry(6, 1.5, 0.2), signMat);
+        signMesh.position.set(0, 5.5, -4.8);
+        scene.add(signMesh);
+
+        // --- 4. SUPERMARKT-REGALE ---
+        const shelfWoodMat = new THREE.MeshStandardMaterial({ color: 0xbd8560, roughness: 0.8 });
+        const plankMat = new THREE.MeshStandardMaterial({ color: 0xdfb08c, roughness: 0.7 });
+
+        // Regal links im Hintergrund
+        shelf = new THREE.Group();
+        shelf.position.set(-4, 0, -3.0);
+        
+        const shelfBase = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.2, 1.0), shelfWoodMat);
+        shelfBase.position.y = 0.1;
+        shelfBase.castShadow = true;
+        shelf.add(shelfBase);
+
+        const shelfUp1 = new THREE.Mesh(new THREE.BoxGeometry(0.15, 3.4, 0.8), shelfWoodMat);
+        shelfUp1.position.set(-1.7, 1.7, 0);
+        shelfUp1.castShadow = true;
+        shelf.add(shelfUp1);
+
+        const shelfUp2 = shelfUp1.clone();
+        shelfUp2.position.set(1.7, 1.7, 0);
+        shelf.add(shelfUp2);
+
+        // Regalbretter & Bunte Schachteln
+        for (let i = 1; i <= 3; i++) {
+            const plank = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.1, 0.8), plankMat);
+            plank.position.set(0, i * 0.85, 0);
+            plank.castShadow = true;
+            shelf.add(plank);
+
+            const colors = [0xff8888, 0x5cd699, 0xffdd66, 0x5cc6ff, 0xffa3ff];
+            for (let j = -1.5; j <= 1.5; j += 0.75) {
+                if (Math.random() > 0.2) {
+                    const boxGeo = new THREE.BoxGeometry(0.35, 0.45 + Math.random()*0.15, 0.45);
+                    const boxMat = new THREE.MeshStandardMaterial({ 
+                        color: colors[Math.floor(Math.random() * colors.length)], 
+                        roughness: 0.6 
+                    });
+                    const item = new THREE.Mesh(boxGeo, boxMat);
+                    item.position.set(j, i * 0.85 + 0.26, 0.1);
+                    item.castShadow = true;
+                    shelf.add(item);
+                }
+            }
+        }
+        scene.add(shelf);
+
+        // Regal rechts im Hintergrund
+        const rightShelf = shelf.clone();
+        rightShelf.position.set(4.5, 0, -3.0);
+        scene.add(rightShelf);
+
+        // --- 5. OBST- UND GEMÜSESTAND ---
+        const vegStand = new THREE.Group();
+        vegStand.position.set(-8.5, 0, -1.0);
+        
+        const standBase = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.8, 1.2), shelfWoodMat);
+        standBase.position.y = 0.4;
+        standBase.castShadow = true;
+        vegStand.add(standBase);
+
+        // Zwei schräge Kisten oben drauf
+        const crateMat = new THREE.MeshStandardMaterial({ color: 0xcd853f, roughness: 0.9 });
+        const crate1 = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.3, 0.9), crateMat);
+        crate1.position.set(-0.55, 0.95, 0);
+        crate1.rotation.x = 0.2;
+        crate1.castShadow = true;
+        vegStand.add(crate1);
+
+        const crate2 = crate1.clone();
+        crate2.position.set(0.55, 0.95, 0);
+        vegStand.add(crate2);
+
+        // Früchte in Kiste 1 (Rote Äpfel)
+        const appleColor = new THREE.MeshStandardMaterial({ color: 0xd62828, roughness: 0.3 });
+        for (let x = -0.25; x <= 0.25; x += 0.25) {
+            for (let z = -0.25; z <= 0.25; z += 0.25) {
+                const apple = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), appleColor);
+                apple.position.set(-0.55 + x, 1.05 + Math.random()*0.05, z);
+                apple.castShadow = true;
+                vegStand.add(apple);
+            }
+        }
+
+        // Früchte in Kiste 2 (Orangen)
+        const orangeColor = new THREE.MeshStandardMaterial({ color: 0xf77f00, roughness: 0.3 });
+        for (let x = -0.25; x <= 0.25; x += 0.25) {
+            for (let z = -0.25; z <= 0.25; z += 0.25) {
+                const orange = new THREE.Mesh(new THREE.SphereGeometry(0.085, 8, 8), orangeColor);
+                orange.position.set(0.55 + x, 1.05 + Math.random()*0.05, z);
+                orange.castShadow = true;
+                vegStand.add(orange);
+            }
+        }
+        scene.add(vegStand);
+
+        // --- 6. ROTER EINKAUFSKORB ---
+        const basketGroup = new THREE.Group();
+        basketGroup.position.set(-2.5, 0, 4.0);
+        const basketMat = new THREE.MeshStandardMaterial({ color: 0xe63946, roughness: 0.4 });
+        const basketBase = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.4, 0.45), basketMat);
+        basketBase.position.y = 0.2;
+        basketBase.castShadow = true;
+        basketGroup.add(basketBase);
+
+        // Baguette im Korb
+        const breadColor = new THREE.MeshStandardMaterial({ color: 0xdda15e, roughness: 0.8 });
+        const baguette = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.6, 8), breadColor);
+        baguette.position.set(0.1, 0.35, -0.05);
+        baguette.rotation.set(0.3, 0.2, 0.5);
+        baguette.castShadow = true;
+        basketGroup.add(baguette);
+
+        // Milchflasche im Korb
+        const milkColor = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2 });
+        const milkCap = new THREE.MeshStandardMaterial({ color: 0x4cc9f0 });
+        const bottle = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.3, 8), milkColor);
+        bottle.position.set(-0.12, 0.25, 0.05);
+        bottle.castShadow = true;
+        basketGroup.add(bottle);
+        const bottleCap = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.05, 8), milkCap);
+        bottleCap.position.set(-0.12, 0.42, 0.05);
+        basketGroup.add(bottleCap);
+
+        scene.add(basketGroup);
+
+        // --- 7. DEKORATIVE TOPFPFLANZE (SKANDINAVISCHER STIL) ---
+        plantMesh = new THREE.Group();
+        plantMesh.position.set(-6.5, 0, -4.0);
+        
+        // Keramiktopf
+        const potGeo = new THREE.CylinderGeometry(0.35, 0.25, 0.6, 12);
+        const potMat = new THREE.MeshStandardMaterial({ color: 0xf5ebe0, roughness: 0.5 });
+        const pot = new THREE.Mesh(potGeo, potMat);
+        pot.position.y = 0.3;
+        pot.castShadow = true;
+        plantMesh.add(pot);
+
+        // Pflanzenstängel und Blätter (Monstera-Look)
+        const leafMat = new THREE.MeshStandardMaterial({ color: 0x386641, roughness: 0.6 });
+        for (let i = 0; i < 5; i++) {
+            const leafGroup = new THREE.Group();
+            leafGroup.position.set(0, 0.5, 0);
+            leafGroup.rotation.y = (i * Math.PI * 2) / 5;
+            leafGroup.rotation.z = 0.3 + Math.random() * 0.4;
+            
+            const leafStem = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.5, 8), leafMat);
+            leafStem.position.y = 0.25;
+            leafGroup.add(leafStem);
+
+            const leafBlade = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.02, 0.35), leafMat);
+            leafBlade.position.set(0, 0.5, 0.1);
+            leafBlade.rotation.x = 0.2;
+            leafGroup.add(leafBlade);
+
+            plantMesh.add(leafGroup);
+        }
+        scene.add(plantMesh);
+
+        // --- 8. MINIATUREINKAUFSWAGEN (COOLE METALLREKREATION) ---
+        cartMesh = new THREE.Group();
+        cartMesh.position.set(-4.5, 0, 3.8);
+        cartMesh.rotation.y = 0.5;
+
+        const metalMat = new THREE.MeshStandardMaterial({ color: 0xd1d5db, metalness: 0.8, roughness: 0.2 });
+        const plasticAccent = new THREE.MeshStandardMaterial({ color: 0xf72585 });
+
+        const cartBase = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.05, 0.8), metalMat);
+        cartBase.position.y = 0.25;
+        cartMesh.add(cartBase);
+
+        // 4 Kleine Räder
+        for (let x = -0.22; x <= 0.22; x += 0.44) {
+            for (let z = -0.35; z <= 0.35; z += 0.7) {
+                const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.04, 8), metalMat);
+                wheel.rotation.z = Math.PI / 2;
+                wheel.position.set(x, 0.08, z);
+                cartMesh.add(wheel);
+            }
+        }
+
+        // Metallgitterbox
+        const cageGeo = new THREE.BoxGeometry(0.46, 0.35, 0.7);
+        const cageMat = new THREE.MeshStandardMaterial({ color: 0xd1d5db, wireframe: true });
+        const cage = new THREE.Mesh(cageGeo, cageMat);
+        cage.position.y = 0.55;
+        cartMesh.add(cage);
+
+        // Griff
+        const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.4, 8), plasticAccent);
+        handle.rotation.z = Math.PI / 2;
+        handle.position.set(0, 0.75, -0.36);
+        cartMesh.add(handle);
+
+        scene.add(cartMesh);
+
+        // --- 9. KASSENBEREICH ---
+        checkoutDesk = new THREE.Group();
+        checkoutDesk.position.set(0.6, 0, 1.6);
+
+        const deskMetalMat = new THREE.MeshStandardMaterial({ color: 0x4895ef, roughness: 0.3 });
+        const deskWhiteMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 });
+        const beltRubberMat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.9 });
+
+        const bodyDesk = new THREE.Mesh(new THREE.BoxGeometry(3.6, 1.1, 1.4), deskMetalMat);
+        bodyDesk.position.y = 0.55;
+        bodyDesk.castShadow = true;
+        bodyDesk.receiveShadow = true;
+        checkoutDesk.add(bodyDesk);
+
+        const edgeDesk = new THREE.Mesh(new THREE.BoxGeometry(3.64, 0.15, 1.44), deskWhiteMat);
+        edgeDesk.position.y = 1.1;
+        checkoutDesk.add(edgeDesk);
+
+        conveyorBelt = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.02, 1.1), beltRubberMat);
+        conveyorBelt.position.set(-0.5, 1.15, 0);
+        conveyorBelt.receiveShadow = true;
+        checkoutDesk.add(conveyorBelt);
+
+        // Kassenmonitor
+        const regMat = new THREE.MeshStandardMaterial({ color: 0x2b2d42, roughness: 0.5 });
+        const regBase = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.3, 0.4), regMat);
+        regBase.position.set(1.1, 1.3, 0.2);
+        checkoutDesk.add(regBase);
+
+        const screenGeo = new THREE.BoxGeometry(0.5, 0.4, 0.08);
+        const regScreen = new THREE.Mesh(screenGeo, new THREE.MeshStandardMaterial({ color: 0x0a0a0a }));
+        regScreen.position.set(1.1, 1.6, 0.2);
+        regScreen.rotation.y = -Math.PI / 6;
+        checkoutDesk.add(regScreen);
+
+        // Roter Laserscanner
+        const scannerGeo = new THREE.PlaneGeometry(0.35, 0.25);
+        const scannerMat = new THREE.MeshBasicMaterial({ color: 0xff3b30 });
+        const scanner = new THREE.Mesh(scannerGeo, scannerMat);
+        scanner.rotation.x = -Math.PI / 2;
+        scanner.position.set(0.4, 1.18, 0);
+        checkoutDesk.add(scanner);
+
+        // Prozedurale 3D-Laserlinie zum Einscannen
+        const laserLineGeo = new THREE.BoxGeometry(0.02, 0.04, 1.0);
+        const laserLineMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        scannerLaserMesh = new THREE.Mesh(laserLineGeo, laserLineMat);
+        scannerLaserMesh.position.set(0.4, 1.25, 0);
+        scannerLaserMesh.scale.set(0, 0, 0);
+        checkoutDesk.add(scannerLaserMesh);
+
+        scene.add(checkoutDesk);
+
+        // --- 10. MENSCHLICHE CHARAKTERE ---
+        customerChar = new THREE.Group();
+        customerChar.position.set(-6, 0, 2.8); // Vor dem Tresen positioniert
+
+        const skinMat = new THREE.MeshStandardMaterial({ color: 0xffdbac, roughness: 0.6 }); 
+        const hoodieMat = new THREE.MeshStandardMaterial({ color: 0xf72585, roughness: 0.5 }); // Pinker Hoodie
+        const pantsMat = new THREE.MeshStandardMaterial({ color: 0x3f37c9, roughness: 0.6 }); // Jeans
+        const shoeMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 }); // Weisse Sneaker
+        const hairMat = new THREE.MeshStandardMaterial({ color: 0x582f0e, roughness: 0.8 }); // Braunes Haar
+
+        // Torso (Hoodie)
+        const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.4, 0.8, 16), hoodieMat);
+        torso.position.y = 0.85;
+        torso.castShadow = true;
+        torso.receiveShadow = true;
+        customerChar.add(torso);
+
+        // Kapuze hinten am Rücken angedeutet
+        const hoodGeo = new THREE.SphereGeometry(0.22, 12, 12);
+        const hood = new THREE.Mesh(hoodGeo, hoodieMat);
+        hood.position.set(0, 1.0, -0.2);
+        customerChar.add(hood);
+
+        // Kopf
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.35, 16, 16), skinMat);
+        head.position.y = 1.45;
+        head.castShadow = true;
+        customerChar.add(head);
+
+        // Haare (Anliegend mit cooler Tolle)
+        const hairGeo = new THREE.SphereGeometry(0.37, 16, 16, 0, Math.PI * 2, 0, Math.PI / 1.7);
+        const hair = new THREE.Mesh(hairGeo, hairMat);
+        hair.position.y = 1.48;
+        hair.rotation.x = 0.15;
+        customerChar.add(hair);
+
+        // Haarsträhnen links und rechts
+        const strandGeo = new THREE.BoxGeometry(0.08, 0.2, 0.1);
+        const strandL = new THREE.Mesh(strandGeo, hairMat);
+        strandL.position.set(-0.3, 1.4, 0.15);
+        customerChar.add(strandL);
+        const strandR = strandL.clone();
+        strandR.position.x = 0.3;
+        customerChar.add(strandR);
+
+        // Haar-Tolle vorne
+        const fringeGeo = new THREE.BoxGeometry(0.25, 0.12, 0.15);
+        const fringe = new THREE.Mesh(fringeGeo, hairMat);
+        fringe.position.set(0, 1.72, 0.2);
+        customerChar.add(fringe);
+
+        // Gesichtszüge (Augen)
+        const eyeGeo = new THREE.SphereGeometry(0.04, 8, 8);
+        const eyeMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
+        const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+        eyeL.position.set(-0.13, 1.48, 0.3);
+        customerChar.add(eyeL);
+        const eyeR = eyeL.clone();
+        eyeR.position.x = 0.13;
+        customerChar.add(eyeR);
+
+        // Rote Wangen (Blush) für Chibi-Look
+        const blushGeo = new THREE.SphereGeometry(0.04, 8, 8);
+        const blushMat = new THREE.MeshBasicMaterial({ color: 0xff9aa2 });
+        const blushL = new THREE.Mesh(blushGeo, blushMat);
+        blushL.position.set(-0.19, 1.4, 0.27);
+        customerChar.add(blushL);
+        const blushR = blushL.clone();
+        blushR.position.x = 0.19;
+        customerChar.add(blushR);
+
+        // 3D-Mund (Breites, glückliches Lächeln)
+        const smileGeo = new THREE.TorusGeometry(0.07, 0.02, 8, 16, Math.PI);
+        const smileMat = new THREE.MeshBasicMaterial({ color: 0xb03a2e });
+        const smile = new THREE.Mesh(smileGeo, smileMat);
+        smile.position.set(0, 1.35, 0.28);
+        smile.rotation.x = Math.PI;
+        customerChar.add(smile);
+
+        // Stylisches Gamer-Headset
+        const headsetColorMat = new THREE.MeshStandardMaterial({ color: 0x4cc9f0, roughness: 0.3 });
+        const bandGeo = new THREE.TorusGeometry(0.38, 0.03, 8, 24, Math.PI);
+        const band = new THREE.Mesh(bandGeo, headsetColorMat);
+        band.position.set(0, 1.45, 0);
+        band.rotation.x = -0.1;
+        customerChar.add(band);
+        const cupGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.08, 12);
+        const cupL = new THREE.Mesh(cupGeo, headsetColorMat);
+        cupL.position.set(-0.36, 1.45, 0);
+        cupL.rotation.z = Math.PI / 2;
+        customerChar.add(cupL);
+        const cupR = cupL.clone();
+        cupR.position.x = 0.36;
+        customerChar.add(cupR);
+
+        // Beine für Geh-Animation
+        legL = new THREE.Group();
+        legL.position.set(-0.16, 0.45, 0);
+        const legMeshL = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.5, 8), pantsMat);
+        legMeshL.position.y = -0.15;
+        legMeshL.castShadow = true;
+        legL.add(legMeshL);
+        const shoeL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.1, 0.22), shoeMat);
+        shoeL.position.set(0, -0.4, 0.05);
+        shoeL.castShadow = true;
+        legL.add(shoeL);
+        customerChar.add(legL);
+
+        legR = new THREE.Group();
+        legR.position.set(0.16, 0.45, 0);
+        const legMeshR = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.5, 8), pantsMat);
+        legMeshR.position.y = -0.15;
+        legMeshR.castShadow = true;
+        legR.add(legMeshR);
+        const shoeR = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.1, 0.22), shoeMat);
+        shoeR.position.set(0, -0.4, 0.05);
+        shoeR.castShadow = true;
+        legR.add(shoeR);
+        customerChar.add(legR);
+
+        scene.add(customerChar);
+
+        // Kassierer (Blickt zum Kunden)
+        cashierChar = new THREE.Group();
+        cashierChar.position.set(1.4, 0, 0.7);
+        cashierChar.rotation.y = -0.8;
+
+        const apronMat = new THREE.MeshStandardMaterial({ color: 0x4caf50, roughness: 0.6 }); // Grüne Schürze
+        const cashierCapMat = new THREE.MeshStandardMaterial({ color: 0x2b2d42 }); // Kappe
+
+        const cTorso = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.35, 0.9, 12), apronMat);
+        cTorso.position.y = 0.8;
+        cTorso.castShadow = true;
+        cashierChar.add(cTorso);
+
+        const cHead = new THREE.Mesh(new THREE.SphereGeometry(0.32, 16, 16), skinMat);
+        cHead.position.y = 1.4;
+        cHead.castShadow = true;
+        cashierChar.add(cHead);
+
+        // Kassierer-Cap
+        const cap = new THREE.Mesh(new THREE.SphereGeometry(0.34, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2), cashierCapMat);
+        cap.position.y = 1.43;
+        cap.rotation.x = -0.1;
+        cashierChar.add(cap);
+        const visor = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.05, 0.25), cashierCapMat);
+        visor.position.set(0, 1.5, 0.25);
+        cashierChar.add(visor);
+
+        // Kassierer-Augen
+        const cEyeL = new THREE.Mesh(eyeGeo, eyeMat);
+        cEyeL.position.set(-0.12, 1.42, 0.28);
+        cashierChar.add(cEyeL);
+        const cEyeR = cEyeL.clone();
+        cEyeR.position.x = 0.12;
+        cashierChar.add(cEyeR);
+
+        scene.add(cashierChar);
+
+        // activeItemMesh - Einkaufstablett
+        activeItemMesh = new THREE.Group();
+        activeItemMesh.position.set(-0.7, 1.16, 1.6);
+        
+        const trayGeo = new THREE.BoxGeometry(0.7, 0.05, 0.7);
+        const trayMat = new THREE.MeshStandardMaterial({ color: 0xd1d5db, roughness: 0.4 });
+        itemTray = new THREE.Mesh(trayGeo, trayMat);
+        itemTray.castShadow = true;
+        itemTray.receiveShadow = true;
+        activeItemMesh.add(itemTray);
+
+        scene.add(activeItemMesh);
+    }
+
+    let walkingTime = 0;
+    let isWalking = false;
+
+    function animate3D() {
+        requestAnimationFrame(animate3D);
+        renderer.render(scene, camera);
+
+        // Geh-Wackel-Animation
+        if (isWalking) {
+            walkingTime += 0.15;
+            legL.rotation.x = Math.sin(walkingTime) * 0.45;
+            legR.rotation.x = -Math.sin(walkingTime) * 0.45;
+            customerChar.position.y = Math.abs(Math.sin(walkingTime * 2)) * 0.08;
+        } else {
+            legL.rotation.x = 0;
+            legR.rotation.x = 0;
+            customerChar.position.y = 0;
+        }
+
+        // Floating & Rotation des geladenen Lebensmittels (Emoji)
+        if (activeItemMesh.children.length > 1) {
+            const spawnedProduct = activeItemMesh.children[1];
+            spawnedProduct.rotation.y += 0.015;
+            spawnedProduct.position.y = 0.35 + Math.sin(Date.now() * 0.003) * 0.05;
+        }
+
+        // Parabelflug der Goldmünzen in Richtung Kasse
+        for (let i = coinsArray.length - 1; i >= 0; i--) {
+            const coin = coinsArray[i];
+            coin.progress += 0.035;
+
+            if (coin.progress >= 1.0) {
+                scene.remove(coin.mesh);
+                coinsArray.splice(i, 1);
+            } else {
+                const p0 = coin.startPos;
+                const p3 = coin.endPos;
+                const p1 = new THREE.Vector3(p0.x + 0.5, p0.y + 1.8, p0.z);
+                const p2 = new THREE.Vector3(p3.x - 0.5, p3.y + 1.8, p3.z);
+
+                const t = coin.progress;
+                const mt = 1 - t;
+
+                coin.mesh.position.x = mt*mt*mt*p0.x + 3*mt*mt*t*p1.x + 3*mt*t*t*p2.x + t*t*t*p3.x;
+                coin.mesh.position.y = mt*mt*mt*p0.y + 3*mt*mt*t*p1.y + 3*mt*t*t*p2.y + t*t*t*p3.y;
+                coin.mesh.position.z = mt*mt*mt*p0.z + 3*mt*mt*t*p1.z + 3*mt*t*t*p2.z + t*t*t*p3.z;
+
+                coin.mesh.rotation.x += coin.rotSpeed;
+                coin.mesh.rotation.y += coin.rotSpeed;
+            }
+        }
+    }
+
+    function spawnFlyingCoins() {
+        const start = new THREE.Vector3(-0.6, 1.5, 2.8);
+        const end = new THREE.Vector3(1.4, 1.5, 1.0);
+
+        for (let i = 0; i < 6; i++) {
+            setTimeout(() => {
+                const coinGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.03, 10);
+                const coinMat = new THREE.MeshStandardMaterial({ 
+                    color: 0xffd700, 
+                    roughness: 0.1, 
+                    metalness: 0.9 
+                });
+                const mesh = new THREE.Mesh(coinGeo, coinMat);
+                mesh.castShadow = true;
+                scene.add(mesh);
+
+                coinsArray.push({
+                    mesh: mesh,
+                    startPos: start.clone(),
+                    endPos: end.clone(),
+                    progress: 0,
+                    rotSpeed: (Math.random() - 0.5) * 0.4
+                });
+            }, i * 110);
+        }
+    }
+
+    function generateEmoji3DSprite(emoji) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 128;
+        canvas.height = 128;
+        const ctx = canvas.getContext('2d');
+
+        // Weißer Background für super Sichtbarkeit
+        ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
+        ctx.beginPath();
+        ctx.arc(64, 64, 52, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = "#4895ef";
+        ctx.stroke();
+
+        ctx.font = "70px Inter, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(emoji, 64, 64);
+
+        const texture = new THREE.CanvasTexture(canvas);
+        const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+        const sprite = new THREE.Sprite(material);
+        sprite.scale.set(1.0, 1.0, 1);
+        return sprite;
+    }
+
+    function renderVocabularyDictionary() {
+        const container = document.getElementById('dictionary-list-container');
+        container.innerHTML = '';
+
+        levelsData.forEach(lvl => {
+            const section = document.createElement('div');
+            section.className = "bg-slate-50 border border-slate-200 rounded-2xl p-4";
+
+            section.innerHTML = `
+                <h3 class="font-bold text-slate-700 text-sm mb-3 uppercase tracking-wider flex items-center justify-between">
+                    <span>${lvl.name}</span>
+                    <span class="text-xs text-slate-400 font-normal">Level ${lvl.id}</span>
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="dict-words-grid-${lvl.id}"></div>
+            `;
+            container.appendChild(section);
+
+            const grid = document.getElementById(`dict-words-grid-${lvl.id}`);
+            lvl.words.forEach(w => {
+                const isUnlocked = lvl.id <= gameState.unlockedLevel;
+                const card = document.createElement('div');
+                
+                if (isUnlocked) {
+                    card.className = "bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-sm transition-transform hover:-translate-y-0.5";
+                    card.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">${w.emoji}</span>
+                            <div>
+                                <p class="font-bold text-superDark capitalize text-base">${w.en}</p>
+                                <p class="text-xs text-slate-400">Deutsch: ${w.de}</p>
+                            </div>
+                        </div>
+                        <button class="btn-speak-vocab bg-superIndigo/10 hover:bg-superIndigo/25 text-superIndigo p-2.5 rounded-xl transition-all active:scale-90 flex items-center justify-center" data-word="${w.en}">
+                            🔊
+                        </button>
+                    `;
+
+                    card.querySelector('.btn-speak-vocab').onclick = (e) => {
+                        e.stopPropagation();
+                        speakWordInEnglish(w.en);
+                    };
+                } else {
+                    card.className = "bg-slate-100/50 border border-slate-200/50 rounded-xl p-3 flex items-center justify-between opacity-50 cursor-not-allowed";
+                    card.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl grayscale">🔒</span>
+                            <div>
+                                <p class="font-bold text-slate-400 capitalize text-base">???</p>
+                                <p class="text-xs text-slate-400">Gesperrt (Level freischalten)</p>
+                            </div>
+                        </div>
+                    `;
+                }
+                grid.appendChild(card);
+            });
+        });
+    }
+
+    function speakWordInEnglish(word) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // Stoppe vorherige Sprachausgaben
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85; // Leicht langsamer für SuS zum Mitlernen
+            
+            // Versuche eine englische Stimme zu finden
+            const voices = window.speechSynthesis.getVoices();
+            const engVoice = voices.find(v => v.lang.startsWith('en'));
+            if (engVoice) {
+                utterance.voice = engVoice;
+            }
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    // Modal Events für Vokabelheft
+    document.getElementById('btn-open-dictionary').onclick = () => {
+        playSound('click');
+        renderVocabularyDictionary();
+        const dict = document.getElementById('screen-dictionary');
+        dict.classList.remove('hidden');
+        gsap.to(dict, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out" });
+    };
+
+    document.getElementById('btn-close-dictionary').onclick = () => {
+        playSound('click');
+        const dict = document.getElementById('screen-dictionary');
+        gsap.to(dict, { scale: 0.9, opacity: 0, duration: 0.25, onComplete: () => dict.classList.add('hidden') });
+    };
+
+    let activeLevelIndex = 0;
+    let activeQuestionStep = 0;
+    let correctAnswersCount = 0;
+    let scoreCoins = 0;
+    let activeStreak = 0;
+    let maxStreakThisLevel = 0;
+
+    function renderLevelListUI() {
+        const grid = document.getElementById('level-grid');
+        grid.innerHTML = '';
+
+        levelsData.forEach((lvl, idx) => {
+            const isUnlocked = lvl.id <= gameState.unlockedLevel;
+            const highscore = gameState.highscores[lvl.id] || 0;
+            const badge = gameState.badges[lvl.id];
+
+            let badgeHtml = '';
+            if (badge === 'gold') badgeHtml = '<span class="text-xl" title="Gold erhalten!">🏆🥇</span>';
+            else if (badge === 'silver') badgeHtml = '<span class="text-xl" title="Silber erhalten!">🥈</span>';
+            else if (badge === 'bronze') badgeHtml = '<span class="text-xl" title="Bronze erhalten!">🥉</span>';
+
+            const btn = document.createElement('button');
+            btn.className = `flex flex-col items-center justify-between p-4 rounded-3xl border-4 ${lvl.color} text-center transition-all ${
+                isUnlocked 
+                ? 'bg-white hover:shadow-xl hover:scale-105 active:scale-95 cursor-pointer text-superDark' 
+                : 'bg-slate-100 opacity-60 cursor-not-allowed text-slate-400 border-slate-300'
+            }`;
+            btn.disabled = !isUnlocked;
+
+            btn.innerHTML = `
+                <div class="flex justify-between w-full mb-1">
+                    <span class="text-xs font-bold uppercase tracking-wider ${isUnlocked ? lvl.textColor : 'text-slate-400'}">Lvl ${lvl.id}</span>
+                    <span class="text-xs font-bold">${badgeHtml}</span>
+                </div>
+                <p class="font-extrabold text-base md:text-lg leading-tight mb-1 truncate w-full">${lvl.name.split(': ')[1]}</p>
+                <p class="text-[10px] md:text-xs text-slate-400 mb-2">${lvl.subtitle}</p>
+                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden mt-1">
+                    <div class="h-full bg-superGreen transition-all duration-300" style="width: ${highscore * 20}%"></div>
+                </div>
+                <div class="text-[10px] mt-1 font-semibold text-slate-400">Score: ${highscore}/5</div>
+            `;
+
+            if (isUnlocked) {
+                btn.onclick = () => {
+                    playSound('click');
+                    startGameplay(idx);
+                };
+            }
+            grid.appendChild(btn);
+        });
+    }
+
+    // In-Game Custom Modals für Zurücksetzen
+    const resetTriggerBtn = document.getElementById('btn-trigger-reset');
+    const confirmModal = document.getElementById('modal-confirm');
+    const confirmResetBtn = document.getElementById('btn-confirm-reset');
+    const cancelResetBtn = document.getElementById('btn-cancel-reset');
+
+    resetTriggerBtn.onclick = () => {
+        playSound('click');
+        confirmModal.classList.remove('hidden');
+        gsap.to(confirmModal, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out" });
+    };
+
+    cancelResetBtn.onclick = () => {
+        playSound('click');
+        gsap.to(confirmModal, { scale: 0.9, opacity: 0, duration: 0.2, onComplete: () => confirmModal.classList.add('hidden') });
+    };
+
+    confirmResetBtn.onclick = () => {
+        playSound('click');
+        gameState = {
+            unlockedLevel: 1,
+            highscores: {},
+            badges: {},
+            bestStreak: 0
+        };
+        saveToLocalStorage();
+        renderLevelListUI();
+        gsap.to(confirmModal, { scale: 0.9, opacity: 0, duration: 0.2, onComplete: () => confirmModal.classList.add('hidden') });
+    };
+
+    const soundBtn = document.getElementById('btn-sound');
+    soundBtn.onclick = () => {
+        soundEnabled = !soundEnabled;
+        document.getElementById('sound-icon').innerText = soundEnabled ? '🔊' : '🔇';
+        playSound('click');
+    };
+
+    function startGameplay(levelIdx) {
+        activeLevelIndex = levelIdx;
+        activeQuestionStep = 0;
+        correctAnswersCount = 0;
+        activeStreak = 0;
+        maxStreakThisLevel = 0;
+
+        document.getElementById('screen-menu').classList.add('hidden');
+        document.getElementById('btn-home').classList.remove('hidden');
+        document.getElementById('hud-container').classList.remove('hidden');
+        
+        const footer = document.getElementById('gameplay-footer');
+        footer.classList.remove('hidden');
+        gsap.to(footer, { y: 0, opacity: 1, duration: 0.4 });
+
+        document.getElementById('hud-level-val').innerText = activeLevelIndex + 1;
+        document.getElementById('hud-progress-val').innerText = `${activeQuestionStep + 1}/5`;
+        document.getElementById('hud-combo-val').innerText = `🔥 0`;
+        
+        loadNewQuestion();
+    }
+
+    function loadNewQuestion() {
+        if (activeQuestionStep >= 5) {
+            triggerLevelCompleted();
+            return;
+        }
+
+        // Update progress visual indicators
+        const dots = document.querySelectorAll('.step-dot');
+        dots.forEach((dot, idx) => {
+            dot.className = 'step-dot w-4 h-4 rounded-full transition-all duration-300';
+            if (idx < activeQuestionStep) {
+                dot.classList.add('bg-superGreen', 'border-superGreen');
+            } else if (idx === activeQuestionStep) {
+                dot.classList.add('bg-superBlue', 'border-superBlue', 'scale-125');
+            } else {
+                dot.classList.add('bg-white/50', 'border-slate-300');
+            }
+        });
+
+        document.getElementById('hud-progress-val').innerText = `${activeQuestionStep + 1}/5`;
+
+        const currentWordData = levelsData[activeLevelIndex].words[activeQuestionStep];
+
+        // Reset customer character to walking entrance
+        customerChar.position.set(-6, 0, 2.8);
+        customerChar.rotation.y = Math.PI / 2; // Walk in (+X)
+        isWalking = true;
+        
+        // Kunde läuft hinein
+        gsap.to(customerChar.position, {
+            x: -0.6,
+            duration: 1.3,
+            ease: "power1.out",
+            onComplete: () => {
+                isWalking = false;
+                
+                // Dreht sich zur Kasse um (Blickrichtung nach hinten, -Z)
+                gsap.to(customerChar.rotation, {
+                    y: Math.PI,
+                    duration: 0.35,
+                    ease: "power1.out",
+                    onComplete: () => {
+                        // Altes Lebensmittel vom Tablett entfernen
+                        if (activeItemMesh.children.length > 1) {
+                            activeItemMesh.remove(activeItemMesh.children[1]);
+                        }
+                        activeItemMesh.position.set(-0.7, 1.16, 1.6);
+
+                        // Neues Lebensmittel erstellen
+                        const item3d = generateEmoji3DSprite(currentWordData.emoji);
+                        item3d.position.set(0, 0.35, 0);
+                        activeItemMesh.add(item3d);
+
+                        // Einblende-Animation des Lebensmittels
+                        gsap.from(item3d.scale, { x: 0, y: 0, z: 0, duration: 0.4, ease: "back.out" });
+
+                        // Prozeduraler Scanner-Laser Sweep
+                        scannerLaserMesh.scale.set(1, 1, 1);
+                        scannerLaserMesh.position.set(0.4, 1.22, 0);
+                        playSound('scan');
+                        gsap.fromTo(scannerLaserMesh.position, 
+                            { x: -0.8 }, 
+                            { x: 0.8, duration: 0.8, ease: "power1.inOut", onComplete: () => {
+                                gsap.to(scannerLaserMesh.scale, { x: 0, y: 0, z: 0, duration: 0.1 });
+                            }}
+                        );
+                    }
+                });
+            }
+        });
+
+        // Antwortmöglichkeiten laden (1 richtig, 3 falsch)
+        const choices = generateVocabularyChoices(currentWordData.en);
+        const buttons = document.querySelectorAll('.btn-answer');
+        
+        buttons.forEach((btn, idx) => {
+            const wordSpan = btn.querySelector('.btn-word-text');
+            const emojiSpan = btn.querySelector('.btn-emoji');
+            
+            wordSpan.innerText = choices[idx];
+            emojiSpan.innerText = '🛒'; 
+
+            btn.className = "btn-answer group relative bg-white/95 border-b-8 border-slate-200 hover:border-slate-300 text-superDark hover:text-superIndigo p-4 md:p-5 rounded-2xl md:rounded-3xl shadow-xl text-lg md:text-2xl font-bold transition-all flex items-center justify-between text-left pointer-events-auto";
+            btn.disabled = false;
+
+            btn.onclick = () => {
+                handleUserChoice(btn, choices[idx], currentWordData.en);
+            };
+        });
+    }
+
+    function generateVocabularyChoices(correctWord) {
+        let totalVocabularyPool = [];
+        levelsData.forEach(lvl => {
+            lvl.words.forEach(w => totalVocabularyPool.push(w.en));
+        });
+
+        const selectedChoicesSet = new Set([correctWord]);
+        while(selectedChoicesSet.size < 4) {
+            const randIndex = Math.floor(Math.random() * totalVocabularyPool.length);
+            selectedChoicesSet.add(totalVocabularyPool[randIndex]);
+        }
+
+        return Array.from(selectedChoicesSet).sort(() => Math.random() - 0.5);
+    }
+
+    function triggerComboPopup(comboValue) {
+        const popup = document.getElementById('combo-popup');
+        let text = `🔥 Double Combo!`;
+        if (comboValue === 3) text = `🔥 Triple Combo! ⚡`;
+        else if (comboValue === 4) text = `🔥 Mega Combo! ⭐`;
+        else if (comboValue === 5) text = `🔥 Unstoppable! 🏆`;
+
+        popup.innerText = text;
+        popup.style.transform = `scale(0)`;
+        popup.style.opacity = '1';
+        
+        playSound('combo');
+
+        gsap.timeline()
+            .to(popup, { scale: 1.2, duration: 0.3, ease: "back.out" })
+            .to(popup, { y: -50, opacity: 0, duration: 0.7, delay: 0.3, ease: "power2.in", onComplete: () => {
+                popup.style.transform = `scale(0)`;
+                popup.style.opacity = '0';
+                popup.style.y = 0;
+            }});
+    }
+
+    function handleUserChoice(selectedButton, chosenWord, correctWord) {
+        const buttons = document.querySelectorAll('.btn-answer');
+        buttons.forEach(btn => btn.disabled = true);
+
+        const isCorrect = chosenWord === correctWord;
+        
+        if (isCorrect) {
+            playSound('correct');
+            correctAnswersCount++;
+            activeStreak++;
+            if (activeStreak > maxStreakThisLevel) {
+                maxStreakThisLevel = activeStreak;
+            }
+
+            // Streak system triggers
+            if (activeStreak >= 2) {
+                triggerComboPopup(activeStreak);
+            }
+
+            scoreCoins += 10 * activeStreak; // Mehr Punkte durch Combos
+            document.getElementById('hud-score-val').innerText = `🪙 ${scoreCoins}`;
+            document.getElementById('hud-combo-val').innerText = `🔥 ${activeStreak}`;
+
+            selectedButton.className = "btn-answer group relative bg-superGreen border-b-8 border-green-700 text-white p-4 md:p-5 rounded-2xl md:rounded-3xl shadow-xl text-lg md:text-2xl font-bold transition-all flex items-center justify-between text-left pointer-events-none";
+
+            // Chibi-Kunde springt vor Freude auf und ab
+            gsap.to(customerChar.position, { y: 0.5, duration: 0.2, repeat: 1, yoyo: true });
+            
+            // Parabelflug der Goldmünzen
+            spawnFlyingCoins();
+
+            // Tablett gleitet über das Förderband hinweg
+            gsap.to(activeItemMesh.position, { 
+                x: 1.4, 
+                duration: 0.9, 
+                ease: "power2.inOut",
+                onComplete: () => {
+                    gsap.to(activeItemMesh.scale, { x: 0, y: 0, z: 0, duration: 0.2 });
+                }
+            });
+
+        } else {
+            playSound('wrong');
+            activeStreak = 0;
+            document.getElementById('hud-combo-val').innerText = `🔥 0`;
+
+            selectedButton.className = "btn-answer group relative bg-superPink border-b-8 border-pink-700 text-white p-4 md:p-5 rounded-2xl md:rounded-3xl shadow-xl text-lg md:text-2xl font-bold transition-all flex items-center justify-between text-left pointer-events-none";
+
+            // Richtige Antwort hervorheben
+            buttons.forEach(btn => {
+                const text = btn.querySelector('.btn-word-text').innerText;
+                if (text === correctWord) {
+                    btn.className = "btn-answer group relative bg-superGreen border-b-8 border-green-700 text-white p-4 md:p-5 rounded-2xl md:rounded-3xl shadow-xl text-lg md:text-2xl font-bold transition-all flex items-center justify-between text-left pointer-events-none";
+                }
+            });
+
+            // Kunde schüttelt traurig den Kopf
+            gsap.to(customerChar.rotation, { 
+                y: Math.PI - 0.3, 
+                duration: 0.1, 
+                repeat: 3, 
+                yoyo: true,
+                onComplete: () => {
+                    customerChar.rotation.y = Math.PI;
+                }
+            });
+        }
+
+        // Kurze Pause, dann verlässt der Kunde den Laden
+        setTimeout(() => {
+            gsap.to(customerChar.rotation, {
+                y: Math.PI / 2, // Dreht sich in Laufrichtung (+X)
+                duration: 0.25,
+                ease: "power1.out",
+                onComplete: () => {
+                    isWalking = true;
+                    gsap.to(customerChar.position, {
+                        x: 6, // Läuft rechts aus dem Sichtfeld
+                        duration: 1.1,
+                        onComplete: () => {
+                            isWalking = false;
+                            activeQuestionStep++;
+                            
+                            // Reset Tablett für den nächsten Artikel
+                            activeItemMesh.scale.set(1, 1, 1);
+                            if (activeItemMesh.children.length > 1) {
+                                activeItemMesh.remove(activeItemMesh.children[1]);
+                            }
+                            customerChar.rotation.set(0, Math.PI / 2, 0);
+                            loadNewQuestion();
+                        }
+                    });
+                }
+            });
+        }, 1800);
+    }
+
+    function triggerLevelCompleted() {
+        playSound('fanfare');
+        
+        document.getElementById('gameplay-footer').classList.add('hidden');
+        document.getElementById('hud-container').classList.add('hidden');
+        document.getElementById('btn-home').classList.add('hidden');
+
+        const currentLvlId = levelsData[activeLevelIndex].id;
+        
+        // Speichere Highscores in LocalStorage
+        const previousBestScore = gameState.highscores[currentLvlId] || 0;
+        if (correctAnswersCount > previousBestScore) {
+            gameState.highscores[currentLvlId] = correctAnswersCount;
+        }
+
+        let badgeType = '';
+        let badgeEmoji = '🥉';
+        let badgeName = 'Bronze Abzeichen 🥉';
+        let feedbackTitle = 'Gut gemacht!';
+        let feedbackSubtitle = 'Versuche es noch einmal für Gold!';
+
+        if (correctAnswersCount === 5) {
+            badgeType = 'gold';
+            badgeEmoji = '🏆🥇';
+            badgeName = 'Gold-Abzeichen 🏆';
+            feedbackTitle = 'Perfekt! Unglaublich!';
+            feedbackSubtitle = 'Vokabel-Meister! Du hast alles fehlerfrei gelöst.';
+        } else if (correctAnswersCount >= 4) {
+            badgeType = 'silver';
+            badgeEmoji = '🥈';
+            badgeName = 'Silber-Abzeichen 🥈';
+            feedbackTitle = 'Klasse Leistung!';
+            feedbackSubtitle = 'Du bist verdammt nah an der Perfektion!';
+        } else if (correctAnswersCount >= 3) {
+            badgeType = 'bronze';
+            badgeEmoji = '🥉';
+            badgeName = 'Bronze-Abzeichen 🥉';
+            feedbackTitle = 'Bestanden!';
+            feedbackSubtitle = 'Du hast das Level erfolgreich gemeistert!';
+        } else {
+            badgeEmoji = '❌';
+            badgeName = 'Kein Abzeichen';
+            feedbackTitle = 'Schade!';
+            feedbackSubtitle = 'Lerne die Vokabeln noch einmal im Vokabelheft und versuche es erneut!';
+        }
+
+        // Abzeichen speichern, wenn besser
+        if (correctAnswersCount >= 3) {
+            const currentBadge = gameState.badges[currentLvlId];
+            if (!currentBadge || 
+                (badgeType === 'gold' && currentBadge !== 'gold') || 
+                (badgeType === 'silver' && currentBadge === 'bronze')) {
+                gameState.badges[currentLvlId] = badgeType;
+            }
+
+            // Neues Level freischalten
+            if (gameState.unlockedLevel === currentLvlId && currentLvlId < levelsData.length) {
+                gameState.unlockedLevel++;
+            }
+        }
+
+        saveToLocalStorage();
+        renderLevelListUI();
+
+        // Update Result Panel
+        document.getElementById('result-badge-anim').innerText = badgeEmoji;
+        document.getElementById('result-title').innerText = feedbackTitle;
+        document.getElementById('result-subtitle').innerText = feedbackSubtitle;
+        document.getElementById('result-score').innerText = `${correctAnswersCount} / 5 Richtig`;
+        document.getElementById('result-combo').innerText = `🔥 ${maxStreakThisLevel}`;
+        document.getElementById('result-badge-name').innerText = badgeName;
+
+        const resultScreen = document.getElementById('screen-result');
+        resultScreen.classList.remove('hidden');
+        gsap.to(resultScreen, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out" });
+
+        const nextLevelBtn = document.getElementById('btn-next-level');
+        if (correctAnswersCount >= 3 && activeLevelIndex < levelsData.length - 1) {
+            nextLevelBtn.classList.remove('hidden');
+            nextLevelBtn.onclick = () => {
+                playSound('click');
+                gsap.to(resultScreen, { scale: 0.9, opacity: 0, duration: 0.2, onComplete: () => {
+                    resultScreen.classList.add('hidden');
+                    startGameplay(activeLevelIndex + 1);
+                }});
+            };
+        } else {
+            nextLevelBtn.classList.add('hidden');
+        }
+    }
+
+    function returnToMenu() {
+        playSound('click');
+        const resultScreen = document.getElementById('screen-result');
+        const footer = document.getElementById('gameplay-footer');
+
+        gsap.to(resultScreen, { scale: 0.9, opacity: 0, duration: 0.2, onComplete: () => {
+            resultScreen.classList.add('hidden');
+        }});
+        gsap.to(footer, { y: 100, opacity: 0, duration: 0.3, onComplete: () => {
+            footer.classList.add('hidden');
+        }});
+
+        document.getElementById('btn-home').classList.add('hidden');
+        document.getElementById('hud-container').classList.add('hidden');
+        document.getElementById('screen-menu').classList.remove('hidden');
+        
+        if (activeItemMesh.children.length > 1) {
+            activeItemMesh.remove(activeItemMesh.children[1]);
+        }
+        customerChar.position.set(-6, 0, 2.8);
+        customerChar.rotation.set(0, Math.PI / 2, 0);
+    }
+
+    document.getElementById('btn-home').onclick = returnToMenu;
+    document.getElementById('btn-menu-back').onclick = returnToMenu;
+
+    // Smartboard & Keyboard Shortcuts support (Keys 1, 2, 3, 4)
+    window.addEventListener('keydown', (e) => {
+        const gameFooter = document.getElementById('gameplay-footer');
+        if (gameFooter && !gameFooter.classList.contains('hidden')) {
+            const buttons = document.querySelectorAll('.btn-answer');
+            if (e.key === '1' && !buttons[0].disabled) buttons[0].click();
+            if (e.key === '2' && !buttons[1].disabled) buttons[1].click();
+            if (e.key === '3' && !buttons[2].disabled) buttons[2].click();
+            if (e.key === '4' && !buttons[3].disabled) buttons[3].click();
+        }
+    });
+
+    window.addEventListener('resize', onWindowResize, false);
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    window.onload = function() {
+        loadFromLocalStorage();
+        setupThreeScene();
+        renderLevelListUI();
+    };
+    </script>
+</body>
+</html>

@@ -370,6 +370,9 @@
     .sports .icon,
     .sports .tag { color: var(--tag-ink); background: var(--school); }
 
+    .english .icon,
+    .english .tag { color: var(--tag-ink); background: #ffb86b; }
+
     .google .icon,
     .google .tag { color: var(--tag-ink); background: #4285f4; }
 
@@ -592,10 +595,6 @@
       .grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
-
-      .sports {
-        grid-column: span 2;
-      }
     }
 
     @media (max-width: 820px) {
@@ -634,10 +633,6 @@
 
       .grid {
         grid-template-columns: 1fr;
-      }
-
-      .sports {
-        grid-column: auto;
       }
 
       .card {
@@ -930,6 +925,33 @@
         </span>
       </a>
 
+      <a class="card english" href="supermarket_vocab_challenge.html" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 7h15l-2 8H8L6 7Z"></path>
+                <path d="M6 7 5.4 4H3"></path>
+                <path d="M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"></path>
+                <path d="M18 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"></path>
+                <path d="M10 11h5"></path>
+              </svg>
+            </div>
+            <span class="tag">Englisch</span>
+          </div>
+          <h3>Supermarket Vocab Challenge</h3>
+          <p>Englisch-Wortschatz im Supermarkt: Produkte erkennen, zuordnen und spielerisch üben.</p>
+        </div>
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Supermarket Vocab Challenge">
+          Prompt anzeigen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
+          </svg>
+        </span>
+      </a>
+
     </section>
 
     <div class="toolbar">
@@ -1170,6 +1192,12 @@
           label: "AI Enhanced Version",
           text: "# Prompt: FAIRE OU JOUER ? 🇫🇷\n\n## Modern Web-Based French Learning Mini Game\n\nCreate a stunning modern web-based French learning mini game for secondary school students called:\n\n# “FAIRE OU JOUER ? 🇫🇷”\n\nThe game should teach students when to use **“faire”** and when to use **“jouer”** with sports, hobbies, instruments, games, and activities.\n\n---\n\n## 1. Overall Style\n\nDesign the app like a premium educational iPad game.\n\nUse:\n\n* ultra-polished UI\n* bright modern gradients\n* large rounded cards\n* soft shadows\n* smooth animations\n* big typography\n* huge 3D-style emojis\n* glassmorphism panels\n* clean Gen-Z educational aesthetic\n* mobile-first responsive layout\n* touch-friendly controls\n* fun but professional school presentation look\n\nThe visual style should feel like:\n\n> Duolingo meets Apple meets a modern classroom game.\n\n---\n\n## 2. Background / Atmosphere\n\nUse a blue/purple gradient background with subtle floating particles.\n\nAdd tiny French-learning accents such as:\n\n* 🇫🇷\n* ✨\n* ⭐\n* 📚\n\nUse rounded corners everywhere, smooth transitions, and a playful but clean educational vibe.\n\n---\n\n## 3. Main Menu\n\nCreate a beautiful main menu with **5 difficulty levels**.\n\nEach level should be shown as a large rounded card with:\n\n* level number\n* difficulty name\n* short description\n* progress status\n* badge status\n\nThe 5 levels are:\n\n1. **Niveau 1 — Facile**\n2. **Niveau 2 — Standard**\n3. **Niveau 3 — Moyen**\n4. **Niveau 4 — Difficile**\n5. **Niveau 5 — Expert**\n\nEach level contains its own set of emoji/activity cards.\n\n---\n\n## 4. Badge System\n\nAfter completing a level, the level card in the main menu must show a badge.\n\nBadge logic:\n\n* 🥉 **Bronze badge** = level completed\n* 🥈 **Silver badge** = at least 6 correct answers\n* 🥇 **Gold badge** = all answers correct\n\nEach badge should be clearly visible on the level card in the main menu after completion.\n\nStore progress locally using **localStorage** so that completed levels, best scores, earned badges, and main-menu done states remain visible after refreshing the page.\n\nThe localStorage data should include:\n\n* completed levels\n* best score per level\n* earned badge per level\n* done status shown on the main menu\n\nReplay should update the saved badge only if the new result is better than the old result.\n\n---\n\n## 5. Gameplay\n\nThe player chooses a level from the main menu.\n\nDuring the game, the player sees:\n\n* one huge emoji in the center\n* the French sport, hobby, instrument, game, or activity below it\n\nExample:\n\n```text\n🏊‍♂️\nla natation\n```\n\nThe player must drag the card:\n\n```text\n⬅️ LEFT  = FAIRE\n➡️ RIGHT = JOUER\n```\n\n---\n\n## 6. Rules\n\n* Correct answers increase the score.\n* Wrong answers do not increase the score.\n* After each answer, show feedback and continue to the next card.\n* At the end of the level, show the final score and the earned badge.\n\n---\n\n## 7. Correct Answer Feedback\n\nCorrect answers trigger:\n\n* green glow\n* confetti burst\n* smooth success animation\n* message: **“✅ Bravo !”**\n\n---\n\n## 8. Wrong Answer Feedback\n\nWrong answers trigger:\n\n* red flash\n* shake/wiggle animation\n* subtle vibration effect on supported devices\n* message: **“❌ Essaie encore !”**\n\nWrong answers should feel playful, not punishing.\n\n---\n\n## 9. Animations\n\nInclude:\n\n* smooth drag physics\n* snap effect when dropped\n* hover scaling\n* button bounce\n* shake animation on wrong answer\n* celebration animation on correct answer\n* smooth screen transitions\n* animated badge reveal at the end of each level\n* subtle floating particles in the background\n* progress bar filling smoothly\n* confetti on correct answers and level completion\n\n---\n\n## 10. UI Details\n\nThe game screen should include:\n\n* top progress bar\n* score counter with star icon\n* current level indicator\n* large draggable card\n* left drop zone labeled **FAIRE**\n* right drop zone labeled **JOUER**\n* back-to-menu button\n* replay level button on the result screen\n\nThe drop zones must be large and easy to use on mobile devices.\n\n---\n\n## 11. Content\n\nCreate **5 difficulty levels** with **8 cards each**.\n\n---\n\n# LEVEL 1 — FACILE\n\nMostly common sports and simple activities.\n\n| Emoji | French Activity | Correct Answer |\n| ----- | --------------- | -------------- |\n| 🏊‍♂️ | la natation     | faire          |\n| ⚽     | le football     | jouer          |\n| 🎾    | le tennis       | jouer          |\n| 🤸    | la gymnastique  | faire          |\n| 🥋    | le judo         | faire          |\n| 🏀    | le basket       | jouer          |\n| 🚴‍♀️ | le vélo         | faire          |\n| 🎮    | les jeux vidéo  | jouer          |\n\n---\n\n# LEVEL 2 — STANDARD\n\nMix of sports, games, and instruments.\n\n| Emoji | French Activity | Correct Answer |\n| ----- | --------------- | -------------- |\n| ♟️    | les échecs      | jouer          |\n| 🎻    | le violon       | jouer          |\n| 🎹    | le piano        | jouer          |\n| 🏃‍♂️ | la course       | faire          |\n| 🧘    | le yoga         | faire          |\n| 🏐    | le volley       | jouer          |\n| 🏓    | le ping-pong    | jouer          |\n| ⛷️    | le ski          | faire          |\n\n---\n\n# LEVEL 3 — MOYEN\n\nMore variety and slightly less obvious examples.\n\n| Emoji | French Activity     | Correct Answer |\n| ----- | ------------------- | -------------- |\n| 🥊    | la boxe             | faire          |\n| 🧗    | l’escalade          | faire          |\n| 🎸    | la guitare          | jouer          |\n| 🥁    | la batterie         | jouer          |\n| 🏉    | le rugby            | jouer          |\n| 🛹    | le skateboard       | faire          |\n| 🏇    | l’équitation        | faire          |\n| 🎲    | les jeux de société | jouer          |\n\n---\n\n# LEVEL 4 — DIFFICILE\n\nActivities where students must think more carefully.\n\n| Emoji | French Activity | Correct Answer |\n| ----- | --------------- | -------------- |\n| 🏄    | le surf         | faire          |\n| 🤿    | la plongée      | faire          |\n| 🏸    | le badminton    | jouer          |\n| 🏒    | le hockey       | jouer          |\n| 🎺    | la trompette    | jouer          |\n| 🎭    | le théâtre      | faire          |\n| 🧩    | les puzzles     | faire          |\n| 🪁    | du cerf-volant  | faire          |\n\n---\n\n# LEVEL 5 — EXPERT\n\nMore advanced and mixed expressions.\n\n| Emoji | French Activity    | Correct Answer |\n| ----- | ------------------ | -------------- |\n| 🧪    | des expériences    | faire          |\n| 📸    | de la photographie | faire          |\n| 🎤    | du karaoké         | faire          |\n| 🎷    | du saxophone       | jouer          |\n| 🎯    | aux fléchettes     | jouer          |\n| 🃏    | aux cartes         | jouer          |\n| 🏋️   | de la musculation  | faire          |\n| 🧊    | du patinage        | faire          |\n\n---\n\n## 12. Important Language Rule\n\nUse **faire** for general activities, sports, and hobbies.\n\nUse **jouer** for:\n\n* games\n* team ball sports\n* musical instruments\n\nFor **jouer**, use correct French forms such as:\n\n* jouer au football\n* jouer aux échecs\n* jouer du piano\n* jouer de la guitare\n* jouer aux cartes\n\n---\n\n## 13. Result Screen\n\nAt the end of each level, show:\n\n```text\n🎉 Excellent !\n```\n\nAlso show:\n\n* final score\n* total correct answers\n* earned badge\n* motivational French message\n* replay button\n* return to main menu button\n\nBadge logic:\n\n* 🥉 Bronze: level completed\n* 🥈 Silver: at least 6 correct answers\n* 🥇 Gold: 8 correct answers\n\nThe badge reveal should be animated with sparkles.\n\n---\n\n## 14. Technical Requirements\n\nBuild the game as a single-page web app using only:\n\n* HTML\n* CSS\n* JavaScript\n\nNo backend needed.\nNo external framework required.\nThe app must be ready for Vercel deployment.\n\nUse **localStorage** for persistent progress. Add a small reset-progress option that clears only this game's saved localStorage data.\n\nIt must work smoothly on:\n\n* mobile phones\n* tablets\n* desktop browsers\n\n---\n\n## 15. Important Mobile Layout Requirement\n\nMobile first dynamisches Design.\n\nDo **not** rely on fixed `100vh` heights.\n\nUse dynamic viewport units such as:\n\n* `100dvh`\n* `100svh`\n* safe-area insets\n* flexible vertical layouts\n\nThe app must adapt correctly to mobile browser UI bars and avoid broken vertical layouts on phones when address bars appear or disappear.\n\nThe layout should always fit properly on mobile devices.\n\nMobile interactions are especially important:\n\n* touch drag must feel smooth\n* drop zones must be large\n* buttons must be easy to tap\n* content must not overflow vertically\n* no important UI element should be hidden behind browser bars or safe areas\n\n---\n\n## 16. Extra Polish\n\nAdd tiny micro-interactions everywhere:\n\n* buttons bounce slightly when tapped\n* level cards animate on hover/touch\n* badge reveal has sparkle animation\n* progress bar fills smoothly\n* confetti appears on correct answers and level completion\n* wrong answers feel playful, not punishing\n* transitions between menu, game, and result screen feel smooth\n\n---\n\n## 17. Final Goal\n\nThe final result should feel like a complete, polished educational mini game that a teacher could immediately present in class.\n\nIt should be visually impressive, easy to understand, mobile-first, and fun for secondary school students."
         }
+      ],
+      "Supermarket Vocab Challenge": [
+        {
+          label: "Prompt",
+          text: "Erstelle eine **HTML-Demo mit Three.js** als interaktives Minispiel für die Schule.\n\n## Thema\nFach: Englisch  \nLernziel: Lebensmittel-Vokabular im Supermarkt lernen  \nZielgruppe: SuS, die spielerisch neue englische Begriffe üben sollen.\n\n## Grundidee\nBaue einen kleinen, liebevoll gestalteten **3D-Supermarkt** mit Three.js.  \nKleine Charaktere kommen als Kundinnen und Kunden in den Laden und kaufen Lebensmittel ein.\n\nDer Spieler sieht jeweils ein Lebensmittel als **3D-Objekt, Emoji oder SVG-Illustration** und muss aus **4 Antwort-Buttons** den richtigen englischen Begriff auswählen.\n\nBeispiel:\nEin Apfel erscheint → richtige Antwort: **apple**\n\n## Design\n- Mobile-first\n- Dynamische Anpassung an verschiedene Bildschirmgrössen\n- Stunning, modernes Design\n- Freundliche Farben\n- Grosse Buttons\n- Klare Lesbarkeit\n- Weiche Animationen\n- Emoji- oder SVG-Grafiken für Lebensmittel\n- Kleine 3D-Supermarkt-Szene mit Regalen, Kasse, Einkaufswagen und Charakteren\n- Kein langweiliges Idle-Gameplay, sondern lebendige Mini-Szene\n\n## Gameplay\n- Pro Stufe gibt es **5 Begriffe**\n- Insgesamt werden **30 Begriffe** benötigt\n- Es gibt also **6 Stufen**\n- Die Begriffe werden nach Schwierigkeit sortiert:\n  - Stufe 1: sehr einfache Lebensmittel\n  - Stufe 2: einfache Lebensmittel\n  - Stufe 3: mittel\n  - Stufe 4: mittel bis schwierig\n  - Stufe 5: schwierig\n  - Stufe 6: Wiederholung / Challenge\n\n## Freischalten der Stufen\nEine neue Stufe wird freigeschaltet, wenn der Spieler die vorherige Stufe abgeschlossen hat.\n\nBewertung pro Stufe:\n- Bronze: Stufe abgeschlossen\n- Silber: mindestens 4 von 5 richtig\n- Gold: alle 5 richtig\n\nIm Hauptmenü soll sichtbar sein, welche Stufen abgeschlossen sind und welches Abzeichen erreicht wurde.\n\n## Spielablauf\n1. Spieler wählt eine freigeschaltete Stufe.\n2. Ein Kunde betritt den Supermarkt.\n3. Der Kunde legt ein Lebensmittel auf das Kassenband.\n4. Der Spieler wählt den passenden englischen Begriff aus 4 Buttons.\n5. Bei richtiger Antwort:\n   - positives Feedback\n   - Lebensmittel wandert in die Einkaufstasche\n   - Geld-Animation an der Kasse\n   - Score erhöht sich\n6. Bei falscher Antwort:\n   - freundliches Feedback\n   - richtige Lösung anzeigen\n   - nächste Aufgabe startet\n7. Nach 5 Begriffen ist die Stufe beendet.\n8. Ergebnis-Screen mit Abzeichen, Punkten und Button zurück zum Hauptmenü.\n\n## Wortschatz\nErstelle insgesamt **30 Lebensmittel-Begriffe** und sortiere sie passend nach Schwierigkeit.\n\nBeispiele für einfache Begriffe:\n- apple\n- banana\n- milk\n- bread\n- cheese\n\nMittel:\n- carrot\n- potato\n- chicken\n- rice\n- juice\n\nSchwieriger:\n- cucumber\n- strawberry\n- yoghurt\n- cereal\n- flour\n\n## Technische Anforderungen\n- Alles in **einer einzigen HTML-Datei**\n- Enthält HTML, CSS und JavaScript\n- Nutze Three.js für die 3D-Szene\n- Keine externen Build-Tools\n- Mobile-first Layout\n- Touch-optimiert\n- Grosse klickbare Buttons\n- Animationen für:\n  - Kunde kommt rein\n  - Produkt erscheint\n  - richtige Antwort\n  - Geld wird kassiert\n  - Level abgeschlossen\n- Speichere Fortschritt mit localStorage:\n  - freigeschaltete Stufen\n  - Highscore pro Stufe\n  - erreichtes Abzeichen pro Stufe\n  - beste Serie / bestStreak\n- Beim erneuten Spielen wird ein gespeichertes Abzeichen nur überschrieben, wenn das neue Ergebnis besser ist.\n- Baue eine kleine Reset-Funktion ein, die nur den gespeicherten Fortschritt dieses Spiels löscht.\n\n## Ziel\nDie Demo soll wie ein kleines, hochwertiges Lernspiel wirken, das SuS motiviert, englische Lebensmittel-Vokabeln im Kontext Supermarkt zu üben."
+        }
       ]
     };
 
@@ -1186,9 +1214,11 @@
       const kind = currentPromptKind;
       const entries = prompts[title] || promptFallback;
       const entry = pickPromptEntry(entries, kind);
+      const hasMultiplePromptVersions = entries.length > 1;
       currentPromptEntry = entry;
       promptTitle.textContent = title;
       promptText.innerHTML = "";
+      document.querySelector(".prompt-switch").hidden = !hasMultiplePromptVersions;
       promptVariantButtons.forEach((button) => {
         button.setAttribute("aria-pressed", String(button.dataset.promptVariant === kind));
       });
