@@ -1,0 +1,2212 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weiterbildung | KI in der Schule</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f8fafc;
+      --muted: #aab6c5;
+      --line: rgba(255, 255, 255, 0.16);
+      --panel: rgba(12, 18, 30, 0.76);
+      --panel-strong: rgba(18, 27, 43, 0.92);
+      --accent: #42d7b5;
+      --accent-2: #f7c948;
+      --accent-3: #ff7a90;
+      --accent-4: #71a7ff;
+      --school: #d8fff4;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.36);
+      --page-bg:
+        linear-gradient(120deg, rgba(66, 215, 181, 0.10), transparent 34%),
+        linear-gradient(240deg, rgba(247, 201, 72, 0.08), transparent 36%),
+        #08111f;
+      --grid-line: rgba(255, 255, 255, 0.035);
+      --grid-mask: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 78%);
+      --visual-bg:
+        radial-gradient(circle at 30% 28%, rgba(66, 215, 181, 0.22), transparent 28%),
+        linear-gradient(150deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03)),
+        var(--panel);
+      --tile-line: rgba(255, 255, 255, 0.14);
+      --tile-bg: rgba(255, 255, 255, 0.07);
+      --tile-bg-2: rgba(66, 215, 181, 0.16);
+      --tile-bg-3: rgba(247, 201, 72, 0.14);
+      --tile-bg-5: rgba(113, 167, 255, 0.15);
+      --badge-bg: rgba(8, 17, 31, 0.78);
+      --badge-line: rgba(255, 255, 255, 0.18);
+      --card-shadow: 0 16px 48px rgba(0, 0, 0, 0.22);
+      --card-hover-line: rgba(255, 255, 255, 0.34);
+      --icon-line: rgba(255, 255, 255, 0.18);
+      --icon-bg: rgba(255, 255, 255, 0.08);
+      --tag-ink: #08111f;
+      --open-ink: #eaf8ff;
+    }
+
+    body[data-theme="white"] {
+      color-scheme: light;
+      --ink: #122033;
+      --muted: #5c6b7d;
+      --line: rgba(18, 32, 51, 0.12);
+      --panel: rgba(255, 255, 255, 0.82);
+      --panel-strong: #ffffff;
+      --accent: #0f8f7d;
+      --accent-2: #e7a51e;
+      --accent-3: #d95d73;
+      --accent-4: #386fd6;
+      --school: #24405f;
+      --shadow: 0 22px 70px rgba(38, 55, 77, 0.16);
+      --page-bg:
+        linear-gradient(120deg, rgba(15, 143, 125, 0.11), transparent 38%),
+        linear-gradient(240deg, rgba(36, 64, 95, 0.10), transparent 42%),
+        #f4f7fb;
+      --grid-line: rgba(18, 32, 51, 0.045);
+      --grid-mask: linear-gradient(to bottom, rgba(0, 0, 0, 0.72), transparent 74%);
+      --visual-bg:
+        radial-gradient(circle at 30% 28%, rgba(15, 143, 125, 0.14), transparent 28%),
+        linear-gradient(150deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.56)),
+        var(--panel);
+      --tile-line: rgba(18, 32, 51, 0.10);
+      --tile-bg: rgba(255, 255, 255, 0.72);
+      --tile-bg-2: rgba(15, 143, 125, 0.12);
+      --tile-bg-3: rgba(231, 165, 30, 0.13);
+      --tile-bg-5: rgba(56, 111, 214, 0.12);
+      --badge-bg: rgba(255, 255, 255, 0.86);
+      --badge-line: rgba(18, 32, 51, 0.12);
+      --card-shadow: 0 16px 46px rgba(38, 55, 77, 0.12);
+      --card-hover-line: rgba(18, 32, 51, 0.22);
+      --icon-line: rgba(18, 32, 51, 0.12);
+      --icon-bg: rgba(255, 255, 255, 0.72);
+      --tag-ink: #ffffff;
+      --open-ink: var(--school);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--page-bg);
+      color: var(--ink);
+      letter-spacing: 0;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: var(--grid-mask);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 42px 0 36px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 18px;
+    }
+
+    .theme-switch {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      box-shadow: 0 10px 34px rgba(0, 0, 0, 0.08);
+    }
+
+    .theme-switch button {
+      min-width: 86px;
+      border: 0;
+      border-radius: 999px;
+      padding: 9px 14px;
+      color: var(--muted);
+      background: transparent;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .theme-switch button[aria-pressed="true"] {
+      color: var(--tag-ink);
+      background: var(--accent);
+    }
+
+    body[data-theme="white"] .theme-switch button[aria-pressed="true"] {
+      color: #ffffff;
+      background: var(--school);
+    }
+
+    .hero {
+      min-height: 36vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: 28px;
+      align-items: end;
+      padding: 34px 0 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      margin-bottom: 20px;
+      color: var(--school);
+      font-size: 0.84rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .kicker svg {
+      width: 22px;
+      height: 22px;
+      color: var(--accent);
+    }
+
+    h1 {
+      max-width: 820px;
+      margin: 0;
+      font-size: clamp(2.7rem, 5.8vw, 5.6rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 620px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.7vw, 1.2rem);
+      line-height: 1.65;
+    }
+
+    .visual {
+      min-height: 310px;
+      border: 1px solid var(--line);
+      background: var(--visual-bg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+      border-radius: 8px;
+    }
+
+    .visual-grid {
+      position: absolute;
+      inset: 22px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .tile-mini {
+      border: 1px solid var(--tile-line);
+      background: var(--tile-bg);
+      border-radius: 6px;
+      min-height: 40px;
+    }
+
+    .tile-mini:nth-child(2n) {
+      background: var(--tile-bg-2);
+    }
+
+    .tile-mini:nth-child(3n) {
+      background: var(--tile-bg-3);
+    }
+
+    .tile-mini:nth-child(5n) {
+      background: var(--tile-bg-5);
+    }
+
+    .visual-badge {
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px;
+      border: 1px solid var(--badge-line);
+      border-radius: 8px;
+      background: var(--badge-bg);
+      backdrop-filter: blur(16px);
+    }
+
+    .visual-badge-content {
+      min-width: 0;
+    }
+
+    .visual-badge strong {
+      display: block;
+      font-size: 1.05rem;
+    }
+
+    .visual-badge span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .visual-badge svg {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      color: var(--school);
+    }
+
+    .presentation-start {
+      width: 44px;
+      height: 44px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--badge-line);
+      border-radius: 999px;
+      color: var(--tag-ink);
+      background: var(--accent);
+      cursor: pointer;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .presentation-start:hover,
+    .presentation-start:focus-visible {
+      transform: translateX(3px);
+      border-color: var(--card-hover-line);
+      outline: none;
+    }
+
+    .presentation-start svg {
+      width: 23px;
+      height: 23px;
+      color: currentColor;
+    }
+
+    .presentation-stage {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      width: 100vw;
+      height: 100dvh;
+      display: none;
+      background:
+        linear-gradient(120deg, rgba(66, 215, 181, 0.16), transparent 32%),
+        linear-gradient(260deg, rgba(247, 201, 72, 0.14), transparent 38%),
+        #07101d;
+      border-left: 0;
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .presentation-inner {
+      width: 100%;
+      height: 100%;
+    }
+
+    .presentation-button {
+      width: clamp(46px, 5vw, 64px);
+      height: clamp(46px, 5vw, 64px);
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 50%;
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      backdrop-filter: blur(14px);
+      transition: transform 180ms ease, background 180ms ease, opacity 180ms ease;
+    }
+
+    .presentation-button:hover,
+    .presentation-button:focus-visible {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    .presentation-button:disabled {
+      opacity: 0.34;
+      cursor: default;
+      transform: none;
+    }
+
+    .presentation-button svg {
+      width: 46%;
+      height: 46%;
+    }
+
+    .presentation-close {
+      position: absolute;
+      top: clamp(14px, 2.2vw, 28px);
+      left: clamp(14px, 2.2vw, 28px);
+      z-index: 3;
+    }
+
+    .presentation-prev,
+    .presentation-next {
+      position: absolute;
+      top: 50%;
+      z-index: 3;
+      transform: translateY(-50%);
+    }
+
+    .presentation-prev:hover,
+    .presentation-prev:focus-visible,
+    .presentation-next:hover,
+    .presentation-next:focus-visible {
+      transform: translateY(calc(-50% - 2px));
+    }
+
+    .presentation-prev {
+      left: clamp(14px, 2.2vw, 28px);
+    }
+
+    .presentation-next {
+      right: clamp(14px, 2.2vw, 28px);
+      color: #07101d;
+      background: var(--accent);
+      border-color: rgba(66, 215, 181, 0.78);
+    }
+
+    .slide {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 22% 22%, rgba(66, 215, 181, 0.24), transparent 34%),
+        radial-gradient(circle at 78% 72%, rgba(113, 167, 255, 0.20), transparent 32%),
+        rgba(255, 255, 255, 0.055);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 86%);
+      pointer-events: none;
+    }
+
+    .slide-content {
+      position: relative;
+      width: min(1080px, 88%);
+      color: #f8fafc;
+      text-align: center;
+    }
+
+    .slide-kicker {
+      margin: 0 0 22px;
+      color: var(--accent);
+      font-size: clamp(1rem, 1.8vw, 1.5rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .slide h2 {
+      margin: 0;
+      font-size: clamp(4rem, 8vw, 8.5rem);
+      line-height: 0.92;
+      letter-spacing: 0;
+    }
+
+    .slide-text {
+      max-width: 900px;
+      margin: 32px 0 0;
+      color: rgba(248, 250, 252, 0.78);
+      font-size: clamp(1.45rem, 3.4vw, 3.2rem);
+      line-height: 1.12;
+      font-weight: 850;
+    }
+
+    .slide-interactive {
+      width: min(960px, 100%);
+      margin: clamp(28px, 4vw, 46px) auto 0;
+    }
+
+    .slide-interactive[hidden] {
+      display: none;
+    }
+
+    .ai-tool-form {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto auto;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.09);
+      backdrop-filter: blur(16px);
+    }
+
+    .ai-tool-input {
+      min-width: 0;
+      border: 0;
+      border-radius: 999px;
+      padding: 17px 22px;
+      color: #07101d;
+      background: rgba(248, 250, 252, 0.96);
+      font: inherit;
+      font-size: clamp(1rem, 1.7vw, 1.25rem);
+      font-weight: 800;
+      outline: none;
+    }
+
+    .ai-tool-input::placeholder {
+      color: rgba(7, 16, 29, 0.48);
+    }
+
+    .ai-tool-input:focus-visible {
+      box-shadow: 0 0 0 4px rgba(66, 215, 181, 0.32);
+    }
+
+    .ai-tool-add,
+    .ai-tool-reset {
+      border: 0;
+      border-radius: 999px;
+      padding: 0 20px;
+      color: #07101d;
+      font: inherit;
+      font-size: clamp(0.94rem, 1.4vw, 1.06rem);
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 160ms ease, filter 160ms ease, background 160ms ease;
+    }
+
+    .ai-tool-add {
+      background: var(--accent);
+    }
+
+    .ai-tool-reset {
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .ai-tool-add:hover,
+    .ai-tool-add:focus-visible,
+    .ai-tool-reset:hover,
+    .ai-tool-reset:focus-visible {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+      outline: none;
+    }
+
+    .ai-tool-cloud {
+      min-height: clamp(132px, 18vw, 220px);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(10px, 1.6vw, 18px);
+      margin-top: clamp(18px, 2.8vw, 30px);
+    }
+
+    .ai-tool-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 100%;
+      min-height: clamp(54px, 6vw, 78px);
+      padding: 12px clamp(18px, 2.4vw, 30px);
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      border-radius: 999px;
+      color: #07101d;
+      background: linear-gradient(135deg, #42d7b5, #d8fff4);
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
+      font-size: clamp(1.25rem, 3.2vw, 2.6rem);
+      font-weight: 950;
+      line-height: 1;
+      overflow-wrap: anywhere;
+      animation: popIn 260ms cubic-bezier(0.2, 1.3, 0.34, 1) both;
+    }
+
+    .ai-tool-badge:nth-child(4n + 2) {
+      background: linear-gradient(135deg, #f7c948, #fff3ba);
+    }
+
+    .ai-tool-badge:nth-child(4n + 3) {
+      color: #f8fafc;
+      background: linear-gradient(135deg, #71a7ff, #8b5cf6);
+    }
+
+    .ai-tool-badge:nth-child(4n + 4) {
+      color: #f8fafc;
+      background: linear-gradient(135deg, #ff7a90, #f97316);
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.82);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .slide-progress {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(18px, 3vw, 34px);
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      color: rgba(248, 250, 252, 0.78);
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.86rem;
+      font-weight: 850;
+      transform: translateX(-50%);
+      backdrop-filter: blur(14px);
+    }
+
+    body.presentation-active {
+      overflow: hidden;
+    }
+
+    body.presentation-active .page {
+      display: none;
+    }
+
+    body.presentation-active .presentation-stage {
+      left: 0;
+      width: 100vw;
+      display: block;
+    }
+
+    body.presentation-active .topbar {
+      justify-content: flex-start;
+    }
+
+    body.presentation-active .hero {
+      grid-template-columns: 1fr;
+      min-height: auto;
+      padding-top: 18px;
+    }
+
+    body.presentation-active h1 {
+      font-size: clamp(2.1rem, 3.6vw, 3.4rem);
+    }
+
+    body.presentation-active .visual {
+      min-height: 230px;
+    }
+
+    body.presentation-active .grid {
+      grid-template-columns: 1fr;
+    }
+
+    body.presentation-active .toolbar {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 26px 0 18px;
+    }
+
+    .toolbar h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      letter-spacing: 0;
+    }
+
+    .toolbar span {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      min-height: 286px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--card-shadow);
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      outline: none;
+    }
+
+    .card:focus-visible,
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--card-hover-line);
+      background: var(--panel-strong);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--icon-line);
+      border-radius: 8px;
+      background: var(--icon-bg);
+    }
+
+    .icon svg {
+      width: 25px;
+      height: 25px;
+    }
+
+    .tag {
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: var(--tag-ink);
+      font-size: 0.73rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      background: var(--accent);
+      white-space: nowrap;
+    }
+
+    .math .icon,
+    .math .tag { color: var(--tag-ink); background: var(--accent-2); }
+
+    .history .icon,
+    .history .tag { color: var(--tag-ink); background: var(--accent-3); }
+
+    .eco .icon,
+    .eco .tag { color: var(--tag-ink); background: var(--accent); }
+
+    .photosynthesis .icon,
+    .photosynthesis .tag { color: var(--tag-ink); background: #34d399; }
+
+    .quiz .icon,
+    .quiz .tag { color: var(--tag-ink); background: var(--accent-4); }
+
+    .sports .icon,
+    .sports .tag { color: var(--tag-ink); background: var(--school); }
+
+    .english .icon,
+    .english .tag { color: var(--tag-ink); background: #ffb86b; }
+
+    .google .icon,
+    .google .tag { color: var(--tag-ink); background: #4285f4; }
+
+    .gemini .icon,
+    .gemini .tag { color: var(--tag-ink); background: #8ab4f8; }
+
+    .github .icon,
+    .github .tag { color: var(--ink); background: #24292f; }
+
+    .vercel .icon,
+    .vercel .tag { color: var(--tag-ink); background: #ffffff; }
+
+    .ib .icon,
+    .ib .tag { color: var(--tag-ink); background: #8b5cf6; }
+
+    .card h3 {
+      margin: 32px 0 12px;
+      font-size: 1.35rem;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.97rem;
+    }
+
+    .open {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: fit-content;
+      margin-top: 24px;
+      padding: 11px 15px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--tag-ink);
+      background: var(--accent);
+      font-weight: 850;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .open:focus-visible {
+      outline: 3px solid var(--accent-4);
+      outline-offset: 3px;
+    }
+
+    .open svg {
+      width: 18px;
+      height: 18px;
+      transition: transform 180ms ease;
+    }
+
+    .card:hover .open svg,
+    .card:focus-visible .open svg {
+      transform: translateX(3px);
+    }
+
+    .prompt-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      background: rgba(4, 10, 18, 0.62);
+      backdrop-filter: blur(8px);
+    }
+
+    .prompt-modal.is-open {
+      display: flex;
+    }
+
+    .prompt-panel {
+      width: min(680px, 100%);
+      height: min(90vh, 860px);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-strong);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .prompt-panel header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .prompt-panel h2 {
+      margin: 0;
+      font-size: 0.94rem;
+      letter-spacing: 0;
+      font-weight: 700;
+    }
+
+    .prompt-close {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: transparent;
+      cursor: pointer;
+      transition: background 180ms ease, border-color 180ms ease;
+    }
+
+    .prompt-close:hover,
+    .prompt-close:focus-visible {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--card-hover-line);
+    }
+
+    .prompt-copy {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: transparent;
+      cursor: pointer;
+      transition: background 180ms ease, border-color 180ms ease;
+    }
+
+    .prompt-copy:hover,
+    .prompt-copy:focus-visible {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--tag-ink);
+    }
+
+    .prompt-body {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding: 12px;
+      flex: 1;
+    }
+
+    .prompt-switch {
+      display: inline-flex;
+      width: fit-content;
+      gap: 6px;
+      margin-bottom: 12px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .prompt-switch button {
+      min-width: 92px;
+      border: 0;
+      border-radius: 999px;
+      padding: 9px 16px;
+      color: var(--ink);
+      background: transparent;
+      font: inherit;
+      font-size: 0.94rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .prompt-switch button[aria-pressed="true"] {
+      color: var(--tag-ink);
+      background: var(--accent);
+    }
+
+    #promptText {
+      min-height: 0;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .prompt-placeholder {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .prompt-box {
+      margin-top: 0;
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.06);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.94rem;
+      line-height: 0.5;
+      white-space: pre-wrap;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 36px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 1050px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 820px) {
+      .page {
+        width: min(100% - 24px, 680px);
+        padding-top: 22px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .visual {
+        min-height: 240px;
+      }
+
+      .toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      body.presentation-active .page {
+        display: none;
+      }
+
+      body.presentation-active .presentation-stage {
+        left: 0;
+        width: 100vw;
+      }
+
+      .presentation-inner {
+        min-height: 100svh;
+      }
+
+      .slide-content {
+        width: min(100% - 84px, 680px);
+      }
+
+      .slide h2 {
+        font-size: clamp(3rem, 17vw, 6.2rem);
+      }
+
+      .slide-text {
+        font-size: clamp(1.35rem, 7vw, 2.5rem);
+      }
+
+      .ai-tool-form {
+        grid-template-columns: 1fr;
+        border-radius: 24px;
+      }
+
+      .ai-tool-input,
+      .ai-tool-add,
+      .ai-tool-reset {
+        min-height: 54px;
+      }
+
+      .presentation-prev,
+      .presentation-next {
+        top: auto;
+        bottom: 18px;
+        transform: none;
+      }
+
+      .presentation-prev:hover,
+      .presentation-prev:focus-visible,
+      .presentation-next:hover,
+      .presentation-next:focus-visible {
+        transform: translateY(-2px);
+      }
+
+      .slide-progress {
+        bottom: 22px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .topbar {
+        justify-content: stretch;
+      }
+
+      .theme-switch {
+        width: 100%;
+      }
+
+      .theme-switch button {
+        flex: 1;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        min-height: 252px;
+      }
+
+      .visual-badge {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+      }
+
+      footer {
+        flex-direction: column;
+      }
+    }
+
+    .prompt-content h1,
+    .prompt-content h2,
+    .prompt-content h3 {
+      margin: 2px 0;
+      color: var(--ink);
+      font-size: 0.94rem;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    .prompt-content h1 {
+      margin-top: 0;
+    }
+
+    .prompt-content h2 {
+      margin-top: 2px;
+    }
+
+    .prompt-content h3 {
+      margin-top: 2px;
+    }
+
+    .prompt-content p {
+      margin: 2px 0;
+      color: var(--ink);
+      line-height: 1.4;
+      font-size: 0.94rem;
+    }
+
+    .prompt-content ul,
+    .prompt-content ol {
+      margin: 2px 0;
+      padding-left: 18px;
+      color: var(--ink);
+      font-size: 0.94rem;
+    }
+
+    .prompt-content li {
+      margin: 1px 0;
+      line-height: 1.4;
+    }
+
+    .prompt-content strong {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .prompt-content code {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-family: ui-monospace, monospace;
+      font-size: 1em;
+      color: var(--accent-4);
+    }
+
+    .prompt-content blockquote {
+      border-left: 3px solid var(--accent);
+      padding-left: 10px;
+      margin: 2px 0;
+      color: var(--muted);
+      font-style: italic;
+      font-size: 0.94rem;
+    }
+
+    .prompt-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2px 0;
+      font-size: 0.94rem;
+    }
+
+    .prompt-content th,
+    .prompt-content td {
+      border: 1px solid var(--line);
+      padding: 4px 6px;
+      text-align: left;
+    }
+
+    .prompt-content th {
+      background: rgba(66, 215, 181, 0.1);
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .prompt-content tr:hover {
+      background: rgba(66, 215, 181, 0.05);
+    }
+  </style>
+</head>
+<body>
+  <script>
+    try {
+      if (localStorage.getItem("school-ai-theme") === "white") {
+        document.body.dataset.theme = "white";
+      }
+    } catch (error) {
+      document.body.removeAttribute("data-theme");
+    }
+  </script>
+  <main class="page">
+    <div class="topbar" aria-label="Theme-Auswahl">
+      <div class="theme-switch" role="group" aria-label="Theme wechseln">
+        <button type="button" data-theme-choice="default" aria-pressed="true">Default</button>
+        <button type="button" data-theme-choice="white" aria-pressed="false">White</button>
+      </div>
+    </div>
+
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <div class="kicker">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6L12 3Z"></path>
+            <path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"></path>
+          </svg>
+          Weiterbildung Schule & KI
+        </div>
+        <h1 id="page-title">KI sinnvoll im Unterricht einsetzen</h1>
+        <p>
+          Eine kompakte Sammlung interaktiver Unterrichtsbeispiele: fachlich angebunden,
+          direkt nutzbar und geeignet, um den Einsatz von KI in der Schule konkret zu diskutieren.
+        </p>
+      </div>
+
+      <div class="visual">
+        <div class="visual-grid">
+          <div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div>
+          <div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div>
+          <div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div>
+          <div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div>
+          <div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div><div class="tile-mini"></div>
+        </div>
+        <div class="visual-badge">
+          <div class="visual-badge-content">
+            <strong>Unterricht & Ressourcen</strong>
+            <span>Präsentation im Vollbild starten</span>
+          </div>
+          <button class="presentation-start" type="button" aria-label="Präsentation starten" data-presentation-open>
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14"></path>
+              <path d="m13 6 6 6-6 6"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <h2>Unterrichtsmaterial</h2>
+      <span>Interaktive Beispiele für Unterricht und Weiterbildung</span>
+    </div>
+
+    <section class="grid" aria-label="Unterrichtsmaterial">
+      <a class="card math" href="bruchrechnen_entdecker.html" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="8"></circle>
+                <path d="M12 4v8h8"></path>
+                <path d="M12 12 6.4 17.6"></path>
+                <path d="M12 12h-8"></path>
+              </svg>
+            </div>
+            <span class="tag">Mathematik</span>
+          </div>
+          <h3>Bruch-Entdecker Studio</h3>
+          <p>Visuelle Bruchrechnung als Beispiel für adaptive Aufgaben, Feedback und individuelle Lernwege.</p>
+        </div>
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Bruch-Entdecker Studio">
+          Prompt anzeigen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
+          </svg>
+        </span>
+      </a>
+
+      <a class="card history" href="interaktives_dilemma_1789.html" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 5h16v14H4z"></path>
+                <path d="M7 8h10v8H7z"></path>
+                <path d="M9 14l2-2 2 2 2-3 2 5H7l2-2Z"></path>
+                <circle cx="10" cy="10" r="1"></circle>
+                <path d="M8 3h8"></path>
+                <path d="M8 21h8"></path>
+              </svg>
+            </div>
+            <span class="tag">Geschichte</span>
+          </div>
+          <h3>Interaktives Dilemma: 1789</h3>
+          <p>Historische Perspektivenarbeit mit Entscheidungen, Rollen und reflektierter Quellenkritik.</p>
+        </div>
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Interaktives Dilemma: 1789">
+          Prompt anzeigen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
+          </svg>
+        </span>
+      </a>
+
+      <a class="card eco" href="ecosystem_simulator.html" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 17c3-6 7-9 16-10"></path>
+                <path d="M6 17c2 2 5 3 8 3"></path>
+                <path d="M9 13c-2-1-4-1-6 0"></path>
+                <path d="M16 8c1-2 3-3 5-3"></path>
+                <circle cx="7" cy="17" r="2"></circle>
+                <circle cx="17" cy="8" r="2"></circle>
+                <circle cx="12" cy="20" r="1.5"></circle>
+              </svg>
+            </div>
+            <span class="tag">Biologie</span>
+          </div>
+          <h3>Ökosystem Simulator</h3>
+          <p>Ein Modell zum Verändern, Beobachten und Auswerten dynamischer Räuber-Beute-Systeme.</p>
+        </div>
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Ökosystem Simulator">
+          Prompt anzeigen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
+          </svg>
+        </span>
+      </a>
+
+      <a class="card photosynthesis" href="photosynthese.html" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="6" cy="6" r="2"></circle>
+                <path d="M6 1v2"></path>
+                <path d="M6 9v2"></path>
+                <path d="M1 6h2"></path>
+                <path d="M9 6h2"></path>
+                <path d="M12 21V9"></path>
+                <path d="M12 14c-4 0-6-3-6-7 4 0 6 3 6 7Z"></path>
+                <path d="M12 16c4 0 7-3 7-8-4 0-7 3-7 8Z"></path>
+                <path d="M9 21h6"></path>
+              </svg>
+            </div>
+            <span class="tag">Biologie</span>
+          </div>
+          <h3>Photosynthese Labor</h3>
+          <p>Interaktives Lernlabor zu Edukten, Produkten, Sauerstoffbildung und Glucose-Speicherung.</p>
+        </div>
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Photosynthese Labor">
+          Prompt anzeigen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
+          </svg>
+        </span>
+      </a>
+
+      <a class="card quiz" href="schatten_quiz.html" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19V5"></path>
+                <path d="M4 19h16"></path>
+                <path d="M8 15l3-4 3 2 4-7"></path>
+                <path d="M8 15h.01"></path>
+                <path d="M11 11h.01"></path>
+                <path d="M14 13h.01"></path>
+                <path d="M18 6h.01"></path>
+              </svg>
+            </div>
+            <span class="tag">Reflexion</span>
+          </div>
+          <h3>Schätzfragen & Datenblick</h3>
+          <p>Schätzfragen als Einstieg in Diskussionen über Annahmen, Daten und verlässliche Antworten.</p>
+        </div>
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Schätzfragen & Datenblick">
+          Prompt anzeigen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
+          </svg>
+        </span>
+      </a>
+
+      <a class="card sports" href="https://sports-fr.vercel.app/" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 3v18"></path>
+                <path d="M3 12h18"></path>
+                <path d="M6.5 6.5c3.2 2 7.8 2 11 0"></path>
+                <path d="M6.5 17.5c3.2-2 7.8-2 11 0"></path>
+              </svg>
+            </div>
+            <span class="tag">Französisch</span>
+          </div>
+          <h3>Faire ou Jouer? 🇫🇷</h3>
+          <p>Spiel zum Lernen von Faire vs. Jouer: Schüler sortieren Sport und Aktivitäten per Drag & Drop und verdienen Abzeichen.</p>
+        </div>
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Faire ou Jouer? 🇫🇷">
+          Prompt anzeigen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
+          </svg>
+        </span>
+      </a>
+
+      <a class="card english" href="supermarket_vocab_challenge.html" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 7h15l-2 8H8L6 7Z"></path>
+                <path d="M6 7 5.4 4H3"></path>
+                <path d="M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"></path>
+                <path d="M18 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"></path>
+                <path d="M10 11h5"></path>
+              </svg>
+            </div>
+            <span class="tag">Englisch</span>
+          </div>
+          <h3>Supermarket Vocab Challenge</h3>
+          <p>Englisch-Wortschatz im Supermarkt: Produkte erkennen, zuordnen und spielerisch üben.</p>
+        </div>
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Supermarket Vocab Challenge">
+          Prompt anzeigen
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
+          </svg>
+        </span>
+      </a>
+
+    </section>
+
+    <div class="toolbar">
+      <h2>Entwicklung LernApp</h2>
+      <span>Werkzeuge zum Planen, Bauen und Veröffentlichen</span>
+    </div>
+
+    <section class="grid" aria-label="Entwicklung LernApp">
+      <a class="card gemini" href="https://gemini.google.com" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6L12 3Z"></path>
+                <path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"></path>
+              </svg>
+            </div>
+            <span class="tag">Idee</span>
+          </div>
+          <h3>Gemini</h3>
+          <p>KI-Werkzeug für Ideen, Struktur, Prompt-Entwürfe und erste App-Konzepte.</p>
+        </div>
+      </a>
+
+      <a class="card github" href="https://github.com" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 19c-4.5 1.5-4.5-2.5-6-3"></path>
+                <path d="M15 22v-3.9a3.4 3.4 0 0 0-.9-2.6c3-.3 6.1-1.5 6.1-6.7a5.2 5.2 0 0 0-1.4-3.6 4.8 4.8 0 0 0-.1-3.6s-1.1-.3-3.7 1.4a12.8 12.8 0 0 0-6.8 0C5.6 1.3 4.5 1.6 4.5 1.6a4.8 4.8 0 0 0-.1 3.6A5.2 5.2 0 0 0 3 8.8c0 5.2 3.1 6.4 6.1 6.7a3.4 3.4 0 0 0-.9 2.6V22"></path>
+              </svg>
+            </div>
+            <span class="tag">Code</span>
+          </div>
+          <h3>GitHub</h3>
+          <p>Code speichern, Versionen nachvollziehen und LernApp-Projekte gemeinsam weiterentwickeln.</p>
+        </div>
+      </a>
+
+      <a class="card vercel" href="https://vercel.com" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 4 22 20H2L12 4Z"></path>
+              </svg>
+            </div>
+            <span class="tag">Deploy</span>
+          </div>
+          <h3>Vercel</h3>
+          <p>LernApps veröffentlichen, teilen und direkt im Browser zugänglich machen.</p>
+        </div>
+      </a>
+    </section>
+
+    <div class="toolbar">
+      <h2>Weitere Ressourcen</h2>
+      <span>Externe Angebote zum Vertiefen und Weiterarbeiten</span>
+    </div>
+
+    <section class="grid" aria-label="Weitere Ressourcen">
+      <a class="card google" href="https://grow.google/ai-for-educators/?srsltid=AfmBOorXQiPfgcqZn3wtMzRUBX_Udi27m2iWZUbnefTca5folgEu7h50" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 5h16v14H4z"></path>
+                <path d="M7 9h10"></path>
+                <path d="M7 13h6"></path>
+                <path d="M15 13l2 2 3-4"></path>
+              </svg>
+            </div>
+            <span class="tag">Extern</span>
+          </div>
+          <h3>Google AI for Educators</h3>
+          <p>Ressource für Lehrpersonen zum verantwortungsvollen und praktischen Einsatz von KI im Unterricht.</p>
+        </div>
+      </a>
+
+      <a class="card ib" href="https://ib-pe.vercel.app/" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 6h14"></path>
+                <path d="M5 12h8"></path>
+                <path d="M5 18h10"></path>
+                <path d="M16 10l3 2-3 2"></path>
+                <path d="M18 12h-5"></path>
+              </svg>
+            </div>
+            <span class="tag">KI</span>
+          </div>
+          <h3>Prompt Engineering</h3>
+          <p>Kurs zum richtigen Prompten: klare Aufträge formulieren, bessere Antworten erhalten und KI gezielter nutzen.</p>
+        </div>
+      </a>
+    </section>
+
+    <footer>
+      <span>Weiterbildung: KI in der Schule</span>
+      <span>Alle Links öffnen in einem neuen Browser-Tab.</span>
+    </footer>
+  </main>
+
+  <section class="presentation-stage" id="presentationStage" aria-label="Präsentation" aria-hidden="true">
+    <div class="presentation-inner">
+      <article class="slide" aria-labelledby="slide-title">
+        <button class="presentation-button presentation-close" type="button" aria-label="Präsentation schliessen" data-presentation-close>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5"></path>
+            <path d="m11 6-6 6 6 6"></path>
+          </svg>
+        </button>
+        <button class="presentation-button presentation-prev" type="button" aria-label="Vorherige Folie" data-presentation-prev>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5"></path>
+            <path d="m11 6-6 6 6 6"></path>
+          </svg>
+        </button>
+        <div class="slide-content">
+          <p class="slide-kicker" data-slide-kicker>WILLKOMMEN !</p>
+          <h2 id="slide-title" data-slide-title>KI sinnvoll im Unterricht einsetzen</h2>
+          <p class="slide-text" data-slide-text></p>
+          <div class="slide-interactive" data-slide-interactive hidden>
+            <form class="ai-tool-form" data-ai-tool-form>
+              <input class="ai-tool-input" type="text" placeholder="z. B. ChatGPT, Gemini, Copilot ..." autocomplete="off" data-ai-tool-input>
+              <button class="ai-tool-add" type="submit">Hinzufügen</button>
+              <button class="ai-tool-reset" type="button" data-ai-tool-reset>Zurücksetzen</button>
+            </form>
+            <div class="ai-tool-cloud" aria-live="polite" data-ai-tool-cloud></div>
+          </div>
+        </div>
+        <button class="presentation-button presentation-next" type="button" aria-label="Nächste Folie" data-presentation-next>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14"></path>
+            <path d="m13 6 6 6-6 6"></path>
+          </svg>
+        </button>
+        <div class="slide-progress" data-slide-progress>1 / 1</div>
+      </article>
+    </div>
+  </section>
+
+  <div class="prompt-modal" id="promptModal" role="dialog" aria-modal="true" aria-labelledby="promptTitle" hidden>
+    <div class="prompt-panel">
+      <header>
+        <h2 id="promptTitle">Prompt anzeigen</h2>
+        <div style="display: flex; gap: 10px;">
+          <button class="prompt-copy" type="button" aria-label="Prompt kopieren" data-prompt-copy>
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+          <button class="prompt-close" type="button" aria-label="Prompt schliessen" data-prompt-close>
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6 6 18"></path>
+              <path d="m6 6 12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+      <div class="prompt-body">
+        <div class="prompt-switch" role="group" aria-label="Prompt-Version wählen">
+          <button type="button" data-prompt-variant="human" aria-pressed="true">Human</button>
+          <button type="button" data-prompt-variant="ai" aria-pressed="false">AI</button>
+        </div>
+        <div id="promptText"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const themeButtons = document.querySelectorAll("[data-theme-choice]");
+    const getSavedTheme = () => {
+      try {
+        return localStorage.getItem("school-ai-theme");
+      } catch (error) {
+        return null;
+      }
+    };
+
+    const saveTheme = (theme) => {
+      try {
+        localStorage.setItem("school-ai-theme", theme);
+      } catch (error) {
+        return;
+      }
+    };
+
+    const applyTheme = (theme) => {
+      if (theme === "white") {
+        document.body.dataset.theme = "white";
+      } else {
+        document.body.removeAttribute("data-theme");
+      }
+
+      themeButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.themeChoice === theme));
+      });
+
+      saveTheme(theme);
+    };
+
+    applyTheme(getSavedTheme() || "default");
+
+    themeButtons.forEach((button) => {
+      button.addEventListener("click", () => applyTheme(button.dataset.themeChoice));
+    });
+
+    const presentationOpen = document.querySelector("[data-presentation-open]");
+    const presentationClose = document.querySelector("[data-presentation-close]");
+    const presentationPrev = document.querySelector("[data-presentation-prev]");
+    const presentationNext = document.querySelector("[data-presentation-next]");
+    const presentationStage = document.getElementById("presentationStage");
+    const slideKicker = document.querySelector("[data-slide-kicker]");
+    const slideTitle = document.querySelector("[data-slide-title]");
+    const slideText = document.querySelector("[data-slide-text]");
+    const slideProgress = document.querySelector("[data-slide-progress]");
+    const slideInteractive = document.querySelector("[data-slide-interactive]");
+    const aiToolForm = document.querySelector("[data-ai-tool-form]");
+    const aiToolInput = document.querySelector("[data-ai-tool-input]");
+    const aiToolReset = document.querySelector("[data-ai-tool-reset]");
+    const aiToolCloud = document.querySelector("[data-ai-tool-cloud]");
+    const aiToolStorageKey = "school-ai-known-tools";
+    let aiToolNames = [];
+    const slides = [
+      {
+        kicker: "WILLKOMMEN",
+        title: "KI sinnvoll im Unterricht einsetzen",
+        text: ""
+      },
+      {
+        kicker: "EINSTIEG",
+        title: "Welche KI-Modelle kennt ihr?",
+        text: "Ruft einfach rein. Ich sammle die Namen live auf dem Beamer."
+      },
+      {
+        kicker: "FOKUS",
+        title: "Heute arbeiten wir vor allem mit Gemini",
+        text: "Wir nutzen Gemini als Beispiel, um Ideen, Prompts und LernApp-Konzepte konkret auszuprobieren."
+      },
+      {
+        kicker: "UNTERRICHTSMATERIAL",
+        title: "Interaktive Lernapps als Gesprächsanlass",
+        text: "Mathematik, Geschichte, Biologie, Französisch und Englisch direkt im Browser ausprobieren."
+      },
+      {
+        kicker: "ENTWICKLUNG",
+        title: "Bauen, testen, veröffentlichen",
+        text: "Gemini, GitHub und Vercel bilden einen einfachen Workflow für eigene LernApp-Projekte."
+      },
+      {
+        kicker: "TRANSFER",
+        title: "Was passt in euren Unterricht?",
+        text: "Die Beispiele sind Startpunkte: anpassen, reduzieren, erweitern und fachlich sauber einbetten."
+      }
+    ];
+    let currentSlideIndex = 0;
+
+    const loadAiToolNames = () => {
+      try {
+        const savedNames = JSON.parse(localStorage.getItem(aiToolStorageKey) || "[]");
+        aiToolNames = Array.isArray(savedNames) ? savedNames.filter((name) => typeof name === "string") : [];
+      } catch (error) {
+        aiToolNames = [];
+      }
+    };
+
+    const saveAiToolNames = () => {
+      try {
+        localStorage.setItem(aiToolStorageKey, JSON.stringify(aiToolNames));
+      } catch (error) {
+        return;
+      }
+    };
+
+    const renderAiToolBadges = () => {
+      aiToolCloud.innerHTML = "";
+      aiToolNames.forEach((name) => {
+        const badge = document.createElement("span");
+        badge.className = "ai-tool-badge";
+        badge.textContent = name;
+        aiToolCloud.append(badge);
+      });
+    };
+
+    const addAiToolName = (rawName) => {
+      const name = rawName.trim();
+      if (!name) {
+        return;
+      }
+
+      const alreadyExists = aiToolNames.some((entry) => entry.toLowerCase() === name.toLowerCase());
+      if (!alreadyExists) {
+        aiToolNames.push(name);
+        saveAiToolNames();
+        renderAiToolBadges();
+      }
+
+      aiToolInput.value = "";
+      aiToolInput.focus();
+    };
+
+    const resetAiToolNames = () => {
+      aiToolNames = [];
+      saveAiToolNames();
+      renderAiToolBadges();
+      aiToolInput.focus();
+    };
+
+    const renderSlide = () => {
+      const slide = slides[currentSlideIndex];
+      const isInteractiveSlide = currentSlideIndex === 1;
+      slideKicker.textContent = slide.kicker;
+      slideTitle.textContent = slide.title;
+      slideText.textContent = slide.text;
+      slideProgress.textContent = `${currentSlideIndex + 1} / ${slides.length}`;
+      presentationPrev.disabled = currentSlideIndex === 0;
+      presentationNext.disabled = currentSlideIndex === slides.length - 1;
+      slideInteractive.hidden = !isInteractiveSlide;
+
+      if (isInteractiveSlide) {
+        renderAiToolBadges();
+        setTimeout(() => aiToolInput.focus(), 0);
+      }
+    };
+
+    const goToSlide = (index) => {
+      currentSlideIndex = Math.max(0, Math.min(index, slides.length - 1));
+      renderSlide();
+    };
+
+    const openPresentation = () => {
+      goToSlide(0);
+      document.body.classList.add("presentation-active");
+      presentationStage.setAttribute("aria-hidden", "false");
+      presentationNext.focus();
+    };
+
+    const closePresentation = () => {
+      document.body.classList.remove("presentation-active");
+      presentationStage.setAttribute("aria-hidden", "true");
+      presentationOpen.focus();
+    };
+
+    presentationOpen.addEventListener("click", openPresentation);
+    presentationClose.addEventListener("click", closePresentation);
+    presentationPrev.addEventListener("click", () => goToSlide(currentSlideIndex - 1));
+    presentationNext.addEventListener("click", () => goToSlide(currentSlideIndex + 1));
+    aiToolForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      addAiToolName(aiToolInput.value);
+    });
+    aiToolReset.addEventListener("click", resetAiToolNames);
+    loadAiToolNames();
+    renderAiToolBadges();
+
+    const promptModal = document.getElementById("promptModal");
+    const promptTitle = document.getElementById("promptTitle");
+    const promptText = document.getElementById("promptText");
+    const promptClose = document.querySelector("[data-prompt-close]");
+    const promptCopy = document.querySelector("[data-prompt-copy]");
+    const promptButtons = document.querySelectorAll("[data-prompt-button]");
+    const promptVariantButtons = document.querySelectorAll("[data-prompt-variant]");
+    let currentPromptTitle = "";
+    let currentPromptKind = "human";
+    let currentPromptEntry = null;
+    const promptFallback = [
+      {
+        label: "Prompt",
+        text: "Prompt folgt. Sobald der finale Prompt bereit ist, kann er hier pro Live-Demo eingefügt werden."
+      }
+    ];
+
+    const prompts = {
+      "Bruch-Entdecker Studio": [
+        {
+          label: "Einfache Human Version",
+          text: "Erstelle interaktive Demo für SuS, die zum ersten Mal Bruchrechnen üben. Beispiele: Pizzastücke, Blumenwiese, Schokolade giessen, Wasserglas. stunning graphics. Mobile first dynamisches Design.\n\nDie SuS lösen verschiedene Aufgabentypen, z. B. erkennen, wie viele Stücke bei **3/8** markiert sind.\n\n3x Schwierigkeitsgrad , pro grad gibt es **10 Übungen**. Die Aufgaben werden untereinander angezeigt und bleiben immer sichtbar, damit SuS Aufgaben überspringen können.\n\nJede Aufgabe ist ein- und ausklappbar. Im eingeklappten und geöffneten Zustand soll ein **grüner Haken** erscheinen, sobald die Aufgabe gelöst wurde, damit der Fortschritt sofort erkennbar ist.\n\nFortschritt lokal speichern, damit gelöste Aufgaben nach dem Neuladen erhalten bleiben."
+        },
+        {
+          label: "AI Enhanced Version",
+          text: "Rolle: Du bist ein kreativer Frontend-Entwickler und UI/UX-Experte für Lernapps in der Primarstufe.\n\nAufgabe: Erstelle eine interaktive Single-Page Web-App namens \"Bruch-Entdecker Studio\". Die App ist ein großes digitales Arbeitsblatt für SuS, die zum ersten Mal Bruchrechnen üben.\n\nZiel:\nDie SuS sollen Brüche visuell verstehen: Zähler, Nenner, markierte Teile, gefüllte Bereiche und Brüche ablesen. Die App soll spielerisch wirken, aber klar und schulnah bleiben.\n\nTechnik:\n- Alles in einer einzigen HTML-Datei.\n- Nutze HTML, CSS und JavaScript.\n- Keine externen Bilder.\n- Die App muss auf Handy, Tablet und Desktop funktionieren.\n- Mobile first dynamisches Design.\n- Aufgaben sollen nach dem Laden sofort sichtbar sein.\n\nAufbau:\n- Titel: \"Bruch-Entdecker Studio\"\n- Untertitel: \"Ein interaktives Riesen-Arbeitsblatt mit 27 Übungen\"\n- Es gibt 3 Schwierigkeitsstufen mit je 9 Aufgaben:\n  1. Stufe 1: Brüche zeichnen & einfärben (Aufgaben 1-9)\n  2. Stufe 2: Brüche ablesen (Aufgaben 10-18)\n  3. Stufe 3: Gemischte Profi-Aufgaben (Aufgaben 19-27)\n- Alle Aufgaben werden untereinander angezeigt.\n- SuS dürfen Aufgaben überspringen und in eigener Reihenfolge lösen.\n- Jede Aufgabe ist ein- und ausklappbar.\n- Aufgabe 1 ist beim Start geöffnet, die anderen sind eingeklappt.\n\nFortschritt:\n- Zeige oben den Gesamtfortschritt: \"x von 27 gelöst\".\n- Zeige eine Fortschrittsleiste.\n- Zeige pro Stufe den Fortschritt, z. B. \"Stufe 1: 4/9\".\n- Bei 9, 18 und 27 gelösten Aufgaben werden Medaillen freigeschaltet: Bronze, Silber, Gold.\n- Speichere gelöste Aufgaben, Gesamtfortschritt und freigeschaltete Medaillen mit localStorage, damit der Fortschritt nach dem Neuladen erhalten bleibt.\n- Sobald eine Aufgabe richtig gelöst wurde, erscheint ein grüner Haken.\n- Der grüne Haken muss sowohl im geöffneten als auch im eingeklappten Zustand sichtbar sein.\n\nAufgabentypen:\n1. Bruch darstellen:\n   - Beispiel: \"Belege genau 3/8 der Pizza mit Salami.\"\n   - SuS klicken Teile an, bis die richtige Anzahl markiert ist.\n\n2. Bruch ablesen:\n   - Beispiel: \"Welcher Anteil dieser Pizza ist mit Salami belegt?\"\n   - SuS tragen Zähler und Nenner in zwei Eingabefelder ein.\n\n3. Gemischte Aufgaben:\n   - Mischung aus Markieren, Ablesen und Vergleichen.\n   - Die Aufgaben sollen schwieriger werden, aber weiterhin visuell lösbar bleiben.\n\nVisualisierungen:\nNutze mehrere kindgerechte Modelle:\n- Pizza in Stücke geteilt\n- Schokolade in rechteckige Felder geteilt\n- Blumenwiese, bei der einzelne Blumen markiert/verwandelt werden\n- Wasserglas mit Füllstand und Markierungen\n\nInteraktion:\n- Bei Markieraufgaben können SuS einzelne Teile anklicken.\n- Beim Wasserglas soll der Füllstand bis zu einer Markierung gesetzt werden können.\n- Bei Ableseaufgaben gibt es Eingabefelder für Zähler und Nenner.\n- Jede Aufgabe hat einen Button \"Überprüfen\".\n- Wenn die Antwort falsch ist, gibt es kurzes, freundliches Feedback.\n- Wenn die Antwort richtig ist, bleibt die Aufgabe als gelöst markiert.\n- Gelöste Aufgaben können nicht versehentlich wieder falsch gemacht werden.\n\nHilfen:\n- Jede Aufgabe hat optional einen Button \"Tipp verraten\".\n- Der Tipp erklärt kurz und didaktisch:\n  - Nenner = in wie viele gleich große Teile das Ganze geteilt ist.\n  - Zähler = wie viele Teile markiert/gefüllt/betrachtet werden.\n- Unten gibt es eine kleine Info-Box \"Zähler & Nenner Kurztipp\".\n\nDesign:\n- Hell, freundlich, hochwertig und für Kinder einladend.\n- Nutze große, klare Karten mit runden Ecken.\n- Nutze deutliche Farben für die Stufen:\n  - Stufe 1 grün\n  - Stufe 2 gelb/orange\n  - Stufe 3 rot/rosa\n- Nutze weiche Schatten, kleine Animationen und klare Icons.\n- Die Visualisierungen sollen \"stunning graphics\" haben, aber nicht überladen sein.\n- Die Bedienung muss sofort verständlich sein.\n\nZusatzfunktionen:\n- Button \"Alle auf\"\n- Button \"Alle zu\"\n- Button \"Zurücksetzen\", der auch den localStorage-Fortschritt für diese App löscht.\n- Optional: Ton an/aus und kleine Erfolgssounds.\n- Optional: Serienanzeige/Streak für mehrere richtige Lösungen hintereinander."
+        }
+      ],
+      "Interaktives Dilemma: 1789": [
+        {
+          label: "Einfache Human Version",
+          text: "HTML DEMO erstellen für unterricht geschichte. Sus treffen Entscheidungen mit direkter Konsequenz auf Textverlauf.\n\nbsp Ein Tag im Jahr 1789 (Französische Revolution)\n\n\"Du bist ein armer Bauer in der Nähe von Paris. Deine Familie hungert, aber die Abgaben an den Grundherren stehen an. Was tust du?\"\n\nOption A: Du jagst heimlich im Wald des Grafen, um Essen für deine Familie zu finden.\n\nOption B: Nach Paris ziehen und dich den Protesten anschliessen.\n\nMobile first dynamisches Design.\nGENERATE stunning IMAGES um die geschichte lebhaft zu machen"
+        },
+        {
+          label: "AI Enhanced Version",
+          text: "HTML DEMO Das interaktive Dilemma (Fach: Geschichte / Lebenskunde / Deutsch)\n\nHier zeigst du, wie man Storytelling und kritisches Denken kombiniert.\n\nDie Idee: Ein „Choose-Your-Own-Adventure“-Mini-Szenario.\n\nDie Mechanik: Multiple-Choice-Entscheidungen mit direkter Konsequenz auf den Textverlauf.\n\nKonkretes Live-Beispiel: „Ein Tag im Jahr 1789 (Französische Revolution)“ oder „Ein moralisches Dilemma im Alltag“.\n\nText: „Du bist ein armer Bauer in der Nähe von Paris. Deine Familie hungert, aber die Abgaben an den Grundherren stehen an. Was tust du?“\n\nOption A: Heimlich im Wald des Grafen wildern.\n\nOption B: Nach Paris ziehen und dich den Protesten anschliessen.\n\nDer Effekt: Je nach Klick verändert sich die Geschichte sofort. Nach drei Entscheidungen gibt es ein kurzes Fazit (z. B. „Du wurdest erwischt“ oder „Du stehst vor der Bastille“).\n\nWarum das zieht: Geisteswissenschaftliche Lehrkräfte sehen sofort, dass interaktive Medien nicht nur für Mathe oder Sprachen taugen, sondern Empathie und historische Perspektiven erlebbar machen.\n\nDesign/Technik: Mobile first dynamisches Design. Die Entscheidungen müssen auf Smartphone, Tablet und Desktop gut lesbar und leicht antippbar sein.\n\nGENERATE stunning IMAGES um die geschichte lebhaft zu machen USING NANO BANANO"
+        }
+      ],
+      "Ökosystem Simulator": [
+        {
+          label: "Einfache Human Version",
+          text: "HTML DEMO erstellen für Biologie / NMG.\n\nThema: Räuber-Beute-Beziehung; Luchse und Rehe.\n\nBaue Slider für:\n- Anzahl Luchse\n- Anzahl Rehe\n- Waldfläche / Lebensraum\n- Nachwuchs der Rehe\n- Jagd-Erfolg der Luchse\n\nWenn ich einen Slider verändere, sieht man sofort die Auswirkung.\n\nMach es visuell mit Punkten, Tieren oder einem einfachen Graphen.\nMobile first dynamisches Design.\n\nZusätzlich: optionaler Wintermodus mit Stufe 1-3.\nIm Winter bewegen sich Tiere langsamer, Luchse verlieren mehr Energie und bekommen pro konsumiertem Reh weniger Energie."
+        },
+        {
+          label: "AI Enhanced Version",
+          text: "HTML DEMO: Ökosystem-Simulator (Fach: Biologie / NMG)\n\nErstelle eine interaktive Single-Page-Demo zur Räuber-Beute-Beziehung zwischen Luchsen und Rehen.\n\nZiel:\nDie Lernenden sollen dynamische Zusammenhänge im Ökosystem live erforschen, statt nur Begriffe abzufragen.\n\nMechanik:\nDie Simulation läuft automatisch. Es gibt keinen Start-Button. Sobald die Seite geöffnet ist, bewegen sich Populationen, Diagramm oder visuelle Punkte weiter. Änderungen an den Reglern wirken sofort sichtbar auf die Simulation.\n\nRegler:\n1. Luchse (Raubtiere)\n   - verändert den Druck auf die Rehpopulation\n   - mehr Luchse führen zu stärkerem Rückgang der Rehe\n\n2. Waldfläche (Lebensraum)\n   - beschreibt verfügbare Fläche, Schutz und ökologische Bedingungen\n   - mehr Lebensraum stabilisiert oder erhöht die Rehpopulation\n\n3. Nachwuchs (Kitze pro Wurf)\n   - steuert, wie stark Rehe sich vermehren\n   - höherer Wert lässt die Rehpopulation schneller wachsen\n\n4. Jagd-Erfolg (Energie pro konsumiertem Reh)\n   - steuert, wie viel Energie ein Luchs aus einem gefressenen Reh gewinnt\n   - höherer Wert erhöht den Druck auf die Rehpopulation und kann die Luchspopulation stabilisieren\n\nWintermodus:\nBaue einen Toggle für Wintermodus ein.\nWenn Winter aktiv ist, erscheint ein kleines Infofenster mit der Erklärung:\n\"Tiere bewegen sich langsamer. Luchse verlieren mehr Energie und bekommen pro gefressenem Reh weniger Energie. Dadurch treffen sie weniger Beute und verhungern schneller.\"\n\nZusätzlich gibt es einen Regler \"Winterstärke\" mit drei Stufen:\n1. Stufe 1 = milder Winter\n2. Stufe 2 = starker Winter\n3. Stufe 3 = extremer Winter\n\nDie Winterstärke soll die Effekte sichtbar verstärken:\n- Tiere bewegen sich langsamer\n- Rehe vermehren sich langsamer\n- Waldfläche / Lebensraum wirkt weniger stark\n- Luchse verlieren mehr Energie\n- Luchse gewinnen pro konsumiertem Reh weniger Energie\n- Schneeflocken erscheinen in der Simulation und werden bei stärkerem Winter dichter\n\nVisualisierung:\nZeige die Entwicklung mit einer klaren Live-Grafik, z. B.:\n- wachsende und schrumpfende Punkte für Luchse und Rehe\n- ein einfaches Liniendiagramm mit zwei Kurven\n- farbige Zähler für aktuelle Populationswerte\n\nInteraktion:\nWenn ein Regler bewegt wird, soll man sofort sehen:\n- Rehe nehmen ab, wenn es viele Luchse gibt\n- Rehe erholen sich, wenn mehr Waldfläche vorhanden ist\n- Rehe wachsen schneller, wenn der Nachwuchs-Wert steigt\n- Rehe geraten stärker unter Druck, wenn der Jagd-Erfolg-Wert steigt\n- Im Winter brechen Populationen schneller ein, besonders bei hoher Winterstufe\n\nDesign:\n- Modernes, klares Unterrichtsinterface mit grossen Labels, gut sichtbaren Slidern und ruhiger Farbgebung.\n- Mobile first dynamisches Design.\n- Im Wintermodus soll die Visualisierung kälter wirken, z. B. mit bläulichem Hintergrund und fallenden Schneeflocken.\n\nDidaktischer Effekt:\nDie Demo soll zeigen, dass Ökosysteme dynamisch sind. Kleine Veränderungen an einem Parameter können grosse Auswirkungen auf das ganze System haben."
+        }
+      ],
+      "Photosynthese Labor": [
+        {
+          label: "Einfache Human Version",
+          text: "Erstelle eine interaktive HTML-Demo zum Thema Photosynthese für die 7. Klasse. Station 1 und 2 sollen zusammen auf dem Startscreen sein: Karten mit Wasser, CO₂, Lichtenergie, Sauerstoff und Glucose werden einem Pflanzenmodell zugeordnet.\n\nDanach soll es separate Ansichten geben:\n- Wie entsteht Sauerstoff?\n- Sortier-Duell: Edukte und Produkte sortieren\n- Wissens-Rallye mit 4 Multiple-Choice-Fragen\n\nMobile first, modernes Dark-Mode-Design, Drag-and-drop plus Klick-Bedienung, Fortschritt 0/15, Erfolgmodal mit Konfetti. Verwende echte Formeln wie CO₂, O₂, H₂O und C₆H₁₂O₆, keine LaTeX-Reste wie $CO_2$."
+        },
+        {
+          label: "AI Enhanced Version",
+          text: `Erstelle eine interaktive HTML-Demo für den Unterricht zum Thema Photosynthese.
+
+## Thema
+Fach: Biologie / NMG
+Zielgruppe: 7. Klasse
+Lernziel: Die Lernenden verstehen, welche Stoffe bei der Photosynthese benötigt werden, welche Produkte entstehen, wo diese Stoffe in der Pflanze vorkommen und warum Sauerstoff entsteht.
+
+## Grundidee
+Baue ein interaktives Photosynthese-Labor als hochwertige Single-Page-Web-App.
+
+Die App darf nicht als lange Scrollseite wirken. Sie soll in mehrere separate Ansichten innerhalb derselben HTML-Datei aufgeteilt sein:
+
+1. Startansicht mit Station 1 und Station 2 auf einem Screen
+2. Eigene Ansicht: Wie entsteht Sauerstoff?
+3. Eigene Ansicht: Sortier-Duell
+4. Eigene Ansicht: Wissens-Rallye
+
+Zwischen den Ansichten gibt es klare Weiter- und Zurück-Buttons.
+
+## Technische Anforderungen
+- Alles in einer einzigen HTML-Datei
+- HTML, CSS und JavaScript direkt in derselben Datei
+- Tailwind CSS per CDN verwenden
+- Vanilla JavaScript für die gesamte Logik
+- Keine Build-Tools
+- Mobile-first und responsive
+- Touch-optimiert
+- Drag-and-drop und zusätzlich Click-to-place für Tablets/Smartphones
+- Fortschritt global zählen
+- Am Ende ein Erfolgserlebnis mit Modal, Sound und Konfetti
+
+## Design
+- Moderner Dark Mode
+- Glasartige Panels mit leichter Transparenz und Blur
+- Farben: Dunkles Slate/Navy als Basis, Akzente in Emerald, Sky, Teal und Amber
+- Grosse klickbare Elemente
+- Gute Lesbarkeit auf Mobile und Desktop
+- Klare Stationen, keine überladene Dauer-Scrollseite
+- Runde Zielpunkte im Diagramm
+- Kleine Animationen für korrekt/falsch, z. B. Shake bei Fehlern und Glow bei Erfolg
+
+## Header
+Oben steht ein kompakter Header:
+- Titel: PHOTOSYNTHESE PRO
+- Untertitel: Interaktives NMG-Labor • Level-Up Edition
+- Globaler Fortschritt: "0 / 15 Aufgaben gelöst"
+- Fortschrittsbalken
+
+Der Gesamtfortschritt zählt:
+- 5 Diagramm-Zuordnungen
+- 6 Sortierkarten
+- 4 Multiple-Choice-Fragen
+
+## Ansicht 1: Station 1 und 2
+Diese Ansicht ist der Startscreen.
+
+### Station 1: Die Labor-Bausteine
+Links gibt es Karten zum Zuordnen:
+
+Edukte / Eingangsstoffe:
+- Wasser, H₂O, aus dem Boden
+- Kohlenstoffdioxid, CO₂, aus der Luft
+- Lichtenergie, Sonne, Motor der Reaktion
+
+Produkte:
+- Sauerstoff, O₂, wird abgegeben
+- Glucose, Traubenzucker, Energie für die Pflanze
+
+Die Karten sollen per Drag-and-drop und per Klick auswählbar sein.
+
+Zusätzlich gibt es einen Formel-Spickzettel:
+6 H₂O + 6 CO₂ + Licht -> C₆H₁₂O₆ + 6 O₂
+
+### Station 2: Modell-Zuordnung
+Rechts gibt es ein interaktives Pflanzenmodell als Inline-SVG:
+- Sonne
+- Boden
+- Wurzeln
+- Stängel
+- Blätter
+- Pfeile für Wasseraufnahme, CO₂-Eingang und O₂-Ausgang
+
+Es gibt 5 Zielpunkte:
+- Sonne akzeptiert Lichtenergie
+- Wurzeln akzeptieren Wasser
+- Blatt-Eingang akzeptiert Kohlenstoffdioxid
+- Blatt-Ausgang akzeptiert Sauerstoff
+- Speicher akzeptiert Glucose
+
+Bei richtiger Zuordnung:
+- Zielpunkt wird ausgefüllt
+- Karte wird ausgegraut
+- Fortschritt steigt
+- positives Feedback
+
+Bei falscher Zuordnung:
+- rotes Feedback
+- Shake-Animation
+
+Unten gibt es einen Button:
+"Weiter: Wie entsteht Sauerstoff?"
+
+## Ansicht 2: Wie entsteht Sauerstoff?
+Diese Ansicht zeigt das Chemie-Mikroskop.
+
+Titel:
+"Das Chemie-Mikroskop: Wie entsteht Sauerstoff?"
+
+Baue eine schrittweise Visualisierung mit drei Buttons:
+
+1. Rohstoffe strömen ein
+   - Zeige Wasser (H₂O) und Kohlenstoffdioxid (CO₂)
+   - Erklärung: Wasser steigt aus den Wurzeln herauf. CO₂ dringt durch die Spaltöffnungen des Blattes in den Chloroplasten ein.
+
+2. Wasserspaltung durch Licht
+   - Zeige Wasserstoff (H) und Sauerstoff (O₂)
+   - Erklärung: Lichtstrahlen knacken das stabile Wassermolekül. Sauerstoff ist für die Pflanze in diesem Moment ein Abfallprodukt und strömt aus.
+
+3. Synthese von Glucose
+   - Zeige einen vereinfachten Glucose-Baustein C₆H₁₂O₆
+   - Erklärung: Aus Wasserstoff und Kohlenstoff aus CO₂ synthetisiert die Pflanze energiereiche Glucose.
+
+Wichtig:
+- Verwende echte Unicode-Formeln wie CO₂, O₂, H₂O und C₆H₁₂O₆.
+- Verwende keine Markdown- oder LaTeX-Reste wie $CO_2$, $O_2$ oder **Glucose**.
+
+Navigation:
+- Zurück zu 1 & 2
+- Weiter: Sortier-Duell
+
+## Ansicht 3: Sortier-Duell
+Die Lernenden sortieren Begriffe in zwei Zonen.
+
+Karten:
+- Kohlenstoffdioxid
+- Wasser
+- Lichtenergie
+- Sauerstoff
+- Glucose
+- Stärke (Speicherstoff)
+
+Zonen:
+- Edukte / Ausgangsstoffe
+- Produkte / Endstoffe
+
+Richtige Zuordnung:
+- Karte wird in die Zone verschoben
+- Karte wird grün markiert
+- Zähler steigt
+- Fortschritt steigt
+
+Falsche Zuordnung:
+- rotes Feedback
+- Shake-Animation
+
+Navigation:
+- Zurück: Sauerstoff
+- Weiter: Wissens-Rallye
+
+## Ansicht 4: Wissens-Rallye
+Baue vier Multiple-Choice-Fragen.
+
+Frage 1:
+Woher holt sich eine Pflanze das unsichtbare Kohlenstoffdioxid (CO₂)?
+- A) Sie saugt es flüssig über die Wurzeln aus der Erde auf.
+- B) Über winzige Poren (Spaltöffnungen) an der Unterseite ihrer Blätter. RICHTIG
+- C) Sie stellt das Gas im Stängel selbst her.
+
+Frage 2:
+Welcher spezielle Farbstoff fängt in den Blättern die Sonnenenergie ein?
+- A) Carotin, das die Blätter im Herbst rot färbt.
+- B) Hämoglobin, das den Sauerstoff im Blut transportiert.
+- C) Chlorophyll, das auch für die grüne Farbe verantwortlich ist. RICHTIG
+
+Frage 3:
+Warum ist die Photosynthese für uns Menschen und Tiere überlebenswichtig?
+- A) Weil Pflanzen dabei Sauerstoff (O₂) herstellen, den wir einatmen müssen. RICHTIG
+- B) Weil sie giftiges Wasser aus dem Erdboden in reines Quellwasser filtert.
+- C) Weil dadurch nachts die Temperatur auf der Erde sinkt.
+
+Frage 4:
+Was macht die Pflanze mit der hergestellten Glucose?
+- A) Sie schwitzt sie komplett über die Blütenblätter wieder aus.
+- B) Sie lagert sie als Stärke, z. B. in Kartoffeln oder Blättern, als Energievorrat ein. RICHTIG
+- C) Sie verdampft sie im Licht, um sich vor Überhitzung zu schützen.
+
+Bei richtiger Antwort:
+- Button grün markieren
+- Badge auf "Richtig!" setzen
+- andere Optionen deaktivieren
+- Fortschritt steigt
+
+Bei falscher Antwort:
+- Button rot markieren
+- kurzer Shake
+- Frage bleibt lösbar
+
+Navigation:
+- Zurück: Sortier-Duell
+
+## Erfolg
+Wenn alle 15 Aufgaben gelöst sind:
+- Erfolgmodal anzeigen
+- Titel: Photosynthese-Superstar!
+- Kurze Zusammenfassung der Leistung:
+  - Diagramm-Positionierung: 5 / 5 richtig
+  - Stoffklassen-Einteilung: 6 / 6 richtig
+  - Theoriewissen: 4 / 4 richtig
+- Konfetti auslösen
+- Kurzer Erfolgssound mit Web Audio API
+- Button: Labor zurücksetzen & erneut starten
+
+## Didaktischer Fokus
+Die App soll die Photosynthese nicht nur abfragen, sondern modellhaft sichtbar machen:
+- Was geht in die Pflanze hinein?
+- Was entsteht?
+- Wo passiert es?
+- Warum entsteht Sauerstoff?
+- Was macht die Pflanze mit Glucose?
+
+Das Endprodukt soll wie ein kleines, hochwertiges Lernlabor wirken, nicht wie ein Arbeitsblatt.`
+        }
+      ],
+      "Schätzfragen & Datenblick": [
+        {
+          label: "Einfache Human Version",
+          text: "HTML DEMO Erstellen über\nSchätzen von Grössenordnungen, Gewichten oder Wahrscheinlichkeiten.\n\nBaue Eingabefeld oder Slider, schätzung abgeben, gefolgt von der Einblendung der Lösung.\n\nbsp Wie viel Wasser wird für die Herstellung von einer einzigen Jeans benötigt?\n\n10 schätzfragen mit stunning graphics: zu jeder frage eine grafik oder animation. Mobile first dynamisches Design."
+        },
+        {
+          label: "AI Enhanced Version",
+          text: "Rolle: Du bist ein kreativer Frontend-Entwickler und UI/UX-Experte. \nAufgabe: Erstelle eine interaktive, visuell beeindruckende Single-Page Web-App (HTML, CSS, JS in einer einzigen Datei) namens \"Aha-Effekt: 10 Schätzfragen\".\n\nKernelement & Mechanik (Der Aha-Effekt):\nDer Nutzer sieht eine Schätzfrage und wählt über einen Slider einen Wert. Nach Klick auf \"Auflösen\" wird die tatsächliche Zahl groß eingeblendet. Der eigentliche \"Aha-Effekt\" entsteht danach: Die abstrakte Zahl wird visuell übersetzt, indem sich ein Raster mit dutzenden kleinen Icons füllt (z.B. 8000 Liter = 50 Badewannen, die nacheinander animiert aufpoppen).\n\nDesign & UI/UX (Stunning Graphics):\n1. Premium Dark Mode: Nutze dunkle Blautöne (z.B. Tailwind slate-900) als Basis.\n2. Glassmorphism: Die Haupt-Cards sollen halbtransparent sein mit einem Backdrop-Blur.\n3. Dynamische Thematisierung: Jede Frage hat eine eigene Akzentfarbe (Hex-Code). Ändere über CSS-Variablen dynamisch leuchtende Hintergrund-Orbs (Glow-Effekte) und die Farbe von Slider, Texten und Icons, passend zur aktuellen Frage.\n4. Custom Slider: Baue einen stark stilisierten Range-Slider (kein Standard-Browser-Design), dessen Daumen (Thumb) bei Interaktion größer wird.\n5. Typografie: Modern, serifenlos, große Kontraste (z.B. sehr fette Zahlen, feine Beschriftungen).\n6. Zahlenformat: Verwende das Schweizer Format mit Apostroph für Tausender (z.B. 20'000).\n\nGrafiken & Animationen (NUR Inline-SVGs, KEINE externen Bilder):\nJede Frage benötigt ZWEI Arten von SVGs:\n1. Hero-Grafik: Eine große, thematisch passende SVG-Grafik, die unter der Frage schwebt. Sie muss eine Endlosschleifen-Animation haben (z.B. sanftes Schweben, Pulsieren oder Rotieren) und einen leichten Drop-Shadow in der jeweiligen Themenfarbe besitzen.\n2. Icon-Grafik: Ein kleines SVG für das Raster der Auflösung (z.B. kleine Badewanne, Baum, Kreditkarte).\nWenn die Frage aufgelöst wird, muss die Hero-Grafik weich verschwinden und das Raster mit den Icon-Grafiken muss mit einem Stagger-Effekt (verzögertes Einblenden, z.B. Pop-In und Fill-Animation) nacheinander erscheinen.\n\nTechnische Anforderungen:\n- Frameworks: Nutze Tailwind CSS via CDN (<script src=\"https://cdn.tailwindcss.com\"><\/script>).\n- Vanilla JavaScript für die Logik.\n- Alles MUSS zwingend in einer einzigen .html Datei liegen.\n- Responsiv: Perfekt bedienbar auf Mobile und Desktop (kein horizontales Scrollen).\n- Mobile first dynamisches Design.\n- Feedback-Logik: Gib dem Nutzer Feedback zu seiner Schätzung (Perfekt, sehr nah dran [<15% Abweichung], zu hoch, zu niedrig).\n\nInhalt (Die 10 Fragen):\nIntegriere folgende 10 Fragen als Array in JS mit jeweils passendem Min/Max/Step für den Slider:\n1. Liter Wasser für 1 Jeans (Antwort: 8000L. Visualisierung: 50 Badewannen à 160L. Farbe: Blau).\n2. Mikroplastik gegessen pro Jahr (Antwort: 260g. Visualisierung: 52 Kreditkarten à 5g. Farbe: Violett).\n3. CO2 Flug Zürich-New York retour (Antwort: 2000kg. Visualisierung: 200 Bäume à 10kg. Farbe: Grün).\n4. Food Waste pro Kopf/Jahr Schweiz (Antwort: 120kg. Visualisierung: 24 Abfallsäcke à 5kg. Farbe: Bernstein).\n5. Reines Gold in Olympia-Goldmedaille (Antwort: 6g. Visualisierung: 6 Gramm-Stücke à 1g. Farbe: Gold).\n6. Stunden YouTube Uploads pro Minute (Antwort: 500h. Visualisierung: 250 Spielfilme à 2h. Farbe: Rot).\n7. Herzschläge pro Tag (Antwort: 100'000. Visualisierung: 100 Icons à 1000 Schläge. Farbe: Pink).\n8. Papierverbrauch pro Person/Jahr CH (Antwort: 110kg. Visualisierung: 22 Papiertaschen à 5kg. Farbe: Grau).\n9. Schokolade gegessen pro Jahr CH (Antwort: 11kg. Visualisierung: 110 Tafeln à 100g. Farbe: Schokobraun).\n10. Länge Blutgefäße Mensch (Antwort: 100'000km. Visualisierung: 2.5 Erdumrundungen à 40'000km. Farbe: Hellblau).\n\nAblauf-Logik:\nNach dem Laden startet Frage 1. Slider bewegen -> Klick \"Auflösen\" -> Berechnung & Feedback -> Stagger-Animation des Rasters -> \"Nächste Frage\" Button erscheint -> Bei Klick Fade-Transition zur nächsten Frage mit Farbwechsel der App-Umgebung. Nach Frage 10 ein \"Quiz beendet\" Screen."
+        }
+      ],
+      "Faire ou Jouer? 🇫🇷": [
+        {
+          label: "Einfache Human Version",
+          text: "Ich brauche eine interaktive Demo mit Sport: faire ou jouer.\nMobile first dynamisches Design.\n\n\nBeispiel: Emoji + la natation → nach links droppen für faire, nach rechts droppen für jouer.\n\n\nErstelle einen Prompt mit stunning Design, grossen Emojis und bei falscher Antwort: rot + Wackel-Animation.\n\n\nIch brauche 5 Emoji-Sets mit Schwierigkeitsstufen.\n\n\n5 Niveaus, im Hauptmenü sichtbar und jeweils als done markieren, wenn abgeschlossen.\n\n\nAbzeichen: Bronze = Abschluss, Silber = mindestens 6 richtig, Gold = alle richtig.\n\nFortschritt lokal speichern, damit erledigte Niveaus und Abzeichen nach dem Neuladen erhalten bleiben."
+        },
+        {
+          label: "AI Enhanced Version",
+          text: "# Prompt: FAIRE OU JOUER ? 🇫🇷\n\n## Modern Web-Based French Learning Mini Game\n\nCreate a stunning modern web-based French learning mini game for secondary school students called:\n\n# “FAIRE OU JOUER ? 🇫🇷”\n\nThe game should teach students when to use **“faire”** and when to use **“jouer”** with sports, hobbies, instruments, games, and activities.\n\n---\n\n## 1. Overall Style\n\nDesign the app like a premium educational iPad game.\n\nUse:\n\n* ultra-polished UI\n* bright modern gradients\n* large rounded cards\n* soft shadows\n* smooth animations\n* big typography\n* huge 3D-style emojis\n* glassmorphism panels\n* clean Gen-Z educational aesthetic\n* mobile-first responsive layout\n* touch-friendly controls\n* fun but professional school presentation look\n\nThe visual style should feel like:\n\n> Duolingo meets Apple meets a modern classroom game.\n\n---\n\n## 2. Background / Atmosphere\n\nUse a blue/purple gradient background with subtle floating particles.\n\nAdd tiny French-learning accents such as:\n\n* 🇫🇷\n* ✨\n* ⭐\n* 📚\n\nUse rounded corners everywhere, smooth transitions, and a playful but clean educational vibe.\n\n---\n\n## 3. Main Menu\n\nCreate a beautiful main menu with **5 difficulty levels**.\n\nEach level should be shown as a large rounded card with:\n\n* level number\n* difficulty name\n* short description\n* progress status\n* badge status\n\nThe 5 levels are:\n\n1. **Niveau 1 — Facile**\n2. **Niveau 2 — Standard**\n3. **Niveau 3 — Moyen**\n4. **Niveau 4 — Difficile**\n5. **Niveau 5 — Expert**\n\nEach level contains its own set of emoji/activity cards.\n\n---\n\n## 4. Badge System\n\nAfter completing a level, the level card in the main menu must show a badge.\n\nBadge logic:\n\n* 🥉 **Bronze badge** = level completed\n* 🥈 **Silver badge** = at least 6 correct answers\n* 🥇 **Gold badge** = all answers correct\n\nEach badge should be clearly visible on the level card in the main menu after completion.\n\nStore progress locally using **localStorage** so that completed levels, best scores, earned badges, and main-menu done states remain visible after refreshing the page.\n\nThe localStorage data should include:\n\n* completed levels\n* best score per level\n* earned badge per level\n* done status shown on the main menu\n\nReplay should update the saved badge only if the new result is better than the old result.\n\n---\n\n## 5. Gameplay\n\nThe player chooses a level from the main menu.\n\nDuring the game, the player sees:\n\n* one huge emoji in the center\n* the French sport, hobby, instrument, game, or activity below it\n\nExample:\n\n```text\n🏊‍♂️\nla natation\n```\n\nThe player must drag the card:\n\n```text\n⬅️ LEFT  = FAIRE\n➡️ RIGHT = JOUER\n```\n\n---\n\n## 6. Rules\n\n* Correct answers increase the score.\n* Wrong answers do not increase the score.\n* After each answer, show feedback and continue to the next card.\n* At the end of the level, show the final score and the earned badge.\n\n---\n\n## 7. Correct Answer Feedback\n\nCorrect answers trigger:\n\n* green glow\n* confetti burst\n* smooth success animation\n* message: **“✅ Bravo !”**\n\n---\n\n## 8. Wrong Answer Feedback\n\nWrong answers trigger:\n\n* red flash\n* shake/wiggle animation\n* subtle vibration effect on supported devices\n* message: **“❌ Essaie encore !”**\n\nWrong answers should feel playful, not punishing.\n\n---\n\n## 9. Animations\n\nInclude:\n\n* smooth drag physics\n* snap effect when dropped\n* hover scaling\n* button bounce\n* shake animation on wrong answer\n* celebration animation on correct answer\n* smooth screen transitions\n* animated badge reveal at the end of each level\n* subtle floating particles in the background\n* progress bar filling smoothly\n* confetti on correct answers and level completion\n\n---\n\n## 10. UI Details\n\nThe game screen should include:\n\n* top progress bar\n* score counter with star icon\n* current level indicator\n* large draggable card\n* left drop zone labeled **FAIRE**\n* right drop zone labeled **JOUER**\n* back-to-menu button\n* replay level button on the result screen\n\nThe drop zones must be large and easy to use on mobile devices.\n\n---\n\n## 11. Content\n\nCreate **5 difficulty levels** with **8 cards each**.\n\n---\n\n# LEVEL 1 — FACILE\n\nMostly common sports and simple activities.\n\n| Emoji | French Activity | Correct Answer |\n| ----- | --------------- | -------------- |\n| 🏊‍♂️ | la natation     | faire          |\n| ⚽     | le football     | jouer          |\n| 🎾    | le tennis       | jouer          |\n| 🤸    | la gymnastique  | faire          |\n| 🥋    | le judo         | faire          |\n| 🏀    | le basket       | jouer          |\n| 🚴‍♀️ | le vélo         | faire          |\n| 🎮    | les jeux vidéo  | jouer          |\n\n---\n\n# LEVEL 2 — STANDARD\n\nMix of sports, games, and instruments.\n\n| Emoji | French Activity | Correct Answer |\n| ----- | --------------- | -------------- |\n| ♟️    | les échecs      | jouer          |\n| 🎻    | le violon       | jouer          |\n| 🎹    | le piano        | jouer          |\n| 🏃‍♂️ | la course       | faire          |\n| 🧘    | le yoga         | faire          |\n| 🏐    | le volley       | jouer          |\n| 🏓    | le ping-pong    | jouer          |\n| ⛷️    | le ski          | faire          |\n\n---\n\n# LEVEL 3 — MOYEN\n\nMore variety and slightly less obvious examples.\n\n| Emoji | French Activity     | Correct Answer |\n| ----- | ------------------- | -------------- |\n| 🥊    | la boxe             | faire          |\n| 🧗    | l’escalade          | faire          |\n| 🎸    | la guitare          | jouer          |\n| 🥁    | la batterie         | jouer          |\n| 🏉    | le rugby            | jouer          |\n| 🛹    | le skateboard       | faire          |\n| 🏇    | l’équitation        | faire          |\n| 🎲    | les jeux de société | jouer          |\n\n---\n\n# LEVEL 4 — DIFFICILE\n\nActivities where students must think more carefully.\n\n| Emoji | French Activity | Correct Answer |\n| ----- | --------------- | -------------- |\n| 🏄    | le surf         | faire          |\n| 🤿    | la plongée      | faire          |\n| 🏸    | le badminton    | jouer          |\n| 🏒    | le hockey       | jouer          |\n| 🎺    | la trompette    | jouer          |\n| 🎭    | le théâtre      | faire          |\n| 🧩    | les puzzles     | faire          |\n| 🪁    | du cerf-volant  | faire          |\n\n---\n\n# LEVEL 5 — EXPERT\n\nMore advanced and mixed expressions.\n\n| Emoji | French Activity    | Correct Answer |\n| ----- | ------------------ | -------------- |\n| 🧪    | des expériences    | faire          |\n| 📸    | de la photographie | faire          |\n| 🎤    | du karaoké         | faire          |\n| 🎷    | du saxophone       | jouer          |\n| 🎯    | aux fléchettes     | jouer          |\n| 🃏    | aux cartes         | jouer          |\n| 🏋️   | de la musculation  | faire          |\n| 🧊    | du patinage        | faire          |\n\n---\n\n## 12. Important Language Rule\n\nUse **faire** for general activities, sports, and hobbies.\n\nUse **jouer** for:\n\n* games\n* team ball sports\n* musical instruments\n\nFor **jouer**, use correct French forms such as:\n\n* jouer au football\n* jouer aux échecs\n* jouer du piano\n* jouer de la guitare\n* jouer aux cartes\n\n---\n\n## 13. Result Screen\n\nAt the end of each level, show:\n\n```text\n🎉 Excellent !\n```\n\nAlso show:\n\n* final score\n* total correct answers\n* earned badge\n* motivational French message\n* replay button\n* return to main menu button\n\nBadge logic:\n\n* 🥉 Bronze: level completed\n* 🥈 Silver: at least 6 correct answers\n* 🥇 Gold: 8 correct answers\n\nThe badge reveal should be animated with sparkles.\n\n---\n\n## 14. Technical Requirements\n\nBuild the game as a single-page web app using only:\n\n* HTML\n* CSS\n* JavaScript\n\nNo backend needed.\nNo external framework required.\nThe app must be ready for Vercel deployment.\n\nUse **localStorage** for persistent progress. Add a small reset-progress option that clears only this game's saved localStorage data.\n\nIt must work smoothly on:\n\n* mobile phones\n* tablets\n* desktop browsers\n\n---\n\n## 15. Important Mobile Layout Requirement\n\nMobile first dynamisches Design.\n\nDo **not** rely on fixed `100vh` heights.\n\nUse dynamic viewport units such as:\n\n* `100dvh`\n* `100svh`\n* safe-area insets\n* flexible vertical layouts\n\nThe app must adapt correctly to mobile browser UI bars and avoid broken vertical layouts on phones when address bars appear or disappear.\n\nThe layout should always fit properly on mobile devices.\n\nMobile interactions are especially important:\n\n* touch drag must feel smooth\n* drop zones must be large\n* buttons must be easy to tap\n* content must not overflow vertically\n* no important UI element should be hidden behind browser bars or safe areas\n\n---\n\n## 16. Extra Polish\n\nAdd tiny micro-interactions everywhere:\n\n* buttons bounce slightly when tapped\n* level cards animate on hover/touch\n* badge reveal has sparkle animation\n* progress bar fills smoothly\n* confetti appears on correct answers and level completion\n* wrong answers feel playful, not punishing\n* transitions between menu, game, and result screen feel smooth\n\n---\n\n## 17. Final Goal\n\nThe final result should feel like a complete, polished educational mini game that a teacher could immediately present in class.\n\nIt should be visually impressive, easy to understand, mobile-first, and fun for secondary school students."
+        }
+      ],
+      "Supermarket Vocab Challenge": [
+        {
+          label: "Prompt",
+          text: "Erstelle eine **HTML-Demo mit Three.js** als interaktives Minispiel für die Schule.\n\n## Thema\nFach: Englisch  \nLernziel: Lebensmittel-Vokabular im Supermarkt lernen  \nZielgruppe: SuS, die spielerisch neue englische Begriffe üben sollen.\n\n## Grundidee\nBaue einen kleinen, liebevoll gestalteten **3D-Supermarkt** mit Three.js.  \nKleine Charaktere kommen als Kundinnen und Kunden in den Laden und kaufen Lebensmittel ein.\n\nDer Spieler sieht jeweils ein Lebensmittel als **3D-Objekt, Emoji oder SVG-Illustration** und muss aus **4 Antwort-Buttons** den richtigen englischen Begriff auswählen.\n\nBeispiel:\nEin Apfel erscheint → richtige Antwort: **apple**\n\n## Design\n- Mobile-first\n- Dynamische Anpassung an verschiedene Bildschirmgrössen\n- Stunning, modernes Design\n- Freundliche Farben\n- Grosse Buttons\n- Klare Lesbarkeit\n- Weiche Animationen\n- Emoji- oder SVG-Grafiken für Lebensmittel\n- Kleine 3D-Supermarkt-Szene mit Regalen, Kasse, Einkaufswagen und Charakteren\n- Kein langweiliges Idle-Gameplay, sondern lebendige Mini-Szene\n\n## Gameplay\n- Pro Stufe gibt es **5 Begriffe**\n- Insgesamt werden **30 Begriffe** benötigt\n- Es gibt also **6 Stufen**\n- Die Begriffe werden nach Schwierigkeit sortiert:\n  - Stufe 1: sehr einfache Lebensmittel\n  - Stufe 2: einfache Lebensmittel\n  - Stufe 3: mittel\n  - Stufe 4: mittel bis schwierig\n  - Stufe 5: schwierig\n  - Stufe 6: Wiederholung / Challenge\n\n## Freischalten der Stufen\nEine neue Stufe wird freigeschaltet, wenn der Spieler die vorherige Stufe abgeschlossen hat.\n\nBewertung pro Stufe:\n- Bronze: Stufe abgeschlossen\n- Silber: mindestens 4 von 5 richtig\n- Gold: alle 5 richtig\n\nIm Hauptmenü soll sichtbar sein, welche Stufen abgeschlossen sind und welches Abzeichen erreicht wurde.\n\n## Spielablauf\n1. Spieler wählt eine freigeschaltete Stufe.\n2. Ein Kunde betritt den Supermarkt.\n3. Der Kunde legt ein Lebensmittel auf das Kassenband.\n4. Der Spieler wählt den passenden englischen Begriff aus 4 Buttons.\n5. Bei richtiger Antwort:\n   - positives Feedback\n   - Lebensmittel wandert in die Einkaufstasche\n   - Geld-Animation an der Kasse\n   - Score erhöht sich\n6. Bei falscher Antwort:\n   - freundliches Feedback\n   - richtige Lösung anzeigen\n   - nächste Aufgabe startet\n7. Nach 5 Begriffen ist die Stufe beendet.\n8. Ergebnis-Screen mit Abzeichen, Punkten und Button zurück zum Hauptmenü.\n\n## Wortschatz\nErstelle insgesamt **30 Lebensmittel-Begriffe** und sortiere sie passend nach Schwierigkeit.\n\nBeispiele für einfache Begriffe:\n- apple\n- banana\n- milk\n- bread\n- cheese\n\nMittel:\n- carrot\n- potato\n- chicken\n- rice\n- juice\n\nSchwieriger:\n- cucumber\n- strawberry\n- yoghurt\n- cereal\n- flour\n\n## Technische Anforderungen\n- Alles in **einer einzigen HTML-Datei**\n- Enthält HTML, CSS und JavaScript\n- Nutze Three.js für die 3D-Szene\n- Keine externen Build-Tools\n- Mobile-first Layout\n- Touch-optimiert\n- Grosse klickbare Buttons\n- Animationen für:\n  - Kunde kommt rein\n  - Produkt erscheint\n  - richtige Antwort\n  - Geld wird kassiert\n  - Level abgeschlossen\n- Speichere Fortschritt mit localStorage:\n  - freigeschaltete Stufen\n  - Highscore pro Stufe\n  - erreichtes Abzeichen pro Stufe\n  - beste Serie / bestStreak\n- Beim erneuten Spielen wird ein gespeichertes Abzeichen nur überschrieben, wenn das neue Ergebnis besser ist.\n- Baue eine kleine Reset-Funktion ein, die nur den gespeicherten Fortschritt dieses Spiels löscht.\n\n## Ziel\nDie Demo soll wie ein kleines, hochwertiges Lernspiel wirken, das SuS motiviert, englische Lebensmittel-Vokabeln im Kontext Supermarkt zu üben."
+        }
+      ]
+    };
+
+    const pickPromptEntry = (entries, kind) => {
+      if (kind === "ai") {
+        return entries.find((entry) => /ai|ki|enhanced|hauptprompt/i.test(entry.label)) || entries[1] || entries[0];
+      }
+
+      return entries.find((entry) => /human|mensch|einfach/i.test(entry.label)) || entries[0];
+    };
+
+    const renderPrompt = () => {
+      const title = currentPromptTitle;
+      const kind = currentPromptKind;
+      const entries = prompts[title] || promptFallback;
+      const entry = pickPromptEntry(entries, kind);
+      const hasMultiplePromptVersions = entries.length > 1;
+      currentPromptEntry = entry;
+      promptTitle.textContent = title;
+      promptText.innerHTML = "";
+      document.querySelector(".prompt-switch").hidden = !hasMultiplePromptVersions;
+      promptVariantButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.promptVariant === kind));
+      });
+
+      const box = document.createElement("div");
+      box.className = "prompt-box prompt-content";
+      box.innerHTML = marked.parse(entry.text);
+      promptText.append(box);
+    };
+
+    const openPrompt = (button) => {
+      currentPromptTitle = button.dataset.promptTitle;
+      currentPromptKind = "human";
+      renderPrompt();
+
+      promptModal.hidden = false;
+      promptModal.classList.add("is-open");
+      promptClose.focus();
+    };
+
+    const closePrompt = () => {
+      promptModal.classList.remove("is-open");
+      promptModal.hidden = true;
+    };
+
+    promptButtons.forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openPrompt(button);
+      });
+
+      button.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          event.stopPropagation();
+          openPrompt(button);
+        }
+      });
+    });
+
+    promptVariantButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        currentPromptKind = button.dataset.promptVariant;
+        renderPrompt();
+      });
+    });
+
+    promptClose.addEventListener("click", closePrompt);
+    promptCopy.addEventListener("click", () => {
+      const textToCopy = currentPromptEntry ? currentPromptEntry.text : "";
+      
+      if (textToCopy) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          const originalLabel = promptCopy.getAttribute("aria-label");
+          promptCopy.setAttribute("aria-label", "Kopiert!");
+          promptCopy.style.background = "var(--accent)";
+          promptCopy.style.borderColor = "var(--accent)";
+          promptCopy.style.color = "var(--tag-ink)";
+          setTimeout(() => {
+            promptCopy.setAttribute("aria-label", originalLabel);
+            promptCopy.style.background = "";
+            promptCopy.style.borderColor = "";
+            promptCopy.style.color = "";
+          }, 2000);
+        });
+      }
+    });
+    promptModal.addEventListener("click", (event) => {
+      if (event.target === promptModal) {
+        closePrompt();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !promptModal.hidden) {
+        closePrompt();
+        return;
+      }
+
+      if (document.body.classList.contains("presentation-active")) {
+        if (event.key === "Escape") {
+          closePresentation();
+          return;
+        }
+
+        const isTypingField = event.target instanceof Element && event.target.matches("input, textarea, [contenteditable='true']");
+        if (isTypingField) {
+          return;
+        }
+
+        if (event.key === "ArrowRight" || event.key === " " || event.key === "PageDown") {
+          event.preventDefault();
+          goToSlide(currentSlideIndex + 1);
+          return;
+        }
+
+        if (event.key === "ArrowLeft" || event.key === "PageUp") {
+          event.preventDefault();
+          goToSlide(currentSlideIndex - 1);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
