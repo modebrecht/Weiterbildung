@@ -893,10 +893,11 @@
         torso.receiveShadow = true;
         customerChar.add(torso);
 
-        // Kapuze hinten am Rücken angedeutet
-        const hoodGeo = new THREE.SphereGeometry(0.22, 12, 12);
+        // Flache Kapuze am Rücken, damit kein runder Buckel entsteht.
+        const hoodGeo = new THREE.BoxGeometry(0.46, 0.28, 0.045);
         const hood = new THREE.Mesh(hoodGeo, hoodieMat);
-        hood.position.set(0, 1.0, -0.2);
+        hood.position.set(0, 1.02, -0.32);
+        hood.rotation.x = -0.08;
         customerChar.add(hood);
 
         // Kopf
