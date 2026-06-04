@@ -23,6 +23,7 @@ Technische Anforderungen:
 - Vanilla JavaScript für die Logik.
 - Alles MUSS zwingend in einer einzigen .html Datei liegen.
 - Responsiv: Perfekt bedienbar auf Mobile und Desktop (kein horizontales Scrollen).
+- Mobile first dynamisches Design.
 - Feedback-Logik: Gib dem Nutzer Feedback zu seiner Schätzung (Perfekt, sehr nah dran [<15% Abweichung], zu hoch, zu niedrig).
 
 Inhalt (Die 10 Fragen):

@@ -8,4 +8,5 @@ Option A: Du jagst heimlich im Wald des Grafen, um Essen für deine Familie zu f
 
 Option B: Nach Paris ziehen und dich den Protesten anschliessen.
 
+Mobile first dynamisches Design.
 GENERATE stunning IMAGES um die geschichte lebhaft zu machen

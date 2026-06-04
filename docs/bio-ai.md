@@ -58,7 +58,9 @@ Wenn ein Regler bewegt wird, soll man sofort sehen:
 - Im Winter brechen Populationen schneller ein, besonders bei hoher Winterstufe
 
 Design:
-Modernes, klares Unterrichtsinterface mit grossen Labels, gut sichtbaren Slidern und ruhiger Farbgebung. Im Wintermodus soll die Visualisierung kälter wirken, z. B. mit bläulichem Hintergrund und fallenden Schneeflocken.
+- Modernes, klares Unterrichtsinterface mit grossen Labels, gut sichtbaren Slidern und ruhiger Farbgebung.
+- Mobile first dynamisches Design.
+- Im Wintermodus soll die Visualisierung kälter wirken, z. B. mit bläulichem Hintergrund und fallenden Schneeflocken.
 
 Didaktischer Effekt:
 Die Demo soll zeigen, dass Ökosysteme dynamisch sind. Kleine Veränderungen an einem Parameter können grosse Auswirkungen auf das ganze System haben.

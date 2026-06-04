@@ -343,6 +343,8 @@ It must work smoothly on:
 
 ## 15. Important Mobile Layout Requirement
 
+Mobile first dynamisches Design.
+
 Do **not** rely on fixed `100vh` heights.
 
 Use dynamic viewport units such as:

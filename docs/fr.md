@@ -1,4 +1,5 @@
 Ich brauche eine interaktive Demo mit Sport: faire ou jouer.
+Mobile first dynamisches Design.
 
 
 Beispiel: Emoji + la natation → nach links droppen für faire, nach rechts droppen für jouer.

@@ -18,5 +18,7 @@ Der Effekt: Je nach Klick verändert sich die Geschichte sofort. Nach drei Entsc
 
 Warum das zieht: Geisteswissenschaftliche Lehrkräfte sehen sofort, dass interaktive Medien nicht nur für Mathe oder Sprachen taugen, sondern Empathie und historische Perspektiven erlebbar machen.
 
+Design/Technik: Mobile first dynamisches Design. Die Entscheidungen müssen auf Smartphone, Tablet und Desktop gut lesbar und leicht antippbar sein.
+
 GENERATE stunning IMAGES um die geschichte lebhaft zu machen USING NANO BANANO 
 

@@ -12,6 +12,7 @@ Baue Slider für:
 Wenn ich einen Slider verändere, sieht man sofort die Auswirkung.
 
 Mach es visuell mit Punkten, Tieren oder einem einfachen Graphen.
+Mobile first dynamisches Design.
 
 Zusätzlich: optionaler Wintermodus mit Stufe 1-3.
 Im Winter bewegen sich Tiere langsamer, Luchse verlieren mehr Energie und bekommen pro konsumiertem Reh weniger Energie.
