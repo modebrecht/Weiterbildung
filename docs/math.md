@@ -6,3 +6,5 @@ Die SuS lösen verschiedene Aufgabentypen, z. B. erkennen, wie viele Stücke bei
 
 Jede Aufgabe ist ein- und ausklappbar. Im eingeklappten und geöffneten Zustand soll ein **grüner Haken** erscheinen, sobald die Aufgabe gelöst wurde, damit der Fortschritt sofort erkennbar ist.
 
+Fortschritt lokal speichern, damit gelöste Aufgaben nach dem Neuladen erhalten bleiben.
+

@@ -15,3 +15,5 @@ Ich brauche 5 Emoji-Sets mit Schwierigkeitsstufen.
 
 
 Abzeichen: Bronze = Abschluss, Silber = mindestens 6 richtig, Gold = alle richtig.
+
+Fortschritt lokal speichern, damit erledigte Niveaus und Abzeichen nach dem Neuladen erhalten bleiben.

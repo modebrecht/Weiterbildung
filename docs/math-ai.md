@@ -30,6 +30,7 @@ Fortschritt:
 - Zeige eine Fortschrittsleiste.
 - Zeige pro Stufe den Fortschritt, z. B. "Stufe 1: 4/9".
 - Bei 9, 18 und 27 gelösten Aufgaben werden Medaillen freigeschaltet: Bronze, Silber, Gold.
+- Speichere gelöste Aufgaben, Gesamtfortschritt und freigeschaltete Medaillen mit localStorage, damit der Fortschritt nach dem Neuladen erhalten bleibt.
 - Sobald eine Aufgabe richtig gelöst wurde, erscheint ein grüner Haken.
 - Der grüne Haken muss sowohl im geöffneten als auch im eingeklappten Zustand sichtbar sein.
 
@@ -83,6 +84,6 @@ Design:
 Zusatzfunktionen:
 - Button "Alle auf"
 - Button "Alle zu"
-- Button "Zurücksetzen"
+- Button "Zurücksetzen", der auch den localStorage-Fortschritt für diese App löscht.
 - Optional: Ton an/aus und kleine Erfolgssounds.
 - Optional: Serienanzeige/Streak für mehrere richtige Lösungen hintereinander.

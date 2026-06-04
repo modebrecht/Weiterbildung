@@ -86,7 +86,16 @@ Badge logic:
 
 Each badge should be clearly visible on the level card in the main menu after completion.
 
-Store progress locally using **localStorage** so that completed levels and badges remain visible after refreshing the page.
+Store progress locally using **localStorage** so that completed levels, best scores, earned badges, and main-menu done states remain visible after refreshing the page.
+
+The localStorage data should include:
+
+* completed levels
+* best score per level
+* earned badge per level
+* done status shown on the main menu
+
+Replay should update the saved badge only if the new result is better than the old result.
 
 ---
 
@@ -332,6 +341,8 @@ Build the game as a single-page web app using only:
 No backend needed.
 No external framework required.
 The app must be ready for Vercel deployment.
+
+Use **localStorage** for persistent progress. Add a small reset-progress option that clears only this game's saved localStorage data.
 
 It must work smoothly on:
 
