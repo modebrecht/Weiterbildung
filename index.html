@@ -393,25 +393,165 @@
     .open {
       display: inline-flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       gap: 12px;
-      width: 100%;
+      width: fit-content;
       margin-top: 24px;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
-      color: var(--open-ink);
+      padding: 11px 15px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--tag-ink);
+      background: var(--accent);
       font-weight: 850;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .open:focus-visible {
+      outline: 3px solid var(--accent-4);
+      outline-offset: 3px;
     }
 
     .open svg {
-      width: 21px;
-      height: 21px;
+      width: 18px;
+      height: 18px;
       transition: transform 180ms ease;
     }
 
     .card:hover .open svg,
     .card:focus-visible .open svg {
-      transform: translate(3px, -3px);
+      transform: translateX(3px);
+    }
+
+    .prompt-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(4, 10, 18, 0.62);
+      backdrop-filter: blur(8px);
+    }
+
+    .prompt-modal.is-open {
+      display: flex;
+    }
+
+    .prompt-panel {
+      width: min(680px, 100%);
+      max-height: 90vh;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-strong);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .prompt-panel header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .prompt-panel h2 {
+      margin: 0;
+      font-size: 1.12rem;
+      letter-spacing: 0;
+    }
+
+    .prompt-close {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: transparent;
+      cursor: pointer;
+      transition: background 180ms ease, border-color 180ms ease;
+    }
+
+    .prompt-close:hover,
+    .prompt-close:focus-visible {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--card-hover-line);
+    }
+
+    .prompt-copy {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: transparent;
+      cursor: pointer;
+      transition: background 180ms ease, border-color 180ms ease;
+    }
+
+    .prompt-copy:hover,
+    .prompt-copy:focus-visible {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--tag-ink);
+    }
+
+    .prompt-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .prompt-placeholder {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .prompt-box {
+      margin-top: 0;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 0 0 6px 6px;
+      border-top: none;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.06);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .prompt-entry + .prompt-entry {
+      margin-top: 18px;
+    }
+
+    .prompt-entry {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .prompt-label {
+      display: inline-flex;
+      width: fit-content;
+      margin: 0;
+      padding: 6px 10px;
+      border-radius: 6px 6px 0 0;
+      color: var(--tag-ink);
+      background: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-transform: uppercase;
     }
 
     footer {
@@ -491,6 +631,96 @@
         flex-direction: column;
       }
     }
+
+    .prompt-content h1,
+    .prompt-content h2,
+    .prompt-content h3 {
+      margin: 4px 0 2px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .prompt-content h1 {
+      font-size: 1.2rem;
+      margin-top: 0;
+      margin-bottom: 4px;
+    }
+
+    .prompt-content h2 {
+      font-size: 1.05rem;
+      margin-top: 6px;
+    }
+
+    .prompt-content h3 {
+      font-size: 0.95rem;
+    }
+
+    .prompt-content p {
+      margin: 2px 0;
+      color: var(--ink);
+      line-height: 1.4;
+      font-size: 0.94rem;
+    }
+
+    .prompt-content ul,
+    .prompt-content ol {
+      margin: 3px 0;
+      padding-left: 20px;
+      color: var(--ink);
+      font-size: 0.94rem;
+    }
+
+    .prompt-content li {
+      margin: 1px 0;
+      line-height: 1.4;
+    }
+
+    .prompt-content strong {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .prompt-content code {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85em;
+      color: var(--accent-4);
+    }
+
+    .prompt-content blockquote {
+      border-left: 3px solid var(--accent);
+      padding-left: 10px;
+      margin: 4px 0;
+      color: var(--muted);
+      font-style: italic;
+      font-size: 0.94rem;
+    }
+
+    .prompt-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 4px 0;
+      font-size: 0.8rem;
+    }
+
+    .prompt-content th,
+    .prompt-content td {
+      border: 1px solid var(--line);
+      padding: 4px 6px;
+      text-align: left;
+    }
+
+    .prompt-content th {
+      background: rgba(66, 215, 181, 0.1);
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .prompt-content tr:hover {
+      background: rgba(66, 215, 181, 0.05);
+    }
   </style>
 </head>
 <body>
@@ -569,10 +799,11 @@
           <h3>Bruch-Entdecker Studio</h3>
           <p>Visuelle Bruchrechnung als Beispiel für adaptive Aufgaben, Feedback und individuelle Lernwege.</p>
         </div>
-        <span class="open">
-          Öffnen
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Bruch-Entdecker Studio">
+          Prompt
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17 17 7"></path><path d="M7 7h10v10"></path>
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
           </svg>
         </span>
       </a>
@@ -592,10 +823,11 @@
           <h3>Interaktives Dilemma: 1789</h3>
           <p>Historische Perspektivenarbeit mit Entscheidungen, Rollen und reflektierter Quellenkritik.</p>
         </div>
-        <span class="open">
-          Öffnen
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Interaktives Dilemma: 1789">
+          Prompt
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17 17 7"></path><path d="M7 7h10v10"></path>
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
           </svg>
         </span>
       </a>
@@ -615,10 +847,11 @@
           <h3>Ökosystem Simulator</h3>
           <p>Ein Modell zum Verändern, Beobachten und Auswerten dynamischer Räuber-Beute-Systeme.</p>
         </div>
-        <span class="open">
-          Öffnen
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Ökosystem Simulator">
+          Prompt
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17 17 7"></path><path d="M7 7h10v10"></path>
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
           </svg>
         </span>
       </a>
@@ -638,10 +871,11 @@
           <h3>Schätzfragen & Datenblick</h3>
           <p>Schätzfragen als Einstieg in Diskussionen über Annahmen, Daten und verlässliche Antworten.</p>
         </div>
-        <span class="open">
-          Öffnen
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Schätzfragen & Datenblick">
+          Prompt
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17 17 7"></path><path d="M7 7h10v10"></path>
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
           </svg>
         </span>
       </a>
@@ -662,10 +896,11 @@
           <h3>Sports FR</h3>
           <p>Externe Sports-App als weiteres Beispiel für digitale Lern- und Übungsumgebungen.</p>
         </div>
-        <span class="open">
-          Öffnen
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Sports FR">
+          Prompt
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17 17 7"></path><path d="M7 7h10v10"></path>
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
           </svg>
         </span>
       </a>
@@ -681,15 +916,16 @@
                 <path d="M8 21h8"></path>
               </svg>
             </div>
-            <span class="tag">KI</span>
+            <span class="tag">Extern</span>
           </div>
           <h3>Google AI for Educators</h3>
           <p>Ressource für Lehrpersonen zum verantwortungsvollen und praktischen Einsatz von KI im Unterricht.</p>
         </div>
-        <span class="open">
-          Öffnen
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Google AI for Educators">
+          Prompt
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17 17 7"></path><path d="M7 7h10v10"></path>
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
           </svg>
         </span>
       </a>
@@ -705,15 +941,39 @@
                 <path d="M17 14l3 3-3 3"></path>
               </svg>
             </div>
-            <span class="tag">Extern</span>
+            <span class="tag">KI</span>
           </div>
           <h3>IB PE: Prompt Engineering</h3>
           <p>Kurs zum richtigen Prompten: klare Aufträge formulieren, bessere Antworten erhalten und KI gezielter nutzen.</p>
         </div>
-        <span class="open">
-          Öffnen
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="IB PE: Prompt Engineering">
+          Prompt
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17 17 7"></path><path d="M7 7h10v10"></path>
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </span>
+      </a>
+
+      <a class="card sports" href="faire_ou_jouer.html" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2Z"></path>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
+            </div>
+            <span class="tag">Französisch</span>
+          </div>
+          <h3>Faire ou Jouer? 🇫🇷</h3>
+          <p>Spiel zum Lernen von Faire vs. Jouer: Schüler sortieren Sport und Aktivitäten per Drag & Drop und verdienen Abzeichen.</p>
+        </div>
+        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Faire ou Jouer? 🇫🇷">
+          Prompt
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
           </svg>
         </span>
       </a>
@@ -724,6 +984,33 @@
       <span>Alle Materialien öffnen in einem neuen Browser-Tab.</span>
     </footer>
   </main>
+
+  <div class="prompt-modal" id="promptModal" role="dialog" aria-modal="true" aria-labelledby="promptTitle" hidden>
+    <div class="prompt-panel">
+      <header>
+        <h2 id="promptTitle">Prompt anzeigen</h2>
+        <div style="display: flex; gap: 10px;">
+          <button class="prompt-copy" type="button" aria-label="Prompt kopieren" data-prompt-copy>
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+          <button class="prompt-close" type="button" aria-label="Prompt schliessen" data-prompt-close>
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6 6 18"></path>
+              <path d="m6 6 12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+      <div class="prompt-body">
+        <div id="promptText"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     const themeButtons = document.querySelectorAll("[data-theme-choice]");
     const getSavedTheme = () => {
@@ -760,6 +1047,787 @@
 
     themeButtons.forEach((button) => {
       button.addEventListener("click", () => applyTheme(button.dataset.themeChoice));
+    });
+
+    const promptModal = document.getElementById("promptModal");
+    const promptTitle = document.getElementById("promptTitle");
+    const promptText = document.getElementById("promptText");
+    const promptClose = document.querySelector("[data-prompt-close]");
+    const promptCopy = document.querySelector("[data-prompt-copy]");
+    const promptButtons = document.querySelectorAll("[data-prompt-button]");
+    let currentPromptEntries = [];
+    const promptFallback = [
+      {
+        label: "Prompt",
+        text: "Prompt folgt. Sobald der finale Prompt bereit ist, kann er hier pro Live-Demo eingefügt werden."
+      }
+    ];
+
+    const prompts = {
+      "Bruch-Entdecker Studio": promptFallback,
+      "Interaktives Dilemma: 1789": promptFallback,
+      "Ökosystem Simulator": promptFallback,
+      "Schätzfragen & Datenblick": [
+        {
+          label: "Prompt",
+          text: `Rolle: Du bist ein kreativer Frontend-Entwickler und UI/UX-Experte. 
+
+Aufgabe: Erstelle eine interaktive, visuell beeindruckende Single-Page Web-App (HTML, CSS, JS in einer einzigen Datei) namens "Aha-Effekt: 10 Schätzfragen".
+
+## Kernelement & Mechanik (Der Aha-Effekt):
+
+Der Nutzer sieht eine Schätzfrage und wählt über einen Slider einen Wert. Nach Klick auf "Auflösen" wird die tatsächliche Zahl groß eingeblendet. Der eigentliche "Aha-Effekt" entsteht danach: Die abstrakte Zahl wird visuell übersetzt, indem sich ein Raster mit dutzenden kleinen Icons füllt (z.B. 8000 Liter = 50 Badewannen, die nacheinander animiert aufpoppen).
+
+## Design & UI/UX (Stunning Graphics):
+
+1. Premium Dark Mode: Nutze dunkle Blautöne (z.B. Tailwind slate-900) als Basis.
+2. Glassmorphism: Die Haupt-Cards sollen halbtransparent sein mit einem Backdrop-Blur.
+3. Dynamische Thematisierung: Jede Frage hat eine eigene Akzentfarbe (Hex-Code). Ändere über CSS-Variablen dynamisch leuchtende Hintergrund-Orbs (Glow-Effekte) und die Farbe von Slider, Texten und Icons, passend zur aktuellen Frage.
+4. Custom Slider: Baue einen stark stilisierten Range-Slider (kein Standard-Browser-Design), dessen Daumen (Thumb) bei Interaktion größer wird.
+5. Typografie: Modern, serifenlos, große Kontraste (z.B. sehr fette Zahlen, feine Beschriftungen).
+6. Zahlenformat: Verwende das Schweizer Format mit Apostroph für Tausender (z.B. 20'000).
+
+## Grafiken & Animationen (NUR Inline-SVGs, KEINE externen Bilder):
+
+Jede Frage benötigt ZWEI Arten von SVGs:
+
+1. Hero-Grafik: Eine große, thematisch passende SVG-Grafik, die unter der Frage schwebt. Sie muss eine Endlosschleifen-Animation haben (z.B. sanftes Schweben, Pulsieren oder Rotieren) und einen leichten Drop-Shadow in der jeweiligen Themenfarbe besitzen.
+2. Icon-Grafik: Ein kleines SVG für das Raster der Auflösung (z.B. kleine Badewanne, Baum, Kreditkarte).
+
+Wenn die Frage aufgelöst wird, muss die Hero-Grafik weich verschwinden und das Raster mit den Icon-Grafiken muss mit einem Stagger-Effekt (verzögertes Einblenden, z.B. Pop-In und Fill-Animation) nacheinander erscheinen.
+
+## Technische Anforderungen:
+
+- Frameworks: Nutze Tailwind CSS via CDN
+- Vanilla JavaScript für die Logik
+- Alles MUSS zwingend in einer einzigen .html Datei liegen
+- Responsiv: Perfekt bedienbar auf Mobile und Desktop (kein horizontales Scrollen)
+- Feedback-Logik: Gib dem Nutzer Feedback zu seiner Schätzung (Perfekt, sehr nah dran [<15% Abweichung], zu hoch, zu niedrig)
+
+## Inhalt (Die 10 Fragen):
+
+1. Liter Wasser für 1 Jeans (Antwort: 8000L. Visualisierung: 50 Badewannen à 160L. Farbe: Blau).
+2. Mikroplastik gegessen pro Jahr (Antwort: 260g. Visualisierung: 52 Kreditkarten à 5g. Farbe: Violett).
+3. CO2 Flug Zürich-New York retour (Antwort: 2000kg. Visualisierung: 200 Bäume à 10kg. Farbe: Grün).
+4. Food Waste pro Kopf/Jahr Schweiz (Antwort: 120kg. Visualisierung: 24 Abfallsäcke à 5kg. Farbe: Bernstein).
+5. Reines Gold in Olympia-Goldmedaille (Antwort: 6g. Visualisierung: 6 Gramm-Stücke à 1g. Farbe: Gold).
+6. Stunden YouTube Uploads pro Minute (Antwort: 500h. Visualisierung: 250 Spielfilme à 2h. Farbe: Rot).
+7. Herzschläge pro Tag (Antwort: 100'000. Visualisierung: 100 Icons à 1000 Schläge. Farbe: Pink).
+8. Papierverbrauch pro Person/Jahr CH (Antwort: 110kg. Visualisierung: 22 Papiertaschen à 5kg. Farbe: Grau).
+9. Schokolade gegessen pro Jahr CH (Antwort: 11kg. Visualisierung: 110 Tafeln à 100g. Farbe: Schokobraun).
+10. Länge Blutgefäße Mensch (Antwort: 100'000km. Visualisierung: 2.5 Erdumrundungen à 40'000km. Farbe: Hellblau).
+
+## Ablauf-Logik:
+
+Nach dem Laden startet Frage 1. Slider bewegen → Klick "Auflösen" → Berechnung & Feedback → Stagger-Animation des Rasters → "Nächste Frage" Button erscheint → Bei Klick Fade-Transition zur nächsten Frage mit Farbwechsel der App-Umgebung. Nach Frage 10 ein "Quiz beendet" Screen.`
+        }
+      ],
+      "Sports FR": [
+        {
+          label: "Einfache Human Version",
+          text: `Ich brauche eine interaktive Demo mit Sport: **faire ou jouer**.
+
+Beispiel: Emoji + **la natation** → nach links droppen für **faire**, nach rechts droppen für **jouer**.
+
+Erstelle einen Prompt mit stunning Design, grossen Emojis und bei falscher Antwort: **rot + Wackel-Animation**.
+
+Ich brauche **5 Emoji-Sets** mit Schwierigkeitsstufen.
+
+**5 Niveaus**, im Hauptmenü sichtbar und jeweils als **done** markieren, wenn abgeschlossen.
+
+Abzeichen: **Bronze = Abschluss**, **Silber = mindestens 6 richtig**, **Gold = alle richtig**.`
+        },
+        {
+          label: "AI Enhanced Version",
+          text: `# Prompt: FAIRE OU JOUER ? 🇫🇷
+
+## Modern Web-Based French Learning Mini Game
+
+Create a stunning modern web-based French learning mini game for secondary school students called:
+
+# "FAIRE OU JOUER ? 🇫🇷"
+
+The game should teach students when to use **"faire"** and when to use **"jouer"** with sports, hobbies, instruments, games, and activities.
+
+---
+
+## 1. Overall Style
+
+Design the app like a premium educational iPad game.
+
+Use:
+
+* ultra-polished UI
+* bright modern gradients
+* large rounded cards
+* soft shadows
+* smooth animations
+* big typography
+* huge 3D-style emojis
+* glassmorphism panels
+* clean Gen-Z educational aesthetic
+* mobile-first responsive layout
+* touch-friendly controls
+* fun but professional school presentation look
+
+The visual style should feel like:
+
+> Duolingo meets Apple meets a modern classroom game.
+
+---
+
+## 2. Background / Atmosphere
+
+Use a blue/purple gradient background with subtle floating particles.
+
+Add tiny French-learning accents such as:
+
+* 🇫🇷
+* ✨
+* ⭐
+* 📚
+
+Use rounded corners everywhere, smooth transitions, and a playful but clean educational vibe.
+
+---
+
+## 3. Main Menu
+
+Create a beautiful main menu with **5 difficulty levels**.
+
+Each level should be shown as a large rounded card with:
+
+* level number
+* difficulty name
+* short description
+* progress status
+* badge status
+
+The 5 levels are:
+
+1. **Niveau 1 — Facile**
+2. **Niveau 2 — Standard**
+3. **Niveau 3 — Moyen**
+4. **Niveau 4 — Difficile**
+5. **Niveau 5 — Expert**
+
+Each level contains its own set of emoji/activity cards.
+
+---
+
+## 4. Badge System
+
+After completing a level, the level card in the main menu must show a badge.
+
+Badge logic:
+
+* 🥉 **Bronze badge** = level completed
+* 🥈 **Silver badge** = at least 6 correct answers
+* 🥇 **Gold badge** = all answers correct
+
+Each badge should be clearly visible on the level card in the main menu after completion.
+
+Store progress locally using **localStorage** so that completed levels and badges remain visible after refreshing the page.
+
+---
+
+## 5. Gameplay
+
+The player chooses a level from the main menu.
+
+During the game, the player sees:
+
+* one huge emoji in the center
+* the French sport, hobby, instrument, game, or activity below it
+
+Example:
+
+\`\`\`text
+🏊‍♂️
+la natation
+\`\`\`
+
+The player must drag the card:
+
+\`\`\`text
+⬅️ LEFT  = FAIRE
+➡️ RIGHT = JOUER
+\`\`\`
+
+---
+
+## 6. Rules
+
+* Correct answers increase the score.
+* Wrong answers do not increase the score.
+* After each answer, show feedback and continue to the next card.
+* At the end of the level, show the final score and the earned badge.
+
+---
+
+## 7. Correct Answer Feedback
+
+Correct answers trigger:
+
+* green glow
+* confetti burst
+* smooth success animation
+* message: **"✅ Bravo !"**
+
+---
+
+## 8. Wrong Answer Feedback
+
+Wrong answers trigger:
+
+* red flash
+* shake/wiggle animation
+* subtle vibration effect on supported devices
+* message: **"❌ Essaie encore !"**
+
+Wrong answers should feel playful, not punishing.
+
+---
+
+## 9. Animations
+
+Include:
+
+* smooth drag physics
+* snap effect when dropped
+* hover scaling
+* button bounce
+* shake animation on wrong answer
+* celebration animation on correct answer
+* smooth screen transitions
+* animated badge reveal at the end of each level
+* subtle floating particles in the background
+* progress bar filling smoothly
+* confetti on correct answers and level completion
+
+---
+
+## 10. UI Details
+
+The game screen should include:
+
+* top progress bar
+* score counter with star icon
+* current level indicator
+* large draggable card
+* left drop zone labeled **FAIRE**
+* right drop zone labeled **JOUER**
+* back-to-menu button
+* replay level button on the result screen
+
+The drop zones must be large and easy to use on mobile devices.
+
+---
+
+## 11. Content
+
+Create **5 difficulty levels** with **8 cards each**.
+
+---
+
+# LEVEL 1 — FACILE
+
+Mostly common sports and simple activities.
+
+| Emoji | French Activity | Correct Answer |
+| ----- | --------------- | -------------- |
+| 🏊‍♂️ | la natation     | faire          |
+| ⚽     | le football     | jouer          |
+| 🎾    | le tennis       | jouer          |
+| 🤸    | la gymnastique  | faire          |
+| 🥋    | le judo         | faire          |
+| 🏀    | le basket       | jouer          |
+| 🚴‍♀️ | le vélo         | faire          |
+| 🎮    | les jeux vidéo  | jouer          |
+
+---
+
+# LEVEL 2 — STANDARD
+
+Mix of sports, games, and instruments.
+
+| Emoji | French Activity | Correct Answer |
+| ----- | --------------- | -------------- |
+| ♟️    | les échecs      | jouer          |
+| 🎻    | le violon       | jouer          |
+| 🎹    | le piano        | jouer          |
+| 🏃‍♂️ | la course       | faire          |
+| 🧘    | le yoga         | faire          |
+| 🏐    | le volley       | jouer          |
+| 🏓    | le ping-pong    | jouer          |
+| ⛷️    | le ski          | faire          |
+
+---
+
+# LEVEL 3 — MOYEN
+
+More variety and slightly less obvious examples.
+
+| Emoji | French Activity     | Correct Answer |
+| ----- | ------------------- | -------------- |
+| 🥊    | la boxe             | faire          |
+| 🧗    | l'escalade          | faire          |
+| 🎸    | la guitare          | jouer          |
+| 🥁    | la batterie         | jouer          |
+| 🏉    | le rugby            | jouer          |
+| 🛹    | le skateboard       | faire          |
+| 🏇    | l'équitation        | faire          |
+| 🎲    | les jeux de société | jouer          |
+
+---
+
+# LEVEL 4 — DIFFICILE
+
+Activities where students must think more carefully.
+
+| Emoji | French Activity | Correct Answer |
+| ----- | --------------- | -------------- |
+| 🏄    | le surf         | faire          |
+| 🤿    | la plongée      | faire          |
+| 🏸    | le badminton    | jouer          |
+| 🏒    | le hockey       | jouer          |
+| 🎺    | la trompette    | jouer          |
+| 🎭    | le théâtre      | faire          |
+| 🧩    | les puzzles     | faire          |
+| 🪁    | du cerf-volant  | faire          |
+
+---
+
+# LEVEL 5 — EXPERT
+
+More advanced and mixed expressions.
+
+| Emoji | French Activity    | Correct Answer |
+| ----- | ------------------ | -------------- |
+| 🧪    | des expériences    | faire          |
+| 📸    | de la photographie | faire          |
+| 🎤    | du karaoké         | faire          |
+| 🎷    | du saxophone       | jouer          |
+| 🎯    | aux fléchettes     | jouer          |
+| 🃏    | aux cartes         | jouer          |
+| 🏋️   | de la musculation  | faire          |
+| 🧊    | du patinage        | faire          |
+
+---
+
+## 12. Important Language Rule
+
+Use **faire** for general activities, sports, and hobbies.
+
+Use **jouer** for:
+
+* games
+* team ball sports
+* musical instruments
+
+For **jouer**, use correct French forms such as:
+
+* jouer au football
+* jouer aux échecs
+* jouer du piano
+* jouer de la guitare
+* jouer aux cartes
+
+---
+
+## 13. Result Screen
+
+At the end of each level, show:
+
+\`\`\`text
+🎉 Excellent !
+\`\`\`
+
+Also show:
+
+* final score
+* total correct answers
+* earned badge
+* motivational French message
+* replay button
+* return to main menu button
+
+Badge logic:
+
+* 🥉 Bronze: level completed
+* 🥈 Silver: at least 6 correct answers
+* 🥇 Gold: 8 correct answers
+
+The badge reveal should be animated with sparkles.
+
+---
+
+## 14. Technical Requirements
+
+Build the game as a single-page web app using only:
+
+* HTML
+* CSS
+* JavaScript
+
+No backend needed.
+No external framework required.
+The app must be ready for Vercel deployment.
+
+It must work smoothly on:
+
+* mobile phones
+* tablets
+* desktop browsers
+
+---
+
+## 15. Important Mobile Layout Requirement
+
+Do **not** rely on fixed \`100vh\` heights.
+
+Use dynamic viewport units such as:
+
+* \`100dvh\`
+* \`100svh\`
+* safe-area insets
+* flexible vertical layouts
+
+The app must adapt correctly to mobile browser UI bars and avoid broken vertical layouts on phones when address bars appear or disappear.
+
+The layout should always fit properly on mobile devices.
+
+Mobile interactions are especially important:
+
+* touch drag must feel smooth
+* drop zones must be large
+* buttons must be easy to tap
+* content must not overflow vertically
+* no important UI element should be hidden behind browser bars or safe areas
+
+---
+
+## 16. Extra Polish
+
+Add tiny micro-interactions everywhere:
+
+* buttons bounce slightly when tapped
+* level cards animate on hover/touch
+* badge reveal has sparkle animation
+* progress bar fills smoothly
+* confetti appears on correct answers and level completion
+* wrong answers feel playful, not punishing
+* transitions between menu, game, and result screen feel smooth
+
+---
+
+## 17. Final Goal
+
+The final result should feel like a complete, polished educational mini game that a teacher could immediately present in class.
+
+It should be visually impressive, easy to understand, mobile-first, and fun for secondary school students.`
+        }
+      ],
+      "Faire ou Jouer? 🇫🇷": [
+        {
+          label: "Einfache Human Version",
+          text: `# Prompt: FAIRE OU JOUER ? 🇫🇷
+
+## Modern Web-Based French Learning Mini Game
+
+Create a stunning modern web-based French learning mini game for secondary school students called:
+
+# "FAIRE OU JOUER ? 🇫🇷"
+
+The game should teach students when to use **"faire"** and when to use **"jouer"** with sports, hobbies, instruments, games, and activities.
+
+---
+
+## 1. Overall Style
+
+Design the app like a premium educational iPad game.
+
+Use:
+
+* ultra-polished UI
+* bright modern gradients
+* large rounded cards
+* soft shadows
+* smooth animations
+* big typography
+* huge 3D-style emojis
+* glassmorphism panels
+* clean Gen-Z educational aesthetic
+* mobile-first responsive layout
+* touch-friendly controls
+* fun but professional school presentation look
+
+The visual style should feel like: Duolingo meets Apple meets a modern classroom game.
+
+---
+
+## 2. Main Menu
+
+Create a beautiful main menu with **5 difficulty levels**:
+
+1. **Niveau 1 — Facile**
+2. **Niveau 2 — Standard**
+3. **Niveau 3 — Moyen**
+4. **Niveau 4 — Difficile**
+5. **Niveau 5 — Expert**
+
+Each level contains **8 cards** with emoji/activity pairs.
+
+---
+
+## 3. Badge System
+
+After completing a level:
+- 🥉 **Bronze badge** = level completed
+- 🥈 **Silver badge** = at least 6 correct answers
+- 🥇 **Gold badge** = all answers correct
+
+Store progress using **localStorage**.
+
+---
+
+## 4. Gameplay
+
+During the game, player sees one huge emoji and French activity below it.
+
+Player must drag the card:
+- ⬅️ LEFT = FAIRE
+- ➡️ RIGHT = JOUER
+
+---
+
+## 5. Feedback
+
+**Correct answers:**
+* green glow
+* confetti burst
+* message: **"✅ Bravo !"**
+
+**Wrong answers:**
+* red flash
+* shake/wiggle animation
+* message: **"❌ Essaie encore !"**
+
+---
+
+## 6. UI Details
+
+The game screen should include:
+* top progress bar
+* score counter with star icon
+* current level indicator
+* large draggable card
+* left drop zone labeled **FAIRE**
+* right drop zone labeled **JOUER**
+* back-to-menu button
+* replay level button on the result screen
+
+---
+
+## 7. Technical Requirements
+
+Build as single-page web app using only:
+* HTML
+* CSS
+* JavaScript
+
+No backend needed. Must work smoothly on mobile phones, tablets, and desktop browsers.`
+        },
+        {
+          label: "AI Enhanced Version",
+          text: `Rolle: Du bist ein erfahrener Frontend-Entwickler für moderne Educational Games.
+Aufgabe: Erstelle eine atemberaubende, moderne Web-App namens "FAIRE OU JOUER ? 🇫🇷"
+
+## Gesamtstil
+Designe die App wie ein Premium-Educational-iPad-Spiel:
+- ultra-poliertes UI mit großen gerundeten Karten
+- helle moderne Gradienten
+- weiche Schatten und sanfte Animationen
+- große Typografie mit riesigen 3D-Emojis
+- Glassmorphismus-Panels
+- Gen-Z-Ästhetik
+Die visuelle Struktur sollte sich anfühlen wie: Duolingo meets Apple.
+
+## Hintergrund
+Blau-/Violett-Farbverlauf mit subtilen schwebenden Partikeln.
+- 🇫🇷 ✨ ⭐ 📚 als französische Lernakzente
+- überall gerundete Ecken und sanfte Übergänge
+
+## Hauptmenü (5 Schwierigkeitsstufen)
+Jedes Niveau als große gerundete Karte mit:
+- Levelzahl, Schwierigkeitsname
+- Kurzbeschreibung, Fortschritt, Abzeichenstatus
+
+1. Niveau 1 — Facile (einfach)
+2. Niveau 2 — Standard 
+3. Niveau 3 — Moyen (mittel)
+4. Niveau 4 — Difficile (schwierig)
+5. Niveau 5 — Expert
+
+Jedes Level hat 8 Karten mit Aktivitäten und Emojis.
+
+## Abzeichensystem
+Nach Levelabschluss:
+- 🥉 Bronze = Level komplett
+- 🥈 Silber = min. 6 richtig
+- 🥇 Gold = alle richtig
+Abzeichen im Hauptmenü speichern via localStorage.
+
+## Spielmechanik
+Der Spieler wählt ein Level.
+Am Spielschirm:
+- Großes Emoji in der Mitte
+- Französische Aktivität darunter
+Ziel: Card drag & drop
+- ⬅️ LINKS = FAIRE
+- ➡️ RECHTS = JOUER
+
+Korrekt: 💚 grünes Leuchten, Konfetti, "✅ Bravo !"
+Falsch: ❌ rotes Blinken, Wackelanimation, "❌ Essaie encore !"
+
+## Animationen
+- sanfte Drag-Physik
+- Snap-Effekt beim Droppen
+- Hover-Scaling, Button-Bounce
+- Schüttel-Animation bei Fehler
+- Feier-Animation bei richtig
+- sanfte Screen-Übergänge
+- Abzeichen-Animation am Levelende
+- schwebende Partikel im Hintergrund
+- Fortschrittsleiste
+
+## UI-Details
+Spielschirm mit:
+- Top-Fortschrittsleiste
+- Score-Zähler mit ⭐
+- Levelanzeige
+- großes draggables Card
+- große Drop-Zonen (FAIRE / JOUER)
+- Zurück-zu-Menü Button
+- Replay-Button auf Ergebnisschirm
+Mobile-freundlich, touch-optimiert.
+
+## Inhalte (5 Levels × 8 Karten)
+Kaum Unterschiede zwischen faire und jouer - aber die Regel:
+- FAIRE: allgemeine Aktivitäten, Sport, Hobbys
+- JOUER: Spiele, Team-Ballspiele, Musikinstrumente
+
+Beispiele:
+Level 1 (Facile): 🏊‍♂️ la natation (faire), ⚽ le football (jouer), 🎾 le tennis (jouer), 🤸 la gymnastique (faire), 🥋 le judo (faire), 🏀 le basket (jouer), 🚴‍♀️ le vélo (faire), 🎮 les jeux vidéo (jouer)
+
+Level 2 (Standard): ♟️ les échecs (jouer), 🎻 le violon (jouer), 🎹 le piano (jouer), 🏃‍♂️ la course (faire), 🧘 le yoga (faire), 🏐 le volley (jouer), 🏓 le ping-pong (jouer), ⛷️ le ski (faire)
+
+Level 3 (Moyen): 🥊 la boxe (faire), 🧗 l'escalade (faire), 🎸 la guitare (jouer), 🥁 la batterie (jouer), 🏉 le rugby (jouer), 🛹 le skateboard (faire), 🏇 l'équitation (faire), 🎲 les jeux de société (jouer)
+
+Level 4 (Difficile): 🏄 le surf (faire), 🤿 la plongée (faire), 🏸 le badminton (jouer), 🏒 le hockey (jouer), 🎺 la trompette (jouer), 🎭 le théâtre (faire), 🧩 les puzzles (faire), 🪁 du cerf-volant (faire)
+
+Level 5 (Expert): 🧪 des expériences (faire), 📸 de la photographie (faire), 🎤 du karaoké (faire), 🎷 du saxophone (jouer), 🎯 aux fléchettes (jouer), 🃏 aux cartes (jouer), 🏋️ de la musculation (faire), 🧊 du patinage (faire)
+
+## Ergebnisschirm
+Nach jedem Level:
+- Score + Abzeichen-Animation
+- Zurück-zu-Menü oder nächstes Level
+
+## Technisch
+- Alles in einer HTML-Datei (HTML, CSS, JS)
+- Tailwind CSS via CDN
+- localStorage für Fortschritt
+- vollständig responsiv (mobile-first)
+
+Stunning, modern, spielerisch, aber professionell für Schulen.`
+        }
+      ],
+      "Google AI for Educators": promptFallback,
+      "IB PE: Prompt Engineering": promptFallback
+    };
+
+    const openPrompt = (button) => {
+      const title = button.dataset.promptTitle;
+      const entries = prompts[title] || promptFallback;
+      currentPromptEntries = entries;
+      promptTitle.textContent = title;
+      promptText.innerHTML = "";
+      entries.forEach((entry) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "prompt-entry";
+
+        const label = document.createElement("div");
+        label.className = "prompt-label";
+        label.textContent = entry.label;
+
+        const box = document.createElement("div");
+        box.className = "prompt-box prompt-content";
+        box.innerHTML = marked.parse(entry.text);
+
+        wrapper.append(label, box);
+        promptText.append(wrapper);
+      });
+      promptModal.hidden = false;
+      promptModal.classList.add("is-open");
+      promptClose.focus();
+    };
+
+    const closePrompt = () => {
+      promptModal.classList.remove("is-open");
+      promptModal.hidden = true;
+    };
+
+    promptButtons.forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openPrompt(button);
+      });
+
+      button.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          event.stopPropagation();
+          openPrompt(button);
+        }
+      });
+    });
+
+    promptClose.addEventListener("click", closePrompt);
+    promptCopy.addEventListener("click", () => {
+      let textToCopy = "";
+      
+      if (currentPromptEntries.length > 0) {
+        const enhancedVersion = currentPromptEntries.find(entry => entry.label.includes("Enhanced") || entry.label.includes("Hauptprompt"));
+        textToCopy = enhancedVersion ? enhancedVersion.text : currentPromptEntries[0].text;
+      }
+      
+      if (textToCopy) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          const originalLabel = promptCopy.getAttribute("aria-label");
+          promptCopy.setAttribute("aria-label", "Kopiert!");
+          promptCopy.style.background = "var(--accent)";
+          promptCopy.style.borderColor = "var(--accent)";
+          promptCopy.style.color = "var(--tag-ink)";
+          setTimeout(() => {
+            promptCopy.setAttribute("aria-label", originalLabel);
+            promptCopy.style.background = "";
+            promptCopy.style.borderColor = "";
+            promptCopy.style.color = "";
+          }, 2000);
+        });
+      }
+    });
+    promptModal.addEventListener("click", (event) => {
+      if (event.target === promptModal) {
+        closePrompt();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !promptModal.hidden) {
+        closePrompt();
+      }
     });
   </script>
 </body>
