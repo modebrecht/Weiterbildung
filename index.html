@@ -430,7 +430,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 14px;
       background: rgba(4, 10, 18, 0.62);
       backdrop-filter: blur(8px);
     }
@@ -441,7 +441,7 @@
 
     .prompt-panel {
       width: min(680px, 100%);
-      max-height: 90vh;
+      height: min(90vh, 860px);
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--panel-strong);
@@ -455,20 +455,21 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      padding: 18px 20px;
+      gap: 10px;
+      padding: 10px 12px;
       border-bottom: 1px solid var(--line);
     }
 
     .prompt-panel h2 {
       margin: 0;
-      font-size: 1.12rem;
+      font-size: 0.94rem;
       letter-spacing: 0;
+      font-weight: 700;
     }
 
     .prompt-close {
-      width: 38px;
-      height: 38px;
+      width: 32px;
+      height: 32px;
       display: grid;
       place-items: center;
       border: 1px solid var(--line);
@@ -486,8 +487,8 @@
     }
 
     .prompt-copy {
-      width: 38px;
-      height: 38px;
+      width: 32px;
+      height: 32px;
       display: grid;
       place-items: center;
       border: 1px solid var(--line);
@@ -506,7 +507,44 @@
     }
 
     .prompt-body {
-      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding: 12px;
+      flex: 1;
+    }
+
+    .prompt-switch {
+      display: inline-flex;
+      width: fit-content;
+      gap: 6px;
+      margin-bottom: 12px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .prompt-switch button {
+      min-width: 92px;
+      border: 0;
+      border-radius: 999px;
+      padding: 9px 16px;
+      color: var(--ink);
+      background: transparent;
+      font: inherit;
+      font-size: 0.94rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .prompt-switch button[aria-pressed="true"] {
+      color: var(--tag-ink);
+      background: var(--accent);
+    }
+
+    #promptText {
+      min-height: 0;
       overflow-y: auto;
       flex: 1;
     }
@@ -519,39 +557,15 @@
 
     .prompt-box {
       margin-top: 0;
-      padding: 16px;
+      padding: 4px 10px;
       border: 1px solid var(--line);
-      border-radius: 0 0 6px 6px;
-      border-top: none;
+      border-radius: 6px;
       color: var(--ink);
       background: rgba(255, 255, 255, 0.06);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 0.92rem;
-      line-height: 1.55;
+      font-size: 0.94rem;
+      line-height: 0.5;
       white-space: pre-wrap;
-    }
-
-    .prompt-entry + .prompt-entry {
-      margin-top: 18px;
-    }
-
-    .prompt-entry {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    .prompt-label {
-      display: inline-flex;
-      width: fit-content;
-      margin: 0;
-      padding: 6px 10px;
-      border-radius: 6px 6px 0 0;
-      color: var(--tag-ink);
-      background: var(--accent);
-      font-size: 0.78rem;
-      font-weight: 900;
-      text-transform: uppercase;
     }
 
     footer {
@@ -635,24 +649,23 @@
     .prompt-content h1,
     .prompt-content h2,
     .prompt-content h3 {
-      margin: 4px 0 2px;
-      color: var(--accent);
-      font-weight: 800;
+      margin: 2px 0;
+      color: var(--ink);
+      font-size: 0.94rem;
+      font-weight: 400;
+      line-height: 1.4;
     }
 
     .prompt-content h1 {
-      font-size: 1.2rem;
       margin-top: 0;
-      margin-bottom: 4px;
     }
 
     .prompt-content h2 {
-      font-size: 1.05rem;
-      margin-top: 6px;
+      margin-top: 2px;
     }
 
     .prompt-content h3 {
-      font-size: 0.95rem;
+      margin-top: 2px;
     }
 
     .prompt-content p {
@@ -664,8 +677,8 @@
 
     .prompt-content ul,
     .prompt-content ol {
-      margin: 3px 0;
-      padding-left: 20px;
+      margin: 2px 0;
+      padding-left: 18px;
       color: var(--ink);
       font-size: 0.94rem;
     }
@@ -685,14 +698,14 @@
       padding: 1px 4px;
       border-radius: 3px;
       font-family: ui-monospace, monospace;
-      font-size: 0.85em;
+      font-size: 1em;
       color: var(--accent-4);
     }
 
     .prompt-content blockquote {
       border-left: 3px solid var(--accent);
       padding-left: 10px;
-      margin: 4px 0;
+      margin: 2px 0;
       color: var(--muted);
       font-style: italic;
       font-size: 0.94rem;
@@ -701,8 +714,8 @@
     .prompt-content table {
       width: 100%;
       border-collapse: collapse;
-      margin: 4px 0;
-      font-size: 0.8rem;
+      margin: 2px 0;
+      font-size: 0.94rem;
     }
 
     .prompt-content th,
@@ -800,10 +813,11 @@
           <p>Visuelle Bruchrechnung als Beispiel für adaptive Aufgaben, Feedback und individuelle Lernwege.</p>
         </div>
         <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Bruch-Entdecker Studio">
-          Prompt
+          Prompt anzeigen
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
           </svg>
         </span>
       </a>
@@ -824,10 +838,11 @@
           <p>Historische Perspektivenarbeit mit Entscheidungen, Rollen und reflektierter Quellenkritik.</p>
         </div>
         <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Interaktives Dilemma: 1789">
-          Prompt
+          Prompt anzeigen
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
           </svg>
         </span>
       </a>
@@ -848,10 +863,11 @@
           <p>Ein Modell zum Verändern, Beobachten und Auswerten dynamischer Räuber-Beute-Systeme.</p>
         </div>
         <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Ökosystem Simulator">
-          Prompt
+          Prompt anzeigen
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
           </svg>
         </span>
       </a>
@@ -872,35 +888,11 @@
           <p>Schätzfragen als Einstieg in Diskussionen über Annahmen, Daten und verlässliche Antworten.</p>
         </div>
         <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Schätzfragen & Datenblick">
-          Prompt
+          Prompt anzeigen
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-        </span>
-      </a>
-
-      <a class="card sports" href="https://sports-fr.vercel.app/" target="_blank" rel="noopener noreferrer">
-        <div>
-          <div class="card-top">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M6 4h12l2 7-8 9-8-9 2-7Z"></path>
-                <path d="M8 4l4 16"></path>
-                <path d="M16 4l-4 16"></path>
-                <path d="M4 11h16"></path>
-              </svg>
-            </div>
-            <span class="tag">Französisch</span>
-          </div>
-          <h3>Sports FR</h3>
-          <p>Externe Sports-App als weiteres Beispiel für digitale Lern- und Übungsumgebungen.</p>
-        </div>
-        <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Sports FR">
-          Prompt
-          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
           </svg>
         </span>
       </a>
@@ -922,10 +914,11 @@
           <p>Ressource für Lehrpersonen zum verantwortungsvollen und praktischen Einsatz von KI im Unterricht.</p>
         </div>
         <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Google AI for Educators">
-          Prompt
+          Prompt anzeigen
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
           </svg>
         </span>
       </a>
@@ -947,15 +940,16 @@
           <p>Kurs zum richtigen Prompten: klare Aufträge formulieren, bessere Antworten erhalten und KI gezielter nutzen.</p>
         </div>
         <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="IB PE: Prompt Engineering">
-          Prompt
+          Prompt anzeigen
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
           </svg>
         </span>
       </a>
 
-      <a class="card sports" href="faire_ou_jouer.html" target="_blank" rel="noopener noreferrer">
+      <a class="card sports" href="https://sports-fr.vercel.app/" target="_blank" rel="noopener noreferrer">
         <div>
           <div class="card-top">
             <div class="icon" aria-hidden="true">
@@ -970,10 +964,11 @@
           <p>Spiel zum Lernen von Faire vs. Jouer: Schüler sortieren Sport und Aktivitäten per Drag & Drop und verdienen Abzeichen.</p>
         </div>
         <span class="open" role="button" tabindex="0" data-prompt-button data-prompt-title="Faire ou Jouer? 🇫🇷">
-          Prompt
+          Prompt anzeigen
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h10"></path>
           </svg>
         </span>
       </a>
@@ -1005,6 +1000,10 @@
         </div>
       </header>
       <div class="prompt-body">
+        <div class="prompt-switch" role="group" aria-label="Prompt-Version wählen">
+          <button type="button" data-prompt-variant="human" aria-pressed="true">Human</button>
+          <button type="button" data-prompt-variant="ai" aria-pressed="false">AI</button>
+        </div>
         <div id="promptText"></div>
       </div>
     </div>
@@ -1055,7 +1054,10 @@
     const promptClose = document.querySelector("[data-prompt-close]");
     const promptCopy = document.querySelector("[data-prompt-copy]");
     const promptButtons = document.querySelectorAll("[data-prompt-button]");
-    let currentPromptEntries = [];
+    const promptVariantButtons = document.querySelectorAll("[data-prompt-variant]");
+    let currentPromptTitle = "";
+    let currentPromptKind = "human";
+    let currentPromptEntry = null;
     const promptFallback = [
       {
         label: "Prompt",
@@ -1122,7 +1124,7 @@ Wenn die Frage aufgelöst wird, muss die Hero-Grafik weich verschwinden und das 
 Nach dem Laden startet Frage 1. Slider bewegen → Klick "Auflösen" → Berechnung & Feedback → Stagger-Animation des Rasters → "Nächste Frage" Button erscheint → Bei Klick Fade-Transition zur nächsten Frage mit Farbwechsel der App-Umgebung. Nach Frage 10 ein "Quiz beendet" Screen.`
         }
       ],
-      "Sports FR": [
+      "Faire ou Jouer? 🇫🇷": [
         {
           label: "Einfache Human Version",
           text: `Ich brauche eine interaktive Demo mit Sport: **faire ou jouer**.
@@ -1223,7 +1225,7 @@ Badge logic:
 
 * 🥉 **Bronze badge** = level completed
 * 🥈 **Silver badge** = at least 6 correct answers
-* 🥇 **Gold badge** = all answers correct
+* 🥇 **Gold badge** = all correct
 
 Each badge should be clearly visible on the level card in the main menu after completion.
 
@@ -1528,245 +1530,41 @@ The final result should feel like a complete, polished educational mini game tha
 It should be visually impressive, easy to understand, mobile-first, and fun for secondary school students.`
         }
       ],
-      "Faire ou Jouer? 🇫🇷": [
-        {
-          label: "Einfache Human Version",
-          text: `# Prompt: FAIRE OU JOUER ? 🇫🇷
-
-## Modern Web-Based French Learning Mini Game
-
-Create a stunning modern web-based French learning mini game for secondary school students called:
-
-# "FAIRE OU JOUER ? 🇫🇷"
-
-The game should teach students when to use **"faire"** and when to use **"jouer"** with sports, hobbies, instruments, games, and activities.
-
----
-
-## 1. Overall Style
-
-Design the app like a premium educational iPad game.
-
-Use:
-
-* ultra-polished UI
-* bright modern gradients
-* large rounded cards
-* soft shadows
-* smooth animations
-* big typography
-* huge 3D-style emojis
-* glassmorphism panels
-* clean Gen-Z educational aesthetic
-* mobile-first responsive layout
-* touch-friendly controls
-* fun but professional school presentation look
-
-The visual style should feel like: Duolingo meets Apple meets a modern classroom game.
-
----
-
-## 2. Main Menu
-
-Create a beautiful main menu with **5 difficulty levels**:
-
-1. **Niveau 1 — Facile**
-2. **Niveau 2 — Standard**
-3. **Niveau 3 — Moyen**
-4. **Niveau 4 — Difficile**
-5. **Niveau 5 — Expert**
-
-Each level contains **8 cards** with emoji/activity pairs.
-
----
-
-## 3. Badge System
-
-After completing a level:
-- 🥉 **Bronze badge** = level completed
-- 🥈 **Silver badge** = at least 6 correct answers
-- 🥇 **Gold badge** = all answers correct
-
-Store progress using **localStorage**.
-
----
-
-## 4. Gameplay
-
-During the game, player sees one huge emoji and French activity below it.
-
-Player must drag the card:
-- ⬅️ LEFT = FAIRE
-- ➡️ RIGHT = JOUER
-
----
-
-## 5. Feedback
-
-**Correct answers:**
-* green glow
-* confetti burst
-* message: **"✅ Bravo !"**
-
-**Wrong answers:**
-* red flash
-* shake/wiggle animation
-* message: **"❌ Essaie encore !"**
-
----
-
-## 6. UI Details
-
-The game screen should include:
-* top progress bar
-* score counter with star icon
-* current level indicator
-* large draggable card
-* left drop zone labeled **FAIRE**
-* right drop zone labeled **JOUER**
-* back-to-menu button
-* replay level button on the result screen
-
----
-
-## 7. Technical Requirements
-
-Build as single-page web app using only:
-* HTML
-* CSS
-* JavaScript
-
-No backend needed. Must work smoothly on mobile phones, tablets, and desktop browsers.`
-        },
-        {
-          label: "AI Enhanced Version",
-          text: `Rolle: Du bist ein erfahrener Frontend-Entwickler für moderne Educational Games.
-Aufgabe: Erstelle eine atemberaubende, moderne Web-App namens "FAIRE OU JOUER ? 🇫🇷"
-
-## Gesamtstil
-Designe die App wie ein Premium-Educational-iPad-Spiel:
-- ultra-poliertes UI mit großen gerundeten Karten
-- helle moderne Gradienten
-- weiche Schatten und sanfte Animationen
-- große Typografie mit riesigen 3D-Emojis
-- Glassmorphismus-Panels
-- Gen-Z-Ästhetik
-Die visuelle Struktur sollte sich anfühlen wie: Duolingo meets Apple.
-
-## Hintergrund
-Blau-/Violett-Farbverlauf mit subtilen schwebenden Partikeln.
-- 🇫🇷 ✨ ⭐ 📚 als französische Lernakzente
-- überall gerundete Ecken und sanfte Übergänge
-
-## Hauptmenü (5 Schwierigkeitsstufen)
-Jedes Niveau als große gerundete Karte mit:
-- Levelzahl, Schwierigkeitsname
-- Kurzbeschreibung, Fortschritt, Abzeichenstatus
-
-1. Niveau 1 — Facile (einfach)
-2. Niveau 2 — Standard 
-3. Niveau 3 — Moyen (mittel)
-4. Niveau 4 — Difficile (schwierig)
-5. Niveau 5 — Expert
-
-Jedes Level hat 8 Karten mit Aktivitäten und Emojis.
-
-## Abzeichensystem
-Nach Levelabschluss:
-- 🥉 Bronze = Level komplett
-- 🥈 Silber = min. 6 richtig
-- 🥇 Gold = alle richtig
-Abzeichen im Hauptmenü speichern via localStorage.
-
-## Spielmechanik
-Der Spieler wählt ein Level.
-Am Spielschirm:
-- Großes Emoji in der Mitte
-- Französische Aktivität darunter
-Ziel: Card drag & drop
-- ⬅️ LINKS = FAIRE
-- ➡️ RECHTS = JOUER
-
-Korrekt: 💚 grünes Leuchten, Konfetti, "✅ Bravo !"
-Falsch: ❌ rotes Blinken, Wackelanimation, "❌ Essaie encore !"
-
-## Animationen
-- sanfte Drag-Physik
-- Snap-Effekt beim Droppen
-- Hover-Scaling, Button-Bounce
-- Schüttel-Animation bei Fehler
-- Feier-Animation bei richtig
-- sanfte Screen-Übergänge
-- Abzeichen-Animation am Levelende
-- schwebende Partikel im Hintergrund
-- Fortschrittsleiste
-
-## UI-Details
-Spielschirm mit:
-- Top-Fortschrittsleiste
-- Score-Zähler mit ⭐
-- Levelanzeige
-- großes draggables Card
-- große Drop-Zonen (FAIRE / JOUER)
-- Zurück-zu-Menü Button
-- Replay-Button auf Ergebnisschirm
-Mobile-freundlich, touch-optimiert.
-
-## Inhalte (5 Levels × 8 Karten)
-Kaum Unterschiede zwischen faire und jouer - aber die Regel:
-- FAIRE: allgemeine Aktivitäten, Sport, Hobbys
-- JOUER: Spiele, Team-Ballspiele, Musikinstrumente
-
-Beispiele:
-Level 1 (Facile): 🏊‍♂️ la natation (faire), ⚽ le football (jouer), 🎾 le tennis (jouer), 🤸 la gymnastique (faire), 🥋 le judo (faire), 🏀 le basket (jouer), 🚴‍♀️ le vélo (faire), 🎮 les jeux vidéo (jouer)
-
-Level 2 (Standard): ♟️ les échecs (jouer), 🎻 le violon (jouer), 🎹 le piano (jouer), 🏃‍♂️ la course (faire), 🧘 le yoga (faire), 🏐 le volley (jouer), 🏓 le ping-pong (jouer), ⛷️ le ski (faire)
-
-Level 3 (Moyen): 🥊 la boxe (faire), 🧗 l'escalade (faire), 🎸 la guitare (jouer), 🥁 la batterie (jouer), 🏉 le rugby (jouer), 🛹 le skateboard (faire), 🏇 l'équitation (faire), 🎲 les jeux de société (jouer)
-
-Level 4 (Difficile): 🏄 le surf (faire), 🤿 la plongée (faire), 🏸 le badminton (jouer), 🏒 le hockey (jouer), 🎺 la trompette (jouer), 🎭 le théâtre (faire), 🧩 les puzzles (faire), 🪁 du cerf-volant (faire)
-
-Level 5 (Expert): 🧪 des expériences (faire), 📸 de la photographie (faire), 🎤 du karaoké (faire), 🎷 du saxophone (jouer), 🎯 aux fléchettes (jouer), 🃏 aux cartes (jouer), 🏋️ de la musculation (faire), 🧊 du patinage (faire)
-
-## Ergebnisschirm
-Nach jedem Level:
-- Score + Abzeichen-Animation
-- Zurück-zu-Menü oder nächstes Level
-
-## Technisch
-- Alles in einer HTML-Datei (HTML, CSS, JS)
-- Tailwind CSS via CDN
-- localStorage für Fortschritt
-- vollständig responsiv (mobile-first)
-
-Stunning, modern, spielerisch, aber professionell für Schulen.`
-        }
-      ],
       "Google AI for Educators": promptFallback,
       "IB PE: Prompt Engineering": promptFallback
     };
 
-    const openPrompt = (button) => {
-      const title = button.dataset.promptTitle;
+    const pickPromptEntry = (entries, kind) => {
+      if (kind === "ai") {
+        return entries.find((entry) => /ai|ki|enhanced|hauptprompt/i.test(entry.label)) || entries[1] || entries[0];
+      }
+
+      return entries.find((entry) => /human|mensch|einfach/i.test(entry.label)) || entries[0];
+    };
+
+    const renderPrompt = () => {
+      const title = currentPromptTitle;
+      const kind = currentPromptKind;
       const entries = prompts[title] || promptFallback;
-      currentPromptEntries = entries;
+      const entry = pickPromptEntry(entries, kind);
+      currentPromptEntry = entry;
       promptTitle.textContent = title;
       promptText.innerHTML = "";
-      entries.forEach((entry) => {
-        const wrapper = document.createElement("div");
-        wrapper.className = "prompt-entry";
-
-        const label = document.createElement("div");
-        label.className = "prompt-label";
-        label.textContent = entry.label;
-
-        const box = document.createElement("div");
-        box.className = "prompt-box prompt-content";
-        box.innerHTML = marked.parse(entry.text);
-
-        wrapper.append(label, box);
-        promptText.append(wrapper);
+      promptVariantButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.promptVariant === kind));
       });
+
+      const box = document.createElement("div");
+      box.className = "prompt-box prompt-content";
+      box.innerHTML = marked.parse(entry.text);
+      promptText.append(box);
+    };
+
+    const openPrompt = (button) => {
+      currentPromptTitle = button.dataset.promptTitle;
+      currentPromptKind = "human";
+      renderPrompt();
+
       promptModal.hidden = false;
       promptModal.classList.add("is-open");
       promptClose.focus();
@@ -1793,14 +1591,16 @@ Stunning, modern, spielerisch, aber professionell für Schulen.`
       });
     });
 
+    promptVariantButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        currentPromptKind = button.dataset.promptVariant;
+        renderPrompt();
+      });
+    });
+
     promptClose.addEventListener("click", closePrompt);
     promptCopy.addEventListener("click", () => {
-      let textToCopy = "";
-      
-      if (currentPromptEntries.length > 0) {
-        const enhancedVersion = currentPromptEntries.find(entry => entry.label.includes("Enhanced") || entry.label.includes("Hauptprompt"));
-        textToCopy = enhancedVersion ? enhancedVersion.text : currentPromptEntries[0].text;
-      }
+      const textToCopy = currentPromptEntry ? currentPromptEntry.text : "";
       
       if (textToCopy) {
         navigator.clipboard.writeText(textToCopy).then(() => {
