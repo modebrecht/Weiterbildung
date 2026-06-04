@@ -134,7 +134,7 @@
             </div>
 
             <!-- Vokabelheft (Dictionary Modal) -->
-            <div id="screen-dictionary" class="bg-white/98 border-4 border-superIndigo rounded-[32px] shadow-2xl p-6 max-w-2xl w-full pointer-events-auto transition-all duration-300 transform scale-90 opacity-0 hidden max-h-[85vh] flex flex-col">
+            <div id="screen-dictionary" class="bg-white border-4 border-superIndigo rounded-[32px] shadow-2xl p-6 max-w-2xl w-full pointer-events-auto transition-all duration-300 transform scale-90 opacity-0 hidden max-h-[85vh] flex flex-col">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold text-superIndigo flex items-center gap-2">📖 Englisches Vokabelheft</h2>
                     <button id="btn-close-dictionary" class="text-slate-400 hover:text-superDark text-2xl font-bold">✕</button>
@@ -147,7 +147,7 @@
             </div>
 
             <!-- Custom Confirmation Dialog (Reset Confirm) -->
-            <div id="modal-confirm" class="bg-white/98 border-4 border-superPink rounded-[28px] shadow-2xl p-6 max-w-sm w-full text-center pointer-events-auto transition-all duration-300 transform scale-90 opacity-0 hidden">
+            <div id="modal-confirm" class="bg-white border-4 border-superPink rounded-[28px] shadow-2xl p-6 max-w-sm w-full text-center pointer-events-auto transition-all duration-300 transform scale-90 opacity-0 hidden">
                 <div class="text-4xl mb-2">🚨</div>
                 <h3 class="text-xl font-bold text-superDark mb-2">Fortschritt zurücksetzen?</h3>
                 <p class="text-slate-500 text-sm mb-6">Möchtest du all deine Sterne, Highscores und Münzen unwiderruflich löschen?</p>
@@ -479,7 +479,7 @@
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         container.appendChild(renderer.domElement);
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.62);
         scene.add(ambientLight);
 
         // Sunlight providing gorgeous warm tones
@@ -492,7 +492,7 @@
         scene.add(sunLight);
 
         // Warm spotlights focusing on checkout area
-        const checkoutSpot = new THREE.SpotLight(0xfffae0, 1.8, 12, Math.PI / 4, 0.5, 1);
+        const checkoutSpot = new THREE.SpotLight(0xfffae0, 1.15, 12, Math.PI / 4, 0.5, 1);
         checkoutSpot.position.set(0.6, 6, 1.6);
         checkoutSpot.target.position.set(0.6, 1.1, 1.6);
         scene.add(checkoutSpot);
@@ -509,8 +509,8 @@
         canvas.height = size;
         const ctx = canvas.getContext('2d');
 
-        // Grout line base color (warm gray beige)
-        ctx.fillStyle = '#bfae9e';
+        // Warmere, etwas dunklere Fugen, damit der helle Tresen nicht im Boden verschwimmt.
+        ctx.fillStyle = '#806958';
         ctx.fillRect(0, 0, size, size);
 
         const tiles = 8;
@@ -524,15 +524,15 @@
                 const tw = tileSize - border * 2;
                 const th = tileSize - border * 2;
 
-                // Base elegant tile color (warm subtle checkerboard pattern)
+                // Warmer, kontrastreicher Fliesenboden statt fast weißer Fläche.
                 const isEven = (x + y) % 2 === 0;
-                ctx.fillStyle = isEven ? '#fdfcf7' : '#f7f2e8';
+                ctx.fillStyle = isEven ? '#caa982' : '#b89068';
                 
                 // Draw tile
                 ctx.fillRect(tx, ty, tw, th);
 
                 // Add subtle elegant terrazzo specks for realistic high-end supermarket look
-                ctx.fillStyle = 'rgba(150, 130, 110, 0.12)';
+                ctx.fillStyle = 'rgba(64, 43, 28, 0.20)';
                 for (let i = 0; i < 20; i++) {
                     const speckX = tx + Math.random() * tw;
                     const speckY = ty + Math.random() * th;
@@ -543,12 +543,12 @@
                 }
 
                 // Soft inner highlight (bevel effect)
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.strokeStyle = 'rgba(255, 241, 220, 0.28)';
                 ctx.lineWidth = 1;
                 ctx.strokeRect(tx + 0.8, ty + 0.8, tw - 1.6, th - 1.6);
 
                 // Subtly darker edge line for geometric definition
-                ctx.strokeStyle = 'rgba(0, 0, 0, 0.03)';
+                ctx.strokeStyle = 'rgba(55, 35, 21, 0.18)';
                 ctx.lineWidth = 1;
                 ctx.strokeRect(tx, ty, tw, th);
             }
@@ -568,8 +568,9 @@
         const floorGeo = new THREE.PlaneGeometry(35, 35);
         const floorMat = new THREE.MeshStandardMaterial({ 
             map: floorTex,
-            roughness: 0.15, // elegant shiny surface reflecting spot lights
-            metalness: 0.05
+            color: 0xc69d75,
+            roughness: 0.62,
+            metalness: 0.0
         });
         const floor = new THREE.Mesh(floorGeo, floorMat);
         floor.rotation.x = -Math.PI / 2;
@@ -816,7 +817,7 @@
         checkoutDesk.position.set(0.6, 0, 1.6);
 
         const deskMetalMat = new THREE.MeshStandardMaterial({ color: 0x4895ef, roughness: 0.3 });
-        const deskWhiteMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 });
+        const deskWhiteMat = new THREE.MeshStandardMaterial({ color: 0xe8eef2, roughness: 0.58 });
         const beltRubberMat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.9 });
 
         const bodyDesk = new THREE.Mesh(new THREE.BoxGeometry(3.6, 1.1, 1.4), deskMetalMat);
